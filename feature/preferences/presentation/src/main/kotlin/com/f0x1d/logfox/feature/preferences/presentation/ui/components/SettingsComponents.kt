@@ -100,7 +100,7 @@ internal fun SettingsSwitchRow(
         Spacer(modifier = Modifier.width(16.dp))
         Switch(
             checked = checked,
-            onCheckedChange = null,
+            onCheckedChange = onCheckedChange,
             enabled = enabled,
         )
     }

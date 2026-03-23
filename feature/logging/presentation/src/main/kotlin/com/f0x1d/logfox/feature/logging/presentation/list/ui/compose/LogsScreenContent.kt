@@ -246,7 +246,7 @@ private fun LogsTopBar(
                     )
                 }
             } else {
-                IconButton(onClick = { listener.onSelectAll(emptySet()) }) {
+                IconButton(onClick = { listener.onSelectAll() }) {
                     Icon(
                         painter = painterResource(Icons.ic_select_all),
                         contentDescription = stringResource(Strings.select_all),

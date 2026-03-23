@@ -6,7 +6,7 @@ internal data class LogsScreenListener(
     val onCopyClick: (Long) -> Unit = {},
     val onCreateFilterClick: (Long) -> Unit = {},
     val onPauseResumeClick: () -> Unit = {},
-    val onSelectAll: (Set<Long>) -> Unit = {},
+    val onSelectAll: () -> Unit = {},
     val onClearSelection: () -> Unit = {},
     val onOpenSearch: () -> Unit = {},
     val onOpenFilters: () -> Unit = {},

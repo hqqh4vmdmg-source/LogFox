@@ -7,6 +7,13 @@ internal sealed interface PreferencesServiceSideEffect {
     data object LoadPreferences : PreferencesServiceSideEffect
     data class CheckTerminalSupport(val type: TerminalType) : PreferencesServiceSideEffect
     data class SaveTerminalType(val type: TerminalType) : PreferencesServiceSideEffect
+    data class SaveFallbackToDefault(val enabled: Boolean) : PreferencesServiceSideEffect
+    data class SaveStartOnBoot(val enabled: Boolean) : PreferencesServiceSideEffect
+    data class SaveStopLoggingOnBackExit(val enabled: Boolean) : PreferencesServiceSideEffect
+    data class SaveShowLogsFromAppLaunch(val enabled: Boolean) : PreferencesServiceSideEffect
+    data class SaveIncludeDeviceInfo(val enabled: Boolean) : PreferencesServiceSideEffect
+    data class SaveIncludeAppInfo(val enabled: Boolean) : PreferencesServiceSideEffect
+    data class SaveExportLogsAsTxt(val enabled: Boolean) : PreferencesServiceSideEffect
     data object RestartLogging : PreferencesServiceSideEffect
 
     // UI side effects - handled by Fragment

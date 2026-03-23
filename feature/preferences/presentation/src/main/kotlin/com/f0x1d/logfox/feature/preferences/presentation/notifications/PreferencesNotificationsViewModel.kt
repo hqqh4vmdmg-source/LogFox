@@ -18,4 +18,5 @@ internal class PreferencesNotificationsViewModel @Inject constructor(
     reducer = reducer,
     effectHandlers = listOf(effectHandler),
     viewStateMapper = viewStateMapper,
+    initialSideEffects = listOf(PreferencesNotificationsSideEffect.LoadPreferences),
 )

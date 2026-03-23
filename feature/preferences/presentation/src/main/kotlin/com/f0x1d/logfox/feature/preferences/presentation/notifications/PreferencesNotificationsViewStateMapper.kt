@@ -9,5 +9,9 @@ internal class PreferencesNotificationsViewStateMapper @Inject constructor() :
     override fun map(state: PreferencesNotificationsState) = PreferencesNotificationsViewState(
         hasNotificationsPermission = state.hasNotificationsPermission,
         notificationsChannelsAvailable = state.notificationsChannelsAvailable,
+        useSeparateChannels = state.useSeparateChannels,
+        javaNotifications = state.javaNotifications,
+        jniNotifications = state.jniNotifications,
+        anrNotifications = state.anrNotifications,
     )
 }

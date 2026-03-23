@@ -9,5 +9,12 @@ internal class PreferencesServiceViewStateMapper @Inject constructor() :
     override fun map(state: PreferencesServiceState) = PreferencesServiceViewState(
         selectedTerminalType = state.selectedTerminalType,
         terminalNames = state.terminalNames,
+        fallbackToDefault = state.fallbackToDefault,
+        stopLoggingOnBackExit = state.stopLoggingOnBackExit,
+        startOnBoot = state.startOnBoot,
+        showLogsFromAppLaunch = state.showLogsFromAppLaunch,
+        includeDeviceInfo = state.includeDeviceInfo,
+        includeAppInfo = state.includeAppInfo,
+        exportLogsAsTxt = state.exportLogsAsTxt,
     )
 }

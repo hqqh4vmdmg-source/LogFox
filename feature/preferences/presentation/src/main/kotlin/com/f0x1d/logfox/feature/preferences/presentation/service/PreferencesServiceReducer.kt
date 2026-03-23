@@ -22,6 +22,13 @@ internal class PreferencesServiceReducer @Inject constructor() : Reducer<Prefere
             state.copy(
                 selectedTerminalType = command.selectedTerminalType,
                 terminalNames = command.terminalNames,
+                fallbackToDefault = command.fallbackToDefault,
+                stopLoggingOnBackExit = command.stopLoggingOnBackExit,
+                startOnBoot = command.startOnBoot,
+                showLogsFromAppLaunch = command.showLogsFromAppLaunch,
+                includeDeviceInfo = command.includeDeviceInfo,
+                includeAppInfo = command.includeAppInfo,
+                exportLogsAsTxt = command.exportLogsAsTxt,
             ).noSideEffects()
         }
 
@@ -48,21 +55,59 @@ internal class PreferencesServiceReducer @Inject constructor() : Reducer<Prefere
             state.withSideEffects(PreferencesServiceSideEffect.ShowTerminalUnavailableToast)
         }
 
+        is PreferencesServiceCommand.FallbackToDefaultChanged -> {
+            state.copy(fallbackToDefault = command.enabled).withSideEffects(
+                PreferencesServiceSideEffect.SaveFallbackToDefault(command.enabled),
+            )
+        }
+
         is PreferencesServiceCommand.StartOnBootChanged -> {
+            val newState = state.copy(startOnBoot = command.enabled)
             val isDefaultTerminal = state.selectedTerminalType == TerminalType.Default
             if (isAtLeastAndroid13 && command.enabled && isDefaultTerminal) {
-                state.withSideEffects(PreferencesServiceSideEffect.ShowAndroid13WarningDialog)
+                newState.withSideEffects(
+                    PreferencesServiceSideEffect.SaveStartOnBoot(command.enabled),
+                    PreferencesServiceSideEffect.ShowAndroid13WarningDialog,
+                )
             } else {
-                state.noSideEffects()
+                newState.withSideEffects(PreferencesServiceSideEffect.SaveStartOnBoot(command.enabled))
             }
         }
 
+        is PreferencesServiceCommand.StopLoggingOnBackExitChanged -> {
+            state.copy(stopLoggingOnBackExit = command.enabled).withSideEffects(
+                PreferencesServiceSideEffect.SaveStopLoggingOnBackExit(command.enabled),
+            )
+        }
+
         is PreferencesServiceCommand.ShowLogsFromAppLaunchChanged -> {
+            val newState = state.copy(showLogsFromAppLaunch = command.enabled)
             if (!command.enabled) {
-                state.withSideEffects(PreferencesServiceSideEffect.RestartLogging)
+                newState.withSideEffects(
+                    PreferencesServiceSideEffect.SaveShowLogsFromAppLaunch(command.enabled),
+                    PreferencesServiceSideEffect.RestartLogging,
+                )
             } else {
-                state.noSideEffects()
+                newState.withSideEffects(PreferencesServiceSideEffect.SaveShowLogsFromAppLaunch(command.enabled))
             }
+        }
+
+        is PreferencesServiceCommand.IncludeDeviceInfoChanged -> {
+            state.copy(includeDeviceInfo = command.enabled).withSideEffects(
+                PreferencesServiceSideEffect.SaveIncludeDeviceInfo(command.enabled),
+            )
+        }
+
+        is PreferencesServiceCommand.IncludeAppInfoChanged -> {
+            state.copy(includeAppInfo = command.enabled).withSideEffects(
+                PreferencesServiceSideEffect.SaveIncludeAppInfo(command.enabled),
+            )
+        }
+
+        is PreferencesServiceCommand.ExportLogsAsTxtChanged -> {
+            state.copy(exportLogsAsTxt = command.enabled).withSideEffects(
+                PreferencesServiceSideEffect.SaveExportLogsAsTxt(command.enabled),
+            )
         }
 
         is PreferencesServiceCommand.ConfirmRestartLogging -> {
