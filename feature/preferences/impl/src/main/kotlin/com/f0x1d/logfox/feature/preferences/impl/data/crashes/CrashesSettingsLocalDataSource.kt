@@ -13,6 +13,7 @@ internal interface CrashesSettingsLocalDataSource {
     fun collectingFor(crashTypeName: String): Boolean
     fun collectingForPreference(crashTypeName: String): Preference<Boolean>
     fun showingNotificationsFor(crashTypeName: String): Boolean
+    fun showingNotificationsForPreference(crashTypeName: String): Preference<Boolean>
 
     fun useSeparateNotificationsChannelsForCrashes(): Preference<Boolean>
 }

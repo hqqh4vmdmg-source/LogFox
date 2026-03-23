@@ -1,3 +1,6 @@
 package com.f0x1d.logfox.feature.preferences.presentation.links
 
-internal sealed interface PreferencesLinksSideEffect
+internal sealed interface PreferencesLinksSideEffect {
+    data class OpenUrl(val url: String) : PreferencesLinksSideEffect
+}
+

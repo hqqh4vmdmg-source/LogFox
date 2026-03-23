@@ -14,6 +14,8 @@ interface CrashesSettingsRepository {
     fun collectingForFlow(crashTypeName: String): PreferenceStateFlow<Boolean>
     fun setCollectingFor(crashTypeName: String, value: Boolean)
     fun showingNotificationsFor(crashTypeName: String): Boolean
+    fun showingNotificationsForFlow(crashTypeName: String): PreferenceStateFlow<Boolean>
+    fun setShowingNotificationsFor(crashTypeName: String, value: Boolean)
 
     fun useSeparateNotificationsChannelsForCrashes(): PreferenceStateFlow<Boolean>
 }

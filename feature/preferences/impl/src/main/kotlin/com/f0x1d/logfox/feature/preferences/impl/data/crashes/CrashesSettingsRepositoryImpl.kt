@@ -31,5 +31,12 @@ internal class CrashesSettingsRepositoryImpl @Inject constructor(
 
     override fun showingNotificationsFor(crashTypeName: String): Boolean = localDataSource.showingNotificationsFor(crashTypeName)
 
+    override fun showingNotificationsForFlow(crashTypeName: String): PreferenceStateFlow<Boolean> =
+        localDataSource.showingNotificationsForPreference(crashTypeName).asPreferenceStateFlow()
+
+    override fun setShowingNotificationsFor(crashTypeName: String, value: Boolean) {
+        localDataSource.showingNotificationsForPreference(crashTypeName).set(value)
+    }
+
     override fun useSeparateNotificationsChannelsForCrashes(): PreferenceStateFlow<Boolean> = localDataSource.useSeparateNotificationsChannelsForCrashes().asPreferenceStateFlow()
 }
