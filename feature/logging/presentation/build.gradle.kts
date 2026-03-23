@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.logfox.android.feature)
+    alias(libs.plugins.logfox.android.feature.compose)
 }
 
 android {
@@ -18,9 +18,9 @@ dependencies {
     implementation(projects.feature.terminals.api)
     implementation(projects.core.tea.base)
     implementation(projects.core.tea.android)
-    implementation(projects.core.ui.base)
     implementation(projects.core.ui.icons)
-    implementation(projects.core.ui.view)
+    implementation(projects.core.ui.compose.fragment)
+    implementation(projects.core.ui.compose.designSystem)
     implementation(projects.core.recycler)
     implementation(projects.core.di)
     implementation(projects.core.coroutines)
@@ -34,6 +34,5 @@ dependencies {
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.androidx.navigation)
     implementation(libs.material)
-    implementation(libs.insetter)
     implementation(libs.timber)
 }
