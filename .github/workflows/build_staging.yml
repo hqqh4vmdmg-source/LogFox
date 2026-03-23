@@ -8,9 +8,6 @@ on:
       - 'master'
 
 env:
-  KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-  ALIAS: ${{ secrets.ALIAS }}
-  KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
 jobs:
   extract_version:
@@ -53,18 +50,3 @@ jobs:
         with:
           name: logfox-release
           path: ./apk
-
-      - name: Send APK to Telegram
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          format: markdown
-          document: ./apk/LogFox-*.apk
-          disable_web_page_preview: true
-          message: |
-            *${{ github.actor }}* committed to *${{ github.repository }}*
-
-            Branch: *${{ github.ref_name }}*
-            Commit: `${{ github.sha }}`
-            Commit message: `${{ github.event.head_commit.message }}`
