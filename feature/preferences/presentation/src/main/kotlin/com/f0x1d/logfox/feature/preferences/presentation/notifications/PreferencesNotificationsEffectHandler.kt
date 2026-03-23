@@ -5,6 +5,7 @@ import com.f0x1d.logfox.core.context.hasNotificationsPermission
 import com.f0x1d.logfox.core.tea.EffectHandler
 import com.f0x1d.logfox.feature.preferences.api.data.CrashesSettingsRepository
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.SetShowingNotificationsForCrashTypeUseCase
+import com.f0x1d.logfox.feature.preferences.presentation.CrashTypeNames
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -23,9 +24,9 @@ internal class PreferencesNotificationsEffectHandler @Inject constructor(
                 onCommand(
                     PreferencesNotificationsCommand.PreferencesLoaded(
                         useSeparateChannels = crashesSettingsRepository.useSeparateNotificationsChannelsForCrashes().value,
-                        javaNotifications = crashesSettingsRepository.showingNotificationsFor(CRASH_TYPE_JAVA),
-                        jniNotifications = crashesSettingsRepository.showingNotificationsFor(CRASH_TYPE_JNI),
-                        anrNotifications = crashesSettingsRepository.showingNotificationsFor(CRASH_TYPE_ANR),
+                        javaNotifications = crashesSettingsRepository.showingNotificationsFor(CrashTypeNames.JAVA),
+                        jniNotifications = crashesSettingsRepository.showingNotificationsFor(CrashTypeNames.JNI),
+                        anrNotifications = crashesSettingsRepository.showingNotificationsFor(CrashTypeNames.ANR),
                     ),
                 )
             }
@@ -43,26 +44,20 @@ internal class PreferencesNotificationsEffectHandler @Inject constructor(
             }
 
             is PreferencesNotificationsSideEffect.SaveJavaNotifications -> {
-                setShowingNotificationsForCrashTypeUseCase(CRASH_TYPE_JAVA, effect.enabled)
+                setShowingNotificationsForCrashTypeUseCase(CrashTypeNames.JAVA, effect.enabled)
             }
 
             is PreferencesNotificationsSideEffect.SaveJniNotifications -> {
-                setShowingNotificationsForCrashTypeUseCase(CRASH_TYPE_JNI, effect.enabled)
+                setShowingNotificationsForCrashTypeUseCase(CrashTypeNames.JNI, effect.enabled)
             }
 
             is PreferencesNotificationsSideEffect.SaveAnrNotifications -> {
-                setShowingNotificationsForCrashTypeUseCase(CRASH_TYPE_ANR, effect.enabled)
+                setShowingNotificationsForCrashTypeUseCase(CrashTypeNames.ANR, effect.enabled)
             }
 
             // UI side effects - handled by Fragment
             is PreferencesNotificationsSideEffect.OpenLoggingChannelSettings -> Unit
             is PreferencesNotificationsSideEffect.OpenAppNotificationSettings -> Unit
         }
-    }
-
-    private companion object {
-        const val CRASH_TYPE_JAVA = "java"
-        const val CRASH_TYPE_JNI = "jni"
-        const val CRASH_TYPE_ANR = "anr"
     }
 }

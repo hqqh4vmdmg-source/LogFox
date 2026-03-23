@@ -4,12 +4,9 @@ import com.f0x1d.logfox.core.compat.notificationsChannelsAvailable
 import com.f0x1d.logfox.core.tea.BaseStoreViewModel
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetShowingNotificationsForCrashTypeUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetUseSeparateNotificationsChannelsForCrashesUseCase
+import com.f0x1d.logfox.feature.preferences.presentation.CrashTypeNames
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-
-private const val CRASH_TYPE_JAVA = "java"
-private const val CRASH_TYPE_JNI = "jni"
-private const val CRASH_TYPE_ANR = "anr"
 
 @HiltViewModel
 internal class PreferencesNotificationsViewModel @Inject constructor(
@@ -23,9 +20,9 @@ internal class PreferencesNotificationsViewModel @Inject constructor(
         hasNotificationsPermission = true,
         notificationsChannelsAvailable = notificationsChannelsAvailable,
         useSeparateChannels = getUseSeparateNotificationsChannelsForCrashesUseCase(),
-        javaNotifications = getShowingNotificationsForCrashTypeUseCase(CRASH_TYPE_JAVA),
-        jniNotifications = getShowingNotificationsForCrashTypeUseCase(CRASH_TYPE_JNI),
-        anrNotifications = getShowingNotificationsForCrashTypeUseCase(CRASH_TYPE_ANR),
+        javaNotifications = getShowingNotificationsForCrashTypeUseCase(CrashTypeNames.JAVA),
+        jniNotifications = getShowingNotificationsForCrashTypeUseCase(CrashTypeNames.JNI),
+        anrNotifications = getShowingNotificationsForCrashTypeUseCase(CrashTypeNames.ANR),
     ),
     reducer = reducer,
     effectHandlers = listOf(effectHandler),

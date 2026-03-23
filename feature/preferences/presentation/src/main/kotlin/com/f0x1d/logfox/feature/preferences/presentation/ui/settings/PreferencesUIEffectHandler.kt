@@ -2,8 +2,8 @@ package com.f0x1d.logfox.feature.preferences.presentation.ui.settings
 
 import androidx.appcompat.app.AppCompatDelegate
 import com.f0x1d.logfox.core.tea.EffectHandler
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetOpenCrashesOnStartupFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetWrapCrashLogLinesFlowUseCase
-import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetOpenCrashesOnStartupUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.SetOpenCrashesOnStartupUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.SetWrapCrashLogLinesUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.datetime.GetDateFormatFlowUseCase
@@ -45,6 +45,39 @@ import com.f0x1d.logfox.feature.preferences.api.domain.ui.SetNightThemeUseCase
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
+// Private data classes to hold typed groups of combined flows
+private data class ThemeAndDatePrefs(
+    val nightTheme: Int,
+    val monetEnabled: Boolean,
+    val dateFormat: String,
+    val timeFormat: String,
+    val openCrashesOnStartup: Boolean,
+)
+
+private data class ShowLogFirstColumns(
+    val showDate: Boolean,
+    val showTime: Boolean,
+    val showUid: Boolean,
+    val showPid: Boolean,
+    val showTid: Boolean,
+)
+
+private data class ShowLogSecondColumns(
+    val showPackage: Boolean,
+    val showTag: Boolean,
+    val showContent: Boolean,
+    val exportInOriginalFormat: Boolean,
+    val wrapCrashLogLines: Boolean,
+)
+
+private data class LogsBehaviourPrefs(
+    val updateInterval: Long,
+    val textSize: Int,
+    val displayLimit: Int,
+    val expanded: Boolean,
+    val resumeWithTouch: Boolean,
+)
+
 internal class PreferencesUIEffectHandler @Inject constructor(
     private val getNightThemeFlowUseCase: GetNightThemeFlowUseCase,
     private val setNightThemeUseCase: SetNightThemeUseCase,
@@ -54,7 +87,7 @@ internal class PreferencesUIEffectHandler @Inject constructor(
     private val setDateFormatUseCase: SetDateFormatUseCase,
     private val getTimeFormatFlowUseCase: GetTimeFormatFlowUseCase,
     private val setTimeFormatUseCase: SetTimeFormatUseCase,
-    private val getOpenCrashesOnStartupUseCase: GetOpenCrashesOnStartupUseCase,
+    private val getOpenCrashesOnStartupFlowUseCase: GetOpenCrashesOnStartupFlowUseCase,
     private val setOpenCrashesOnStartupUseCase: SetOpenCrashesOnStartupUseCase,
     private val getShowLogDateFlowUseCase: GetShowLogDateFlowUseCase,
     private val setShowLogDateUseCase: SetShowLogDateUseCase,
@@ -100,8 +133,9 @@ internal class PreferencesUIEffectHandler @Inject constructor(
                         getMonetEnabledFlowUseCase(),
                         getDateFormatFlowUseCase(),
                         getTimeFormatFlowUseCase(),
-                    ) { nightTheme, monetEnabled, dateFormat, timeFormat ->
-                        listOf<Any>(nightTheme, monetEnabled, dateFormat, timeFormat)
+                        getOpenCrashesOnStartupFlowUseCase(),
+                    ) { nightTheme, monetEnabled, dateFormat, timeFormat, openCrashesOnStartup ->
+                        ThemeAndDatePrefs(nightTheme, monetEnabled, dateFormat, timeFormat, openCrashesOnStartup)
                     },
                     combine(
                         getShowLogDateFlowUseCase(),
@@ -110,7 +144,7 @@ internal class PreferencesUIEffectHandler @Inject constructor(
                         getShowLogPidFlowUseCase(),
                         getShowLogTidFlowUseCase(),
                     ) { date, time, uid, pid, tid ->
-                        listOf(date, time, uid, pid, tid)
+                        ShowLogFirstColumns(date, time, uid, pid, tid)
                     },
                     combine(
                         getShowLogPackageFlowUseCase(),
@@ -119,7 +153,7 @@ internal class PreferencesUIEffectHandler @Inject constructor(
                         getExportLogsInOriginalFormatFlowUseCase(),
                         getWrapCrashLogLinesFlowUseCase(),
                     ) { pkg, tag, content, exportOriginal, wrapLines ->
-                        listOf(pkg, tag, content, exportOriginal, wrapLines)
+                        ShowLogSecondColumns(pkg, tag, content, exportOriginal, wrapLines)
                     },
                     combine(
                         getLogsUpdateIntervalFlowUseCase(),
@@ -128,30 +162,30 @@ internal class PreferencesUIEffectHandler @Inject constructor(
                         getLogsExpandedFlowUseCase(),
                         getResumeLoggingWithBottomTouchFlowUseCase(),
                     ) { updateInterval, textSize, displayLimit, expanded, resumeWithTouch ->
-                        listOf<Any>(updateInterval, textSize, displayLimit, expanded, resumeWithTouch)
+                        LogsBehaviourPrefs(updateInterval, textSize, displayLimit, expanded, resumeWithTouch)
                     },
-                ) { first, showFirst, showSecond, logsSettings ->
+                ) { themeDate, showFirst, showSecond, logsBehaviour ->
                     PreferencesUICommand.PreferencesLoaded(
-                        nightTheme = first[0] as Int,
-                        monetEnabled = first[1] as Boolean,
-                        dateFormat = first[2] as String,
-                        timeFormat = first[3] as String,
-                        openCrashesOnStartup = getOpenCrashesOnStartupUseCase(),
-                        showLogDate = showFirst[0] as Boolean,
-                        showLogTime = showFirst[1] as Boolean,
-                        showLogUid = showFirst[2] as Boolean,
-                        showLogPid = showFirst[3] as Boolean,
-                        showLogTid = showFirst[4] as Boolean,
-                        showLogPackage = showSecond[0] as Boolean,
-                        showLogTag = showSecond[1] as Boolean,
-                        showLogContent = showSecond[2] as Boolean,
-                        exportLogsInOriginalFormat = showSecond[3] as Boolean,
-                        wrapCrashLogLines = showSecond[4] as Boolean,
-                        logsUpdateInterval = logsSettings[0] as Long,
-                        logsTextSize = logsSettings[1] as Int,
-                        logsDisplayLimit = logsSettings[2] as Int,
-                        logsExpanded = logsSettings[3] as Boolean,
-                        resumeLogsWithTouch = logsSettings[4] as Boolean,
+                        nightTheme = themeDate.nightTheme,
+                        monetEnabled = themeDate.monetEnabled,
+                        dateFormat = themeDate.dateFormat,
+                        timeFormat = themeDate.timeFormat,
+                        openCrashesOnStartup = themeDate.openCrashesOnStartup,
+                        showLogDate = showFirst.showDate,
+                        showLogTime = showFirst.showTime,
+                        showLogUid = showFirst.showUid,
+                        showLogPid = showFirst.showPid,
+                        showLogTid = showFirst.showTid,
+                        showLogPackage = showSecond.showPackage,
+                        showLogTag = showSecond.showTag,
+                        showLogContent = showSecond.showContent,
+                        exportLogsInOriginalFormat = showSecond.exportInOriginalFormat,
+                        wrapCrashLogLines = showSecond.wrapCrashLogLines,
+                        logsUpdateInterval = logsBehaviour.updateInterval,
+                        logsTextSize = logsBehaviour.textSize,
+                        logsDisplayLimit = logsBehaviour.displayLimit,
+                        logsExpanded = logsBehaviour.expanded,
+                        resumeLogsWithTouch = logsBehaviour.resumeWithTouch,
                     )
                 }.collect { command ->
                     onCommand(command)
