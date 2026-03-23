@@ -36,6 +36,14 @@ jobs:
           distribution: oracle
           cache: 'gradle'
           
+      - name: Decode Keystore
+        if: inputs.checkout_keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          mkdir -p app/keystore
+          echo "$KEYSTORE_BASE64" | base64 --decode > app/keystore/main.jks
+
       - name: Build APK
         run: bash ./gradlew :app:assembleRelease --stacktrace --no-daemon
 

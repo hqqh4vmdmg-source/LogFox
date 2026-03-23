@@ -34,6 +34,7 @@ jobs:
     needs: extract_version
     uses: ./.github/workflows/build_apk_job.yml
     with:
+      checkout_keystore: true
       version_name: ${{ needs.extract_version.outputs.version_name }}
       version_code: ${{ needs.extract_version.outputs.version_code }}
     secrets: inherit
