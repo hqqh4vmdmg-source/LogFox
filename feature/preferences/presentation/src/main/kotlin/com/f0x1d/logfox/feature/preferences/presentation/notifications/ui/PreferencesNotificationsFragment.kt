@@ -1,113 +1,74 @@
 package com.f0x1d.logfox.feature.preferences.presentation.notifications.ui
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Bundle
 import android.provider.Settings
-import android.view.View
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
-import androidx.preference.Preference
-import com.f0x1d.logfox.core.context.isHorizontalOrientation
-import com.f0x1d.logfox.core.tea.BaseStorePreferenceFragment
-import com.f0x1d.logfox.core.ui.view.setupBackButtonForNavController
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.fragment.findNavController
+import com.f0x1d.logfox.core.ui.compose.BaseComposeFragment
 import com.f0x1d.logfox.feature.notifications.api.LOGGING_STATUS_CHANNEL_ID
-import com.f0x1d.logfox.feature.preferences.presentation.R
 import com.f0x1d.logfox.feature.preferences.presentation.notifications.PreferencesNotificationsCommand
 import com.f0x1d.logfox.feature.preferences.presentation.notifications.PreferencesNotificationsSideEffect
-import com.f0x1d.logfox.feature.preferences.presentation.notifications.PreferencesNotificationsState
 import com.f0x1d.logfox.feature.preferences.presentation.notifications.PreferencesNotificationsViewModel
-import com.f0x1d.logfox.feature.preferences.presentation.notifications.PreferencesNotificationsViewState
-import com.f0x1d.logfox.feature.strings.Strings
-import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.insetter.applyInsetter
 
 @AndroidEntryPoint
-internal class PreferencesNotificationsFragment :
-    BaseStorePreferenceFragment<
-        PreferencesNotificationsViewState,
-        PreferencesNotificationsState,
-        PreferencesNotificationsCommand,
-        PreferencesNotificationsSideEffect,
-        PreferencesNotificationsViewModel,
-        >() {
+internal class PreferencesNotificationsFragment : BaseComposeFragment() {
 
-    override val viewModel by viewModels<PreferencesNotificationsViewModel>()
+    private val viewModel by viewModels<PreferencesNotificationsViewModel>()
 
-    @SuppressLint("InlinedApi")
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        addPreferencesFromResource(R.xml.settings_notifications)
+    @Composable
+    override fun Content() {
+        val state by viewModel.state.collectAsStateWithLifecycle()
+        val lifecycleOwner = LocalLifecycleOwner.current
 
-        findPreference<Preference>("pref_logging_notification")?.setOnPreferenceClickListener {
-            send(PreferencesNotificationsCommand.OpenLoggingNotificationSettings)
-            true
+        DisposableEffect(lifecycleOwner) {
+            val observer = LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_START) {
+                    viewModel.send(PreferencesNotificationsCommand.CheckPermission)
+                }
+            }
+            lifecycleOwner.lifecycle.addObserver(observer)
+            onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
         }
 
-        findPreference<Preference>("pref_notifications_permission")?.setOnPreferenceClickListener {
-            send(PreferencesNotificationsCommand.OpenNotificationsPermissionSettings)
-            true
-        }
-    }
+        LaunchedEffect(viewModel) {
+            viewModel.sideEffects.collect { sideEffect ->
+                when (sideEffect) {
+                    is PreferencesNotificationsSideEffect.OpenLoggingChannelSettings ->
+                        startActivity(
+                            Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+                                putExtra(Settings.EXTRA_CHANNEL_ID, LOGGING_STATUS_CHANNEL_ID)
+                            },
+                        )
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+                    is PreferencesNotificationsSideEffect.OpenAppNotificationSettings ->
+                        startActivity(
+                            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+                            },
+                        )
 
-        view.findViewById<MaterialToolbar>(R.id.toolbar).apply {
-            setTitle(Strings.notifications)
-            setupBackButtonForNavController()
-        }
-
-        listView.apply {
-            clipToPadding = false
-            applyInsetter {
-                type(navigationBars = true) {
-                    padding(vertical = requireContext().isHorizontalOrientation)
+                    is PreferencesNotificationsSideEffect.CheckPermission -> Unit
                 }
             }
         }
-    }
 
-    override fun onStart() {
-        super.onStart()
-        send(PreferencesNotificationsCommand.CheckPermission)
-    }
-
-    override fun render(state: PreferencesNotificationsViewState) {
-        findPreference<Preference>("pref_logging_notification")?.apply {
-            isVisible = state.notificationsChannelsAvailable
-        }
-        findPreference<Preference>("pref_per_app_notifications_settings")?.apply {
-            isVisible = state.notificationsChannelsAvailable
-        }
-        findPreference<Preference>("pref_notifications_permission")?.apply {
-            isVisible = !state.hasNotificationsPermission
-        }
-    }
-
-    @SuppressLint("InlinedApi")
-    override fun handleSideEffect(sideEffect: PreferencesNotificationsSideEffect) {
-        when (sideEffect) {
-            is PreferencesNotificationsSideEffect.OpenLoggingChannelSettings -> {
-                startActivity(
-                    Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
-                        putExtra(Settings.EXTRA_CHANNEL_ID, LOGGING_STATUS_CHANNEL_ID)
-                    },
-                )
-            }
-
-            is PreferencesNotificationsSideEffect.OpenAppNotificationSettings -> {
-                startActivity(
-                    Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
-                    },
-                )
-            }
-
-            // Business logic side effects - handled by EffectHandler
-            is PreferencesNotificationsSideEffect.CheckPermission -> Unit
-        }
+        PreferencesNotificationsScreen(
+            state = state,
+            onBack = { findNavController().popBackStack() },
+            onLoggingNotificationClick = { viewModel.send(PreferencesNotificationsCommand.OpenLoggingNotificationSettings) },
+            onNotificationsPermissionClick = { viewModel.send(PreferencesNotificationsCommand.OpenNotificationsPermissionSettings) },
+        )
     }
 }
