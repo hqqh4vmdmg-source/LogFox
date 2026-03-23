@@ -2,13 +2,20 @@ package com.f0x1d.logfox.feature.preferences.presentation.ui.settings
 
 import androidx.appcompat.app.AppCompatDelegate
 import com.f0x1d.logfox.core.tea.EffectHandler
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetWrapCrashLogLinesFlowUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetOpenCrashesOnStartupUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.SetOpenCrashesOnStartupUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.SetWrapCrashLogLinesUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.datetime.GetDateFormatFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.datetime.GetTimeFormatFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.datetime.SetDateFormatUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.datetime.SetTimeFormatUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetExportLogsInOriginalFormatFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetLogsDisplayLimitFlowUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetLogsExpandedFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetLogsTextSizeFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetLogsUpdateIntervalFlowUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetResumeLoggingWithBottomTouchFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetShowLogContentFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetShowLogDateFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetShowLogPackageFlowUseCase
@@ -17,9 +24,12 @@ import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetShowLogTagFlowUse
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetShowLogTidFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetShowLogTimeFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetShowLogUidFlowUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetExportLogsInOriginalFormatUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetLogsDisplayLimitUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetLogsExpandedUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetLogsTextSizeUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetLogsUpdateIntervalUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetResumeLoggingWithBottomTouchUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetShowLogContentUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetShowLogDateUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetShowLogPackageUseCase
@@ -28,7 +38,9 @@ import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetShowLogTagUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetShowLogTidUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetShowLogTimeUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetShowLogUidUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.ui.GetMonetEnabledFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.ui.GetNightThemeFlowUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.ui.SetMonetEnabledUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.ui.SetNightThemeUseCase
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
@@ -36,10 +48,14 @@ import javax.inject.Inject
 internal class PreferencesUIEffectHandler @Inject constructor(
     private val getNightThemeFlowUseCase: GetNightThemeFlowUseCase,
     private val setNightThemeUseCase: SetNightThemeUseCase,
+    private val getMonetEnabledFlowUseCase: GetMonetEnabledFlowUseCase,
+    private val setMonetEnabledUseCase: SetMonetEnabledUseCase,
     private val getDateFormatFlowUseCase: GetDateFormatFlowUseCase,
     private val setDateFormatUseCase: SetDateFormatUseCase,
     private val getTimeFormatFlowUseCase: GetTimeFormatFlowUseCase,
     private val setTimeFormatUseCase: SetTimeFormatUseCase,
+    private val getOpenCrashesOnStartupUseCase: GetOpenCrashesOnStartupUseCase,
+    private val setOpenCrashesOnStartupUseCase: SetOpenCrashesOnStartupUseCase,
     private val getShowLogDateFlowUseCase: GetShowLogDateFlowUseCase,
     private val setShowLogDateUseCase: SetShowLogDateUseCase,
     private val getShowLogTimeFlowUseCase: GetShowLogTimeFlowUseCase,
@@ -56,12 +72,20 @@ internal class PreferencesUIEffectHandler @Inject constructor(
     private val setShowLogTagUseCase: SetShowLogTagUseCase,
     private val getShowLogContentFlowUseCase: GetShowLogContentFlowUseCase,
     private val setShowLogContentUseCase: SetShowLogContentUseCase,
+    private val getExportLogsInOriginalFormatFlowUseCase: GetExportLogsInOriginalFormatFlowUseCase,
+    private val setExportLogsInOriginalFormatUseCase: SetExportLogsInOriginalFormatUseCase,
+    private val getWrapCrashLogLinesFlowUseCase: GetWrapCrashLogLinesFlowUseCase,
+    private val setWrapCrashLogLinesUseCase: SetWrapCrashLogLinesUseCase,
     private val getLogsUpdateIntervalFlowUseCase: GetLogsUpdateIntervalFlowUseCase,
     private val setLogsUpdateIntervalUseCase: SetLogsUpdateIntervalUseCase,
     private val getLogsTextSizeFlowUseCase: GetLogsTextSizeFlowUseCase,
     private val setLogsTextSizeUseCase: SetLogsTextSizeUseCase,
     private val getLogsDisplayLimitFlowUseCase: GetLogsDisplayLimitFlowUseCase,
     private val setLogsDisplayLimitUseCase: SetLogsDisplayLimitUseCase,
+    private val getLogsExpandedFlowUseCase: GetLogsExpandedFlowUseCase,
+    private val setLogsExpandedUseCase: SetLogsExpandedUseCase,
+    private val getResumeLoggingWithBottomTouchFlowUseCase: GetResumeLoggingWithBottomTouchFlowUseCase,
+    private val setResumeLoggingWithBottomTouchUseCase: SetResumeLoggingWithBottomTouchUseCase,
 ) : EffectHandler<PreferencesUISideEffect, PreferencesUICommand> {
 
     override suspend fun handle(
@@ -73,10 +97,11 @@ internal class PreferencesUIEffectHandler @Inject constructor(
                 combine(
                     combine(
                         getNightThemeFlowUseCase(),
+                        getMonetEnabledFlowUseCase(),
                         getDateFormatFlowUseCase(),
                         getTimeFormatFlowUseCase(),
-                    ) { nightTheme, dateFormat, timeFormat ->
-                        Triple(nightTheme, dateFormat, timeFormat)
+                    ) { nightTheme, monetEnabled, dateFormat, timeFormat ->
+                        listOf<Any>(nightTheme, monetEnabled, dateFormat, timeFormat)
                     },
                     combine(
                         getShowLogDateFlowUseCase(),
@@ -91,22 +116,27 @@ internal class PreferencesUIEffectHandler @Inject constructor(
                         getShowLogPackageFlowUseCase(),
                         getShowLogTagFlowUseCase(),
                         getShowLogContentFlowUseCase(),
+                        getExportLogsInOriginalFormatFlowUseCase(),
+                        getWrapCrashLogLinesFlowUseCase(),
+                    ) { pkg, tag, content, exportOriginal, wrapLines ->
+                        listOf(pkg, tag, content, exportOriginal, wrapLines)
+                    },
+                    combine(
                         getLogsUpdateIntervalFlowUseCase(),
                         getLogsTextSizeFlowUseCase(),
-                    ) { packageName, tag, content, updateInterval, textSize ->
-                        listOf(packageName, tag, content) to (updateInterval to textSize)
+                        getLogsDisplayLimitFlowUseCase(),
+                        getLogsExpandedFlowUseCase(),
+                        getResumeLoggingWithBottomTouchFlowUseCase(),
+                    ) { updateInterval, textSize, displayLimit, expanded, resumeWithTouch ->
+                        listOf<Any>(updateInterval, textSize, displayLimit, expanded, resumeWithTouch)
                     },
-                    getLogsDisplayLimitFlowUseCase(),
-                ) {
-                        (nightTheme, dateFormat, timeFormat),
-                        showFirst,
-                        (showSecond, intervals),
-                        displayLimit,
-                    ->
+                ) { first, showFirst, showSecond, logsSettings ->
                     PreferencesUICommand.PreferencesLoaded(
-                        nightTheme = nightTheme,
-                        dateFormat = dateFormat,
-                        timeFormat = timeFormat,
+                        nightTheme = first[0] as Int,
+                        monetEnabled = first[1] as Boolean,
+                        dateFormat = first[2] as String,
+                        timeFormat = first[3] as String,
+                        openCrashesOnStartup = getOpenCrashesOnStartupUseCase(),
                         showLogDate = showFirst[0] as Boolean,
                         showLogTime = showFirst[1] as Boolean,
                         showLogUid = showFirst[2] as Boolean,
@@ -115,9 +145,13 @@ internal class PreferencesUIEffectHandler @Inject constructor(
                         showLogPackage = showSecond[0] as Boolean,
                         showLogTag = showSecond[1] as Boolean,
                         showLogContent = showSecond[2] as Boolean,
-                        logsUpdateInterval = intervals.first,
-                        logsTextSize = intervals.second,
-                        logsDisplayLimit = displayLimit,
+                        exportLogsInOriginalFormat = showSecond[3] as Boolean,
+                        wrapCrashLogLines = showSecond[4] as Boolean,
+                        logsUpdateInterval = logsSettings[0] as Long,
+                        logsTextSize = logsSettings[1] as Int,
+                        logsDisplayLimit = logsSettings[2] as Int,
+                        logsExpanded = logsSettings[3] as Boolean,
+                        resumeLogsWithTouch = logsSettings[4] as Boolean,
                     )
                 }.collect { command ->
                     onCommand(command)
@@ -134,12 +168,20 @@ internal class PreferencesUIEffectHandler @Inject constructor(
                 AppCompatDelegate.setDefaultNightMode(theme)
             }
 
+            is PreferencesUISideEffect.SaveMonetEnabled -> {
+                setMonetEnabledUseCase(effect.enabled)
+            }
+
             is PreferencesUISideEffect.SaveDateFormat -> {
                 setDateFormatUseCase(effect.format)
             }
 
             is PreferencesUISideEffect.SaveTimeFormat -> {
                 setTimeFormatUseCase(effect.format)
+            }
+
+            is PreferencesUISideEffect.SaveOpenCrashesOnStartup -> {
+                setOpenCrashesOnStartupUseCase(effect.openOnStartup)
             }
 
             is PreferencesUISideEffect.SaveLogsFormat -> {
@@ -155,6 +197,14 @@ internal class PreferencesUIEffectHandler @Inject constructor(
                 }
             }
 
+            is PreferencesUISideEffect.SaveExportLogsInOriginalFormat -> {
+                setExportLogsInOriginalFormatUseCase(effect.inOriginalFormat)
+            }
+
+            is PreferencesUISideEffect.SaveWrapCrashLogLines -> {
+                setWrapCrashLogLinesUseCase(effect.wrap)
+            }
+
             is PreferencesUISideEffect.SaveLogsUpdateInterval -> {
                 setLogsUpdateIntervalUseCase(effect.interval)
             }
@@ -165,6 +215,14 @@ internal class PreferencesUIEffectHandler @Inject constructor(
 
             is PreferencesUISideEffect.SaveLogsDisplayLimit -> {
                 setLogsDisplayLimitUseCase(effect.limit)
+            }
+
+            is PreferencesUISideEffect.SaveLogsExpanded -> {
+                setLogsExpandedUseCase(effect.expanded)
+            }
+
+            is PreferencesUISideEffect.SaveResumeLogsWithTouch -> {
+                setResumeLoggingWithBottomTouchUseCase(effect.resumeWithTouch)
             }
 
             // UI side effects - handled by Fragment

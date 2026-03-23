@@ -74,6 +74,17 @@ import com.f0x1d.logfox.feature.preferences.api.domain.terminal.ShouldFallbackTo
 import com.f0x1d.logfox.feature.preferences.api.domain.ui.GetNightThemeFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.ui.GetNightThemeUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.ui.SetNightThemeUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.ui.GetMonetEnabledUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.ui.GetMonetEnabledFlowUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.ui.SetMonetEnabledUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetCollectingForCrashTypeFlowUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetCollectingForCrashTypeUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.SetCollectingForCrashTypeUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.SetOpenCrashesOnStartupUseCaseimport com.f0x1d.logfox.feature.preferences.api.domain.logs.GetExportLogsInOriginalFormatUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetExportLogsInOriginalFormatFlowUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetExportLogsInOriginalFormatUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetLogsExpandedUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetResumeLoggingWithBottomTouchUseCase
 import com.f0x1d.logfox.feature.preferences.impl.data.crashes.CrashesSettingsLocalDataSource
 import com.f0x1d.logfox.feature.preferences.impl.data.crashes.CrashesSettingsLocalDataSourceImpl
 import com.f0x1d.logfox.feature.preferences.impl.data.crashes.CrashesSettingsRepositoryImpl
@@ -162,6 +173,18 @@ import com.f0x1d.logfox.feature.preferences.impl.domain.terminal.ShouldFallbackT
 import com.f0x1d.logfox.feature.preferences.impl.domain.ui.GetNightThemeFlowUseCaseImpl
 import com.f0x1d.logfox.feature.preferences.impl.domain.ui.GetNightThemeUseCaseImpl
 import com.f0x1d.logfox.feature.preferences.impl.domain.ui.SetNightThemeUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.ui.GetMonetEnabledUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.ui.GetMonetEnabledFlowUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.ui.SetMonetEnabledUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.GetCollectingForCrashTypeFlowUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.GetCollectingForCrashTypeUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.SetCollectingForCrashTypeUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.SetOpenCrashesOnStartupUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.logs.GetExportLogsInOriginalFormatUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.logs.GetExportLogsInOriginalFormatFlowUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.logs.SetExportLogsInOriginalFormatUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.logs.SetLogsExpandedUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.logs.SetResumeLoggingWithBottomTouchUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -597,4 +620,67 @@ internal interface PreferencesModule {
     fun bindGetExportLogsAsTxtUseCase(
         impl: GetExportLogsAsTxtUseCaseImpl,
     ): GetExportLogsAsTxtUseCase
+
+    // UI Use Cases (Monet)
+    @Binds
+    fun bindGetMonetEnabledUseCase(
+        impl: GetMonetEnabledUseCaseImpl,
+    ): GetMonetEnabledUseCase
+
+    @Binds
+    fun bindGetMonetEnabledFlowUseCase(
+        impl: GetMonetEnabledFlowUseCaseImpl,
+    ): GetMonetEnabledFlowUseCase
+
+    @Binds
+    fun bindSetMonetEnabledUseCase(
+        impl: SetMonetEnabledUseCaseImpl,
+    ): SetMonetEnabledUseCase
+
+    // Logs Use Cases (additional)
+    @Binds
+    fun bindGetExportLogsInOriginalFormatUseCase(
+        impl: GetExportLogsInOriginalFormatUseCaseImpl,
+    ): GetExportLogsInOriginalFormatUseCase
+
+    @Binds
+    fun bindGetExportLogsInOriginalFormatFlowUseCase(
+        impl: GetExportLogsInOriginalFormatFlowUseCaseImpl,
+    ): GetExportLogsInOriginalFormatFlowUseCase
+
+    @Binds
+    fun bindSetExportLogsInOriginalFormatUseCase(
+        impl: SetExportLogsInOriginalFormatUseCaseImpl,
+    ): SetExportLogsInOriginalFormatUseCase
+
+    @Binds
+    fun bindSetLogsExpandedUseCase(
+        impl: SetLogsExpandedUseCaseImpl,
+    ): SetLogsExpandedUseCase
+
+    @Binds
+    fun bindSetResumeLoggingWithBottomTouchUseCase(
+        impl: SetResumeLoggingWithBottomTouchUseCaseImpl,
+    ): SetResumeLoggingWithBottomTouchUseCase
+
+    // Crashes Use Cases (additional)
+    @Binds
+    fun bindSetOpenCrashesOnStartupUseCase(
+        impl: SetOpenCrashesOnStartupUseCaseImpl,
+    ): SetOpenCrashesOnStartupUseCase
+
+    @Binds
+    fun bindGetCollectingForCrashTypeFlowUseCase(
+        impl: GetCollectingForCrashTypeFlowUseCaseImpl,
+    ): GetCollectingForCrashTypeFlowUseCase
+
+    @Binds
+    fun bindGetCollectingForCrashTypeUseCase(
+        impl: GetCollectingForCrashTypeUseCaseImpl,
+    ): GetCollectingForCrashTypeUseCase
+
+    @Binds
+    fun bindSetCollectingForCrashTypeUseCase(
+        impl: SetCollectingForCrashTypeUseCaseImpl,
+    ): SetCollectingForCrashTypeUseCase
 }

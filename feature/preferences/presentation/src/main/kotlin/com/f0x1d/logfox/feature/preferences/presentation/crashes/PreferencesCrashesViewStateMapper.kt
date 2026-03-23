@@ -6,5 +6,9 @@ import javax.inject.Inject
 internal class PreferencesCrashesViewStateMapper @Inject constructor() :
     ViewStateMapper<PreferencesCrashesState, PreferencesCrashesViewState> {
 
-    override fun map(state: PreferencesCrashesState) = PreferencesCrashesViewState
+    override fun map(state: PreferencesCrashesState) = PreferencesCrashesViewState(
+        collectJava = state.collectJava,
+        collectJni = state.collectJni,
+        collectAnr = state.collectAnr,
+    )
 }

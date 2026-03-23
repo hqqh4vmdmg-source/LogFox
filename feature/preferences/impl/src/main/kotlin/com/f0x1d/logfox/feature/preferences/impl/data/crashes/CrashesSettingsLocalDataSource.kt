@@ -11,6 +11,7 @@ internal interface CrashesSettingsLocalDataSource {
     fun crashesSortReversedOrder(): Preference<Boolean>
 
     fun collectingFor(crashTypeName: String): Boolean
+    fun collectingForPreference(crashTypeName: String): com.fredporciuncula.flow.preferences.Preference<Boolean>
     fun showingNotificationsFor(crashTypeName: String): Boolean
 
     fun useSeparateNotificationsChannelsForCrashes(): Preference<Boolean>
