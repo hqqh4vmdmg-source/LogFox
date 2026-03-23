@@ -81,6 +81,9 @@ import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetCollectingForC
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetCollectingForCrashTypeUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.SetCollectingForCrashTypeUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.SetOpenCrashesOnStartupUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetShowingNotificationsForCrashTypeUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetShowingNotificationsForCrashTypeFlowUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.SetShowingNotificationsForCrashTypeUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetExportLogsInOriginalFormatUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetExportLogsInOriginalFormatFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetExportLogsInOriginalFormatUseCase
@@ -181,6 +184,9 @@ import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.GetCollectingFor
 import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.GetCollectingForCrashTypeUseCaseImpl
 import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.SetCollectingForCrashTypeUseCaseImpl
 import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.SetOpenCrashesOnStartupUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.GetShowingNotificationsForCrashTypeUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.GetShowingNotificationsForCrashTypeFlowUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.SetShowingNotificationsForCrashTypeUseCaseImpl
 import com.f0x1d.logfox.feature.preferences.impl.domain.logs.GetExportLogsInOriginalFormatUseCaseImpl
 import com.f0x1d.logfox.feature.preferences.impl.domain.logs.GetExportLogsInOriginalFormatFlowUseCaseImpl
 import com.f0x1d.logfox.feature.preferences.impl.domain.logs.SetExportLogsInOriginalFormatUseCaseImpl
@@ -684,4 +690,20 @@ internal interface PreferencesModule {
     fun bindSetCollectingForCrashTypeUseCase(
         impl: SetCollectingForCrashTypeUseCaseImpl,
     ): SetCollectingForCrashTypeUseCase
+
+    // Showing Notifications For Crash Type Use Cases
+    @Binds
+    fun bindGetShowingNotificationsForCrashTypeUseCase(
+        impl: GetShowingNotificationsForCrashTypeUseCaseImpl,
+    ): GetShowingNotificationsForCrashTypeUseCase
+
+    @Binds
+    fun bindGetShowingNotificationsForCrashTypeFlowUseCase(
+        impl: GetShowingNotificationsForCrashTypeFlowUseCaseImpl,
+    ): GetShowingNotificationsForCrashTypeFlowUseCase
+
+    @Binds
+    fun bindSetShowingNotificationsForCrashTypeUseCase(
+        impl: SetShowingNotificationsForCrashTypeUseCaseImpl,
+    ): SetShowingNotificationsForCrashTypeUseCase
 }

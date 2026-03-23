@@ -1,3 +1,6 @@
 package com.f0x1d.logfox.feature.preferences.presentation.links
 
-internal sealed interface PreferencesLinksCommand
+internal sealed interface PreferencesLinksCommand {
+    data class OpenUrl(val url: String) : PreferencesLinksCommand
+}
+

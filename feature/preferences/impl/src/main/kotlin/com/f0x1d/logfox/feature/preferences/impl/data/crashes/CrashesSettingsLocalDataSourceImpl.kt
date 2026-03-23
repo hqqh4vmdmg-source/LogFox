@@ -49,6 +49,11 @@ internal class CrashesSettingsLocalDataSourceImpl @Inject constructor(
         defaultValue = true,
     ).get()
 
+    override fun showingNotificationsForPreference(crashTypeName: String): Preference<Boolean> = booleanPreference(
+        key = "pref_notifications_${crashTypeName.lowercase()}",
+        defaultValue = true,
+    )
+
     override fun useSeparateNotificationsChannelsForCrashes(): Preference<Boolean> = booleanPreference(
         key = KEY_USE_SEPARATE_NOTIFICATIONS_CHANNELS,
         defaultValue = true,

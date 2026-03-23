@@ -1,20 +1,18 @@
 package com.f0x1d.logfox.feature.preferences.presentation.notifications
 
 import android.content.Context
-import androidx.core.content.edit
-import androidx.preference.PreferenceManager
 import com.f0x1d.logfox.core.context.hasNotificationsPermission
 import com.f0x1d.logfox.core.tea.EffectHandler
 import com.f0x1d.logfox.feature.preferences.api.data.CrashesSettingsRepository
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.SetShowingNotificationsForCrashTypeUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 internal class PreferencesNotificationsEffectHandler @Inject constructor(
     @ApplicationContext private val context: Context,
     private val crashesSettingsRepository: CrashesSettingsRepository,
+    private val setShowingNotificationsForCrashTypeUseCase: SetShowingNotificationsForCrashTypeUseCase,
 ) : EffectHandler<PreferencesNotificationsSideEffect, PreferencesNotificationsCommand> {
-
-    private val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
 
     override suspend fun handle(
         effect: PreferencesNotificationsSideEffect,
@@ -45,15 +43,15 @@ internal class PreferencesNotificationsEffectHandler @Inject constructor(
             }
 
             is PreferencesNotificationsSideEffect.SaveJavaNotifications -> {
-                prefs.edit { putBoolean(PREF_KEY_NOTIFICATIONS_JAVA, effect.enabled) }
+                setShowingNotificationsForCrashTypeUseCase(CRASH_TYPE_JAVA, effect.enabled)
             }
 
             is PreferencesNotificationsSideEffect.SaveJniNotifications -> {
-                prefs.edit { putBoolean(PREF_KEY_NOTIFICATIONS_JNI, effect.enabled) }
+                setShowingNotificationsForCrashTypeUseCase(CRASH_TYPE_JNI, effect.enabled)
             }
 
             is PreferencesNotificationsSideEffect.SaveAnrNotifications -> {
-                prefs.edit { putBoolean(PREF_KEY_NOTIFICATIONS_ANR, effect.enabled) }
+                setShowingNotificationsForCrashTypeUseCase(CRASH_TYPE_ANR, effect.enabled)
             }
 
             // UI side effects - handled by Fragment
@@ -66,9 +64,5 @@ internal class PreferencesNotificationsEffectHandler @Inject constructor(
         const val CRASH_TYPE_JAVA = "java"
         const val CRASH_TYPE_JNI = "jni"
         const val CRASH_TYPE_ANR = "anr"
-
-        const val PREF_KEY_NOTIFICATIONS_JAVA = "pref_notifications_java"
-        const val PREF_KEY_NOTIFICATIONS_JNI = "pref_notifications_jni"
-        const val PREF_KEY_NOTIFICATIONS_ANR = "pref_notifications_anr"
     }
 }
