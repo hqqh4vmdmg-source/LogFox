@@ -17,4 +17,5 @@ dependencies {
     api(projects.core.ui.compose.designSystem)
 
     implementation(libs.bundles.androidx.compose)
+    implementation(libs.material)
 }
