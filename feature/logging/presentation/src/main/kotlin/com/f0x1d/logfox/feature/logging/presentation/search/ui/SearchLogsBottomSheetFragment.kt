@@ -1,78 +1,44 @@
 package com.f0x1d.logfox.feature.logging.presentation.search.ui
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import androidx.core.view.isVisible
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
-import com.f0x1d.logfox.core.tea.BaseStoreBottomSheetFragment
-import com.f0x1d.logfox.feature.logging.presentation.databinding.SheetSearchBinding
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.f0x1d.logfox.core.ui.compose.BaseComposeBottomSheetFragment
 import com.f0x1d.logfox.feature.logging.presentation.search.SearchLogsCommand
 import com.f0x1d.logfox.feature.logging.presentation.search.SearchLogsSideEffect
-import com.f0x1d.logfox.feature.logging.presentation.search.SearchLogsState
 import com.f0x1d.logfox.feature.logging.presentation.search.SearchLogsViewModel
-import com.f0x1d.logfox.feature.logging.presentation.search.SearchLogsViewState
+import com.f0x1d.logfox.feature.logging.presentation.search.ui.compose.SearchLogsContent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-internal class SearchLogsBottomSheetFragment :
-    BaseStoreBottomSheetFragment<
-        SheetSearchBinding,
-        SearchLogsViewState,
-        SearchLogsState,
-        SearchLogsCommand,
-        SearchLogsSideEffect,
-        SearchLogsViewModel,
-        >() {
+internal class SearchLogsBottomSheetFragment : BaseComposeBottomSheetFragment() {
 
-    override val viewModel by viewModels<SearchLogsViewModel>()
+    private val viewModel by viewModels<SearchLogsViewModel>()
 
-    override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?) = SheetSearchBinding.inflate(inflater, container, false)
+    @Composable
+    override fun Content() {
+        val state by viewModel.viewState.collectAsStateWithLifecycle()
 
-    override fun SheetSearchBinding.onViewCreated(view: View, savedInstanceState: Bundle?) {
-        clearSearchButton.setOnClickListener {
-            search(null)
-        }
-
-        searchButton.setOnClickListener {
-            search(queryText.text?.toString())
-        }
-        queryText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                search(queryText.text?.toString())
-                true
-            } else {
-                false
+        LaunchedEffect(Unit) {
+            viewModel.sideEffects.collect { effect ->
+                when (effect) {
+                    is SearchLogsSideEffect.Dismiss -> dismiss()
+                    else -> Unit
+                }
             }
         }
 
-        caseSensitiveCheckbox.setOnClickListener {
-            send(SearchLogsCommand.ToggleCaseSensitive)
-        }
-
-        queryText.requestFocus()
-    }
-
-    override fun render(state: SearchLogsViewState) {
-        binding.queryText.setText(state.query)
-        binding.clearSearchButton.isVisible = state.query != null
-        binding.caseSensitiveCheckbox.isChecked = state.caseSensitive
-    }
-
-    override fun handleSideEffect(sideEffect: SearchLogsSideEffect) {
-        when (sideEffect) {
-            is SearchLogsSideEffect.Dismiss -> dismiss()
-
-            // Business logic side effects - handled by EffectHandler
-            else -> Unit
-        }
-    }
-
-    private fun search(text: String?) {
-        if (text?.isEmpty() == true) return
-
-        send(SearchLogsCommand.UpdateQuery(text))
+        SearchLogsContent(
+            state = state,
+            onQueryChanged = { viewModel.send(SearchLogsCommand.UpdateQuery(it)) },
+            onCaseSensitiveToggle = { viewModel.send(SearchLogsCommand.ToggleCaseSensitive) },
+            onSearch = { query ->
+                if (query?.isEmpty() == true) return@SearchLogsContent
+                viewModel.send(SearchLogsCommand.UpdateQuery(query))
+            },
+            onClear = { viewModel.send(SearchLogsCommand.UpdateQuery(null)) },
+        )
     }
 }
