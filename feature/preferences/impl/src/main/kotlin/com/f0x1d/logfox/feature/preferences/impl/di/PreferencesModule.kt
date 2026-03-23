@@ -10,6 +10,7 @@ import com.f0x1d.logfox.feature.preferences.api.data.UISettingsRepository
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetCrashesSortReversedOrderFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetCrashesSortTypeFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetOpenCrashesOnStartupUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetOpenCrashesOnStartupFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetUseSeparateNotificationsChannelsForCrashesFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetUseSeparateNotificationsChannelsForCrashesUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetWrapCrashLogLinesFlowUseCase
@@ -113,6 +114,7 @@ import com.f0x1d.logfox.feature.preferences.impl.data.ui.UISettingsRepositoryImp
 import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.GetCrashesSortReversedOrderFlowUseCaseImpl
 import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.GetCrashesSortTypeFlowUseCaseImpl
 import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.GetOpenCrashesOnStartupUseCaseImpl
+import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.GetOpenCrashesOnStartupFlowUseCaseImpl
 import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.GetUseSeparateNotificationsChannelsForCrashesFlowUseCaseImpl
 import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.GetUseSeparateNotificationsChannelsForCrashesUseCaseImpl
 import com.f0x1d.logfox.feature.preferences.impl.domain.crashes.GetWrapCrashLogLinesFlowUseCaseImpl
@@ -510,6 +512,11 @@ internal interface PreferencesModule {
     fun bindGetOpenCrashesOnStartupUseCase(
         impl: GetOpenCrashesOnStartupUseCaseImpl,
     ): GetOpenCrashesOnStartupUseCase
+
+    @Binds
+    fun bindGetOpenCrashesOnStartupFlowUseCase(
+        impl: GetOpenCrashesOnStartupFlowUseCaseImpl,
+    ): GetOpenCrashesOnStartupFlowUseCase
 
     @Binds
     fun bindGetCrashesSortTypeFlowUseCase(
