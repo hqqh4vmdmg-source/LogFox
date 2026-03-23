@@ -80,7 +80,8 @@ import com.f0x1d.logfox.feature.preferences.api.domain.ui.SetMonetEnabledUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetCollectingForCrashTypeFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.GetCollectingForCrashTypeUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.crashes.SetCollectingForCrashTypeUseCase
-import com.f0x1d.logfox.feature.preferences.api.domain.crashes.SetOpenCrashesOnStartupUseCaseimport com.f0x1d.logfox.feature.preferences.api.domain.logs.GetExportLogsInOriginalFormatUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.crashes.SetOpenCrashesOnStartupUseCase
+import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetExportLogsInOriginalFormatUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.GetExportLogsInOriginalFormatFlowUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetExportLogsInOriginalFormatUseCase
 import com.f0x1d.logfox.feature.preferences.api.domain.logs.SetLogsExpandedUseCase
