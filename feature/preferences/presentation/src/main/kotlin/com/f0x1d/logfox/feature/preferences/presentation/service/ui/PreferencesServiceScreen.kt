@@ -21,10 +21,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.preference.PreferenceManager
 import com.f0x1d.logfox.compose.designsystem.component.button.NavigationBackButton
 import com.f0x1d.logfox.feature.preferences.presentation.service.PreferencesServiceViewState
 import com.f0x1d.logfox.feature.preferences.presentation.ui.components.SettingsCategoryHeader
@@ -39,20 +37,14 @@ internal fun PreferencesServiceScreen(
     state: PreferencesServiceViewState,
     onBack: () -> Unit,
     onTerminalSelected: (TerminalType) -> Unit,
+    onFallbackToDefaultChanged: (Boolean) -> Unit,
     onStartOnBootChanged: (Boolean) -> Unit,
+    onStopLoggingOnBackExitChanged: (Boolean) -> Unit,
     onShowLogsFromAppLaunchChanged: (Boolean) -> Unit,
+    onIncludeDeviceInfoChanged: (Boolean) -> Unit,
+    onIncludeAppInfoChanged: (Boolean) -> Unit,
+    onExportLogsAsTxtChanged: (Boolean) -> Unit,
 ) {
-    val context = LocalContext.current
-    val prefs = remember(context) { PreferenceManager.getDefaultSharedPreferences(context) }
-
-    var fallbackToDefault by remember { mutableStateOf(prefs.getBoolean("pref_fallback_to_default_terminal", true)) }
-    var stopLoggingOnBackExit by remember { mutableStateOf(prefs.getBoolean("pref_stop_logging_on_back_exit", false)) }
-    var startOnBoot by remember { mutableStateOf(prefs.getBoolean("pref_start_on_boot", true)) }
-    var showLogsFromAppLaunch by remember { mutableStateOf(prefs.getBoolean("pref_show_logs_from_app_launch", true)) }
-    var includeDeviceInfo by remember { mutableStateOf(prefs.getBoolean("pref_include_device_info_in_archives", true)) }
-    var includeAppInfo by remember { mutableStateOf(prefs.getBoolean("pref_include_app_info_in_exports", true)) }
-    var exportLogsAsTxt by remember { mutableStateOf(prefs.getBoolean("pref_export_logs_as_txt", false)) }
-
     var showTerminalDialog by remember { mutableStateOf(false) }
 
     if (showTerminalDialog && state.terminalNames.isNotEmpty()) {
@@ -126,11 +118,8 @@ internal fun PreferencesServiceScreen(
                 SettingsSwitchRow(
                     title = stringResource(Strings.fallback_to_default_terminal),
                     subtitle = stringResource(Strings.fallback_to_default_terminal_desc),
-                    checked = fallbackToDefault,
-                    onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_fallback_to_default_terminal", newValue).apply()
-                        fallbackToDefault = newValue
-                    },
+                    checked = state.fallbackToDefault,
+                    onCheckedChange = onFallbackToDefaultChanged,
                 )
             }
             item {
@@ -139,33 +128,22 @@ internal fun PreferencesServiceScreen(
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.start_on_boot),
-                    checked = startOnBoot,
-                    onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_start_on_boot", newValue).apply()
-                        startOnBoot = newValue
-                        onStartOnBootChanged(newValue)
-                    },
+                    checked = state.startOnBoot,
+                    onCheckedChange = onStartOnBootChanged,
                 )
             }
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.stop_logging_on_back_exit),
-                    checked = stopLoggingOnBackExit,
-                    onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_stop_logging_on_back_exit", newValue).apply()
-                        stopLoggingOnBackExit = newValue
-                    },
+                    checked = state.stopLoggingOnBackExit,
+                    onCheckedChange = onStopLoggingOnBackExitChanged,
                 )
             }
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.show_logs_from_app_launch),
-                    checked = showLogsFromAppLaunch,
-                    onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_show_logs_from_app_launch", newValue).apply()
-                        showLogsFromAppLaunch = newValue
-                        onShowLogsFromAppLaunchChanged(newValue)
-                    },
+                    checked = state.showLogsFromAppLaunch,
+                    onCheckedChange = onShowLogsFromAppLaunchChanged,
                 )
             }
             item {
@@ -174,31 +152,22 @@ internal fun PreferencesServiceScreen(
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.include_device_information_in_archives),
-                    checked = includeDeviceInfo,
-                    onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_include_device_info_in_archives", newValue).apply()
-                        includeDeviceInfo = newValue
-                    },
+                    checked = state.includeDeviceInfo,
+                    onCheckedChange = onIncludeDeviceInfoChanged,
                 )
             }
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.include_app_information_in_exports),
-                    checked = includeAppInfo,
-                    onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_include_app_info_in_exports", newValue).apply()
-                        includeAppInfo = newValue
-                    },
+                    checked = state.includeAppInfo,
+                    onCheckedChange = onIncludeAppInfoChanged,
                 )
             }
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.export_logs_as_txt),
-                    checked = exportLogsAsTxt,
-                    onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_export_logs_as_txt", newValue).apply()
-                        exportLogsAsTxt = newValue
-                    },
+                    checked = state.exportLogsAsTxt,
+                    onCheckedChange = onExportLogsAsTxtChanged,
                 )
             }
         }

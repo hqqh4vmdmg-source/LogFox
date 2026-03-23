@@ -7,14 +7,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.preference.PreferenceManager
 import com.f0x1d.logfox.compose.designsystem.component.button.NavigationBackButton
 import com.f0x1d.logfox.feature.preferences.presentation.notifications.PreferencesNotificationsViewState
 import com.f0x1d.logfox.feature.preferences.presentation.ui.components.SettingsCategoryHeader
@@ -29,15 +23,11 @@ internal fun PreferencesNotificationsScreen(
     onBack: () -> Unit,
     onLoggingNotificationClick: () -> Unit,
     onNotificationsPermissionClick: () -> Unit,
+    onUseSeparateChannelsChanged: (Boolean) -> Unit,
+    onJavaNotificationsChanged: (Boolean) -> Unit,
+    onJniNotificationsChanged: (Boolean) -> Unit,
+    onAnrNotificationsChanged: (Boolean) -> Unit,
 ) {
-    val context = LocalContext.current
-    val prefs = remember(context) { PreferenceManager.getDefaultSharedPreferences(context) }
-
-    var useSeparateChannels by remember { mutableStateOf(prefs.getBoolean("pref_notifications_use_separate_channels", true)) }
-    var javaNotifications by remember { mutableStateOf(prefs.getBoolean("pref_notifications_java", true)) }
-    var jniNotifications by remember { mutableStateOf(prefs.getBoolean("pref_notifications_jni", true)) }
-    var anrNotifications by remember { mutableStateOf(prefs.getBoolean("pref_notifications_anr", true)) }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -85,41 +75,29 @@ internal fun PreferencesNotificationsScreen(
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.use_separate_channels_for_crashes),
-                    checked = useSeparateChannels,
-                    onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_notifications_use_separate_channels", newValue).apply()
-                        useSeparateChannels = newValue
-                    },
+                    checked = state.useSeparateChannels,
+                    onCheckedChange = onUseSeparateChannelsChanged,
                 )
             }
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.show_java_crashes_notifications),
-                    checked = javaNotifications,
-                    onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_notifications_java", newValue).apply()
-                        javaNotifications = newValue
-                    },
+                    checked = state.javaNotifications,
+                    onCheckedChange = onJavaNotificationsChanged,
                 )
             }
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.show_jni_crashes_notifications),
-                    checked = jniNotifications,
-                    onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_notifications_jni", newValue).apply()
-                        jniNotifications = newValue
-                    },
+                    checked = state.jniNotifications,
+                    onCheckedChange = onJniNotificationsChanged,
                 )
             }
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.show_anr_notifications),
-                    checked = anrNotifications,
-                    onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_notifications_anr", newValue).apply()
-                        anrNotifications = newValue
-                    },
+                    checked = state.anrNotifications,
+                    onCheckedChange = onAnrNotificationsChanged,
                 )
             }
         }

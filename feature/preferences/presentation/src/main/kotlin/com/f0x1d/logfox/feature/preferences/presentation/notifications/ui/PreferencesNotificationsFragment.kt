@@ -59,7 +59,7 @@ internal class PreferencesNotificationsFragment : BaseComposeFragment() {
                             },
                         )
 
-                    is PreferencesNotificationsSideEffect.CheckPermission -> Unit
+                    else -> Unit
                 }
             }
         }
@@ -69,6 +69,10 @@ internal class PreferencesNotificationsFragment : BaseComposeFragment() {
             onBack = { findNavController().popBackStack() },
             onLoggingNotificationClick = { viewModel.send(PreferencesNotificationsCommand.OpenLoggingNotificationSettings) },
             onNotificationsPermissionClick = { viewModel.send(PreferencesNotificationsCommand.OpenNotificationsPermissionSettings) },
+            onUseSeparateChannelsChanged = { viewModel.send(PreferencesNotificationsCommand.UseSeparateChannelsChanged(it)) },
+            onJavaNotificationsChanged = { viewModel.send(PreferencesNotificationsCommand.JavaNotificationsChanged(it)) },
+            onJniNotificationsChanged = { viewModel.send(PreferencesNotificationsCommand.JniNotificationsChanged(it)) },
+            onAnrNotificationsChanged = { viewModel.send(PreferencesNotificationsCommand.AnrNotificationsChanged(it)) },
         )
     }
 }

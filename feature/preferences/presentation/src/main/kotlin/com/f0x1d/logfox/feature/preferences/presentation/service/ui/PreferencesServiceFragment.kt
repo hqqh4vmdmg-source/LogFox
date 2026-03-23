@@ -46,8 +46,13 @@ internal class PreferencesServiceFragment : BaseComposeFragment() {
             state = state,
             onBack = { findNavController().popBackStack() },
             onTerminalSelected = { viewModel.send(PreferencesServiceCommand.TerminalSelected(it)) },
+            onFallbackToDefaultChanged = { viewModel.send(PreferencesServiceCommand.FallbackToDefaultChanged(it)) },
             onStartOnBootChanged = { viewModel.send(PreferencesServiceCommand.StartOnBootChanged(it)) },
+            onStopLoggingOnBackExitChanged = { viewModel.send(PreferencesServiceCommand.StopLoggingOnBackExitChanged(it)) },
             onShowLogsFromAppLaunchChanged = { viewModel.send(PreferencesServiceCommand.ShowLogsFromAppLaunchChanged(it)) },
+            onIncludeDeviceInfoChanged = { viewModel.send(PreferencesServiceCommand.IncludeDeviceInfoChanged(it)) },
+            onIncludeAppInfoChanged = { viewModel.send(PreferencesServiceCommand.IncludeAppInfoChanged(it)) },
+            onExportLogsAsTxtChanged = { viewModel.send(PreferencesServiceCommand.ExportLogsAsTxtChanged(it)) },
         )
     }
 
