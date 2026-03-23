@@ -4,7 +4,6 @@ plugins {
 
 android {
     namespace = "com.f0x1d.logfox.feature.recordings.presentation"
-    buildFeatures.viewBinding = true
 }
 
 dependencies {
@@ -15,7 +14,6 @@ dependencies {
     implementation(projects.core.ui.compose.fragment)
     implementation(projects.core.ui.icons)
     implementation(projects.core.ui.dialog)
-    implementation(projects.core.ui.view)
     implementation(projects.core.di)
     implementation(projects.core.context)
     implementation(projects.feature.datetime.api)

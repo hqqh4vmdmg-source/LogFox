@@ -1,97 +1,64 @@
 package com.f0x1d.logfox.feature.recordings.presentation.details.ui
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.f0x1d.logfox.core.context.shareFileIntent
-import com.f0x1d.logfox.core.tea.BaseStoreBottomSheetFragment
-import com.f0x1d.logfox.core.ui.view.applyExtendedTextWatcher
-import com.f0x1d.logfox.feature.recordings.presentation.databinding.SheetRecordingDetailsBinding
+import com.f0x1d.logfox.core.ui.compose.BaseComposeBottomSheetFragment
 import com.f0x1d.logfox.feature.recordings.presentation.details.RecordingDetailsCommand
 import com.f0x1d.logfox.feature.recordings.presentation.details.RecordingDetailsSideEffect
-import com.f0x1d.logfox.feature.recordings.presentation.details.RecordingDetailsState
 import com.f0x1d.logfox.feature.recordings.presentation.details.RecordingDetailsViewModel
-import com.f0x1d.logfox.feature.recordings.presentation.details.RecordingDetailsViewState
+import com.f0x1d.logfox.feature.recordings.presentation.details.ui.compose.RecordingDetailsContent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-internal class RecordingDetailsBottomSheetFragment :
-    BaseStoreBottomSheetFragment<
-        SheetRecordingDetailsBinding,
-        RecordingDetailsViewState,
-        RecordingDetailsState,
-        RecordingDetailsCommand,
-        RecordingDetailsSideEffect,
-        RecordingDetailsViewModel,
-        >() {
+internal class RecordingDetailsBottomSheetFragment : BaseComposeBottomSheetFragment() {
 
-    override val viewModel by viewModels<RecordingDetailsViewModel>()
-
-    private val zipLogLauncher = registerForActivityResult(
-        ActivityResultContracts.CreateDocument("application/zip"),
-    ) {
-        it?.let { uri -> send(RecordingDetailsCommand.ExportZipFile(uri)) }
-    }
+    private val viewModel by viewModels<RecordingDetailsViewModel>()
 
     // no plain because android will append .txt itself
     private val logExportLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument("text/*"),
     ) {
-        it?.let { uri -> send(RecordingDetailsCommand.ExportFile(uri)) }
+        it?.let { uri -> viewModel.send(RecordingDetailsCommand.ExportFile(uri)) }
     }
 
-    private var textWatcher: com.f0x1d.logfox.core.ui.view.ExtendedTextWatcher? = null
-
-    override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?) = SheetRecordingDetailsBinding.inflate(inflater, container, false)
-
-    override fun SheetRecordingDetailsBinding.onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?,
+    private val zipLogLauncher = registerForActivityResult(
+        ActivityResultContracts.CreateDocument("application/zip"),
     ) {
-        exportButton.setOnClickListener {
-            send(RecordingDetailsCommand.ExportFileClicked)
-        }
-
-        shareButton.setOnClickListener {
-            send(RecordingDetailsCommand.ShareRecording)
-        }
-
-        zipButton.setOnClickListener {
-            send(RecordingDetailsCommand.ExportZipClicked)
-        }
-
-        textWatcher = title.applyExtendedTextWatcher {
-            send(RecordingDetailsCommand.UpdateTitle(it?.toString().orEmpty()))
-        }
+        it?.let { uri -> viewModel.send(RecordingDetailsCommand.ExportZipFile(uri)) }
     }
 
-    override fun render(state: RecordingDetailsViewState) {
-        textWatcher?.setText(state.currentTitle.orEmpty())
+    @Composable
+    override fun Content() {
+        val state by viewModel.viewState.collectAsStateWithLifecycle()
 
-        state.recordingItem ?: return
-
-        binding.timeText.text = state.recordingItem.formattedDate
-    }
-
-    override fun handleSideEffect(sideEffect: RecordingDetailsSideEffect) {
-        when (sideEffect) {
-            is RecordingDetailsSideEffect.LaunchFileExportPicker -> {
-                logExportLauncher.launch(sideEffect.filename)
+        LaunchedEffect(Unit) {
+            viewModel.sideEffects.collect { effect ->
+                when (effect) {
+                    is RecordingDetailsSideEffect.LaunchFileExportPicker -> {
+                        logExportLauncher.launch(effect.filename)
+                    }
+                    is RecordingDetailsSideEffect.LaunchZipExportPicker -> {
+                        zipLogLauncher.launch(effect.filename)
+                    }
+                    is RecordingDetailsSideEffect.ShareFile -> {
+                        requireContext().shareFileIntent(effect.file)
+                    }
+                    else -> Unit
+                }
             }
-
-            is RecordingDetailsSideEffect.LaunchZipExportPicker -> {
-                zipLogLauncher.launch(sideEffect.filename)
-            }
-
-            is RecordingDetailsSideEffect.ShareFile -> {
-                requireContext().shareFileIntent(sideEffect.file)
-            }
-
-            // Business logic side effects are handled by EffectHandler
-            else -> Unit
         }
+
+        RecordingDetailsContent(
+            state = state,
+            onTitleChanged = { viewModel.send(RecordingDetailsCommand.UpdateTitle(it)) },
+            onExportClick = { viewModel.send(RecordingDetailsCommand.ExportFileClicked) },
+            onShareClick = { viewModel.send(RecordingDetailsCommand.ShareRecording) },
+            onZipClick = { viewModel.send(RecordingDetailsCommand.ExportZipClicked) },
+        )
     }
 }

@@ -4,7 +4,6 @@ plugins {
 
 android {
     namespace = "com.f0x1d.logfox.feature.logging.presentation"
-    buildFeatures.viewBinding = true
 }
 
 dependencies {
