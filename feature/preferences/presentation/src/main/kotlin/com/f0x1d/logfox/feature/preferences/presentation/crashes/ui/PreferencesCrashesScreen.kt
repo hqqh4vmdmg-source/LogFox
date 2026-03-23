@@ -7,29 +7,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.preference.PreferenceManager
 import com.f0x1d.logfox.compose.designsystem.component.button.NavigationBackButton
+import com.f0x1d.logfox.feature.preferences.presentation.crashes.PreferencesCrashesCommand
+import com.f0x1d.logfox.feature.preferences.presentation.crashes.PreferencesCrashesViewState
 import com.f0x1d.logfox.feature.preferences.presentation.ui.components.SettingsCategoryHeader
 import com.f0x1d.logfox.feature.preferences.presentation.ui.components.SettingsSwitchRow
 import com.f0x1d.logfox.feature.strings.Strings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun PreferencesCrashesScreen(onBack: () -> Unit) {
-    val context = LocalContext.current
-    val prefs = remember(context) { PreferenceManager.getDefaultSharedPreferences(context) }
-
-    var collectJava by remember { mutableStateOf(prefs.getBoolean("pref_collect_java", true)) }
-    var collectJni by remember { mutableStateOf(prefs.getBoolean("pref_collect_jni", true)) }
-    var collectAnr by remember { mutableStateOf(prefs.getBoolean("pref_collect_anr", true)) }
-
+internal fun PreferencesCrashesScreen(
+    state: PreferencesCrashesViewState,
+    onBack: () -> Unit,
+    onCommand: (PreferencesCrashesCommand) -> Unit,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -48,30 +41,27 @@ internal fun PreferencesCrashesScreen(onBack: () -> Unit) {
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.collect_java_crashes),
-                    checked = collectJava,
+                    checked = state.collectJava,
                     onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_collect_java", newValue).apply()
-                        collectJava = newValue
+                        onCommand(PreferencesCrashesCommand.CollectJavaChanged(newValue))
                     },
                 )
             }
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.collect_jni_crashes),
-                    checked = collectJni,
+                    checked = state.collectJni,
                     onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_collect_jni", newValue).apply()
-                        collectJni = newValue
+                        onCommand(PreferencesCrashesCommand.CollectJniChanged(newValue))
                     },
                 )
             }
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.collect_anr),
-                    checked = collectAnr,
+                    checked = state.collectAnr,
                     onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_collect_anr", newValue).apply()
-                        collectAnr = newValue
+                        onCommand(PreferencesCrashesCommand.CollectAnrChanged(newValue))
                     },
                 )
             }

@@ -2,8 +2,10 @@ package com.f0x1d.logfox.feature.preferences.presentation.ui.settings
 
 internal data class PreferencesUIViewState(
     val nightTheme: Int,
+    val monetEnabled: Boolean,
     val dateFormat: String,
     val timeFormat: String,
+    val openCrashesOnStartup: Boolean,
     val showLogDate: Boolean,
     val showLogTime: Boolean,
     val showLogUid: Boolean,
@@ -12,7 +14,11 @@ internal data class PreferencesUIViewState(
     val showLogPackage: Boolean,
     val showLogTag: Boolean,
     val showLogContent: Boolean,
+    val exportLogsInOriginalFormat: Boolean,
+    val wrapCrashLogLines: Boolean,
     val logsUpdateInterval: Long,
     val logsTextSize: Int,
     val logsDisplayLimit: Int,
+    val logsExpanded: Boolean,
+    val resumeLogsWithTouch: Boolean,
 )

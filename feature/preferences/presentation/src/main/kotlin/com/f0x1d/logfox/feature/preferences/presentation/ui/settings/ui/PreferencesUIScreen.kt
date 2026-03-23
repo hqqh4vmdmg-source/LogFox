@@ -24,11 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.preference.PreferenceManager
 import com.f0x1d.logfox.compose.designsystem.component.button.NavigationBackButton
 import com.f0x1d.logfox.core.compat.monetAvailable
 import com.f0x1d.logfox.feature.preferences.presentation.ui.components.SettingsCategoryHeader
@@ -55,16 +53,6 @@ internal fun PreferencesUIScreen(
     onBack: () -> Unit,
     onCommand: (PreferencesUICommand) -> Unit,
 ) {
-    val context = LocalContext.current
-    val prefs = remember(context) { PreferenceManager.getDefaultSharedPreferences(context) }
-
-    var monetEnabled by remember { mutableStateOf(prefs.getBoolean("pref_monet_enabled", true)) }
-    var openCrashesOnStartup by remember { mutableStateOf(prefs.getBoolean("pref_open_crashes_page_on_startup", false)) }
-    var exportLogsInOriginalFormat by remember { mutableStateOf(prefs.getBoolean("pref_export_logs_in_original_format", true)) }
-    var wrapCrashLogLines by remember { mutableStateOf(prefs.getBoolean("pref_wrap_crash_log_lines", true)) }
-    var logsExpanded by remember { mutableStateOf(prefs.getBoolean("pref_logs_expanded", false)) }
-    var resumeLogsWithTouch by remember { mutableStateOf(prefs.getBoolean("pref_resume_logs_with_touch", true)) }
-
     var currentDialog by remember { mutableStateOf<UIDialog?>(null) }
     var dialogText by remember { mutableStateOf("") }
 
@@ -339,11 +327,9 @@ internal fun PreferencesUIScreen(
                 item {
                     SettingsSwitchRow(
                         title = stringResource(Strings.monet),
-                        checked = monetEnabled,
+                        checked = state.monetEnabled,
                         onCheckedChange = { newValue ->
-                            prefs.edit().putBoolean("pref_monet_enabled", newValue).apply()
-                            monetEnabled = newValue
-                            onCommand(PreferencesUICommand.MonetEnabledChanged)
+                            onCommand(PreferencesUICommand.MonetEnabledChanged(newValue))
                         },
                     )
                 }
@@ -377,10 +363,9 @@ internal fun PreferencesUIScreen(
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.open_crashes_page_on_startup),
-                    checked = openCrashesOnStartup,
+                    checked = state.openCrashesOnStartup,
                     onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_open_crashes_page_on_startup", newValue).apply()
-                        openCrashesOnStartup = newValue
+                        onCommand(PreferencesUICommand.OpenCrashesOnStartupChanged(newValue))
                     },
                 )
             }
@@ -393,20 +378,18 @@ internal fun PreferencesUIScreen(
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.export_logs_in_original_format),
-                    checked = exportLogsInOriginalFormat,
+                    checked = state.exportLogsInOriginalFormat,
                     onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_export_logs_in_original_format", newValue).apply()
-                        exportLogsInOriginalFormat = newValue
+                        onCommand(PreferencesUICommand.ExportLogsInOriginalFormatChanged(newValue))
                     },
                 )
             }
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.wrap_log_lines_in_details),
-                    checked = wrapCrashLogLines,
+                    checked = state.wrapCrashLogLines,
                     onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_wrap_crash_log_lines", newValue).apply()
-                        wrapCrashLogLines = newValue
+                        onCommand(PreferencesUICommand.WrapCrashLogLinesChanged(newValue))
                     },
                 )
             }
@@ -443,20 +426,18 @@ internal fun PreferencesUIScreen(
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.expanded_logs),
-                    checked = logsExpanded,
+                    checked = state.logsExpanded,
                     onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_logs_expanded", newValue).apply()
-                        logsExpanded = newValue
+                        onCommand(PreferencesUICommand.LogsExpandedChanged(newValue))
                     },
                 )
             }
             item {
                 SettingsSwitchRow(
                     title = stringResource(Strings.resume_logging_with_bottom_edge_touch),
-                    checked = resumeLogsWithTouch,
+                    checked = state.resumeLogsWithTouch,
                     onCheckedChange = { newValue ->
-                        prefs.edit().putBoolean("pref_resume_logs_with_touch", newValue).apply()
-                        resumeLogsWithTouch = newValue
+                        onCommand(PreferencesUICommand.ResumeLogsWithTouchChanged(newValue))
                     },
                 )
             }

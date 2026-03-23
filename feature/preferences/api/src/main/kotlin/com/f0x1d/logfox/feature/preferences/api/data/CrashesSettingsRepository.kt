@@ -11,6 +11,8 @@ interface CrashesSettingsRepository {
     fun crashesSortReversedOrder(): PreferenceStateFlow<Boolean>
 
     fun collectingFor(crashTypeName: String): Boolean
+    fun collectingForFlow(crashTypeName: String): PreferenceStateFlow<Boolean>
+    fun setCollectingFor(crashTypeName: String, value: Boolean)
     fun showingNotificationsFor(crashTypeName: String): Boolean
 
     fun useSeparateNotificationsChannelsForCrashes(): PreferenceStateFlow<Boolean>
