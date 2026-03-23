@@ -1,57 +1,21 @@
 package com.f0x1d.logfox.feature.preferences.presentation.links.ui
 
-import android.os.Bundle
-import android.view.View
+import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
-import com.f0x1d.logfox.core.context.isHorizontalOrientation
-import com.f0x1d.logfox.core.tea.BaseStorePreferenceFragment
-import com.f0x1d.logfox.core.ui.view.setupBackButtonForNavController
-import com.f0x1d.logfox.feature.preferences.presentation.R
-import com.f0x1d.logfox.feature.preferences.presentation.links.PreferencesLinksCommand
-import com.f0x1d.logfox.feature.preferences.presentation.links.PreferencesLinksSideEffect
-import com.f0x1d.logfox.feature.preferences.presentation.links.PreferencesLinksState
+import androidx.navigation.fragment.findNavController
+import com.f0x1d.logfox.core.ui.compose.BaseComposeFragment
 import com.f0x1d.logfox.feature.preferences.presentation.links.PreferencesLinksViewModel
-import com.f0x1d.logfox.feature.preferences.presentation.links.PreferencesLinksViewState
-import com.f0x1d.logfox.feature.strings.Strings
-import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.insetter.applyInsetter
 
 @AndroidEntryPoint
-internal class PreferencesLinksFragment :
-    BaseStorePreferenceFragment<
-        PreferencesLinksViewState,
-        PreferencesLinksState,
-        PreferencesLinksCommand,
-        PreferencesLinksSideEffect,
-        PreferencesLinksViewModel,
-        >() {
+internal class PreferencesLinksFragment : BaseComposeFragment() {
 
-    override val viewModel by viewModels<PreferencesLinksViewModel>()
+    private val viewModel by viewModels<PreferencesLinksViewModel>()
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        addPreferencesFromResource(R.xml.settings_links)
+    @Composable
+    override fun Content() {
+        PreferencesLinksScreen(
+            onBack = { findNavController().popBackStack() },
+        )
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        view.findViewById<MaterialToolbar>(R.id.toolbar).apply {
-            setTitle(Strings.links)
-            setupBackButtonForNavController()
-        }
-
-        listView.apply {
-            clipToPadding = false
-            applyInsetter {
-                type(navigationBars = true) {
-                    padding(vertical = requireContext().isHorizontalOrientation)
-                }
-            }
-        }
-    }
-
-    override fun render(state: PreferencesLinksViewState) = Unit
-
-    override fun handleSideEffect(sideEffect: PreferencesLinksSideEffect) = Unit
 }
