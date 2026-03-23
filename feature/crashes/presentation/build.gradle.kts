@@ -1,10 +1,9 @@
 plugins {
-    alias(libs.plugins.logfox.android.feature)
+    alias(libs.plugins.logfox.android.feature.compose)
 }
 
 android {
     namespace = "com.f0x1d.logfox.feature.crashes.presentation"
-    buildFeatures.viewBinding = true
 }
 
 dependencies {
@@ -16,8 +15,9 @@ dependencies {
     implementation(projects.core.ui.icons)
     implementation(projects.core.ui.view)
     implementation(projects.core.ui.dialog)
-    implementation(projects.core.ui.glide)
-    implementation(projects.core.recycler)
+    implementation(projects.core.ui.compose.fragment)
+    implementation(projects.core.ui.compose.designSystem)
+    implementation(projects.core.ui.compose.base)
     implementation(projects.core.tea.android)
     implementation(projects.core.di)
     implementation(projects.core.compat)
@@ -31,7 +31,6 @@ dependencies {
     implementation(libs.bundles.androidx.navigation)
     implementation(libs.material)
     implementation(libs.androidx.hilt.navigation.fragment)
-    implementation(libs.glide)
-    implementation(libs.insetter)
+    implementation(libs.coil.compose)
     implementation(libs.flow.preferences)
 }
