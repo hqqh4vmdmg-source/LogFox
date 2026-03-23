@@ -1,54 +1,27 @@
 package com.f0x1d.logfox.feature.logging.presentation.extended.ui
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
-import com.f0x1d.logfox.core.tea.BaseStoreFragment
-import com.f0x1d.logfox.core.ui.view.setupBackButtonForNavController
-import com.f0x1d.logfox.feature.logging.presentation.databinding.FragmentLogsExtendedCopyBinding
-import com.f0x1d.logfox.feature.logging.presentation.extended.LogsExtendedCopyCommand
-import com.f0x1d.logfox.feature.logging.presentation.extended.LogsExtendedCopySideEffect
-import com.f0x1d.logfox.feature.logging.presentation.extended.LogsExtendedCopyState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.fragment.findNavController
+import com.f0x1d.logfox.core.ui.compose.BaseComposeFragment
 import com.f0x1d.logfox.feature.logging.presentation.extended.LogsExtendedCopyViewModel
-import com.f0x1d.logfox.feature.logging.presentation.extended.LogsExtendedCopyViewState
+import com.f0x1d.logfox.feature.logging.presentation.extended.ui.compose.LogsExtendedCopyScreenContent
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.insetter.applyInsetter
 
 @AndroidEntryPoint
-internal class LogsExtendedCopyFragment :
-    BaseStoreFragment<
-        FragmentLogsExtendedCopyBinding,
-        LogsExtendedCopyViewState,
-        LogsExtendedCopyState,
-        LogsExtendedCopyCommand,
-        LogsExtendedCopySideEffect,
-        LogsExtendedCopyViewModel,
-        >() {
+internal class LogsExtendedCopyFragment : BaseComposeFragment() {
 
-    override val viewModel by viewModels<LogsExtendedCopyViewModel>()
+    private val viewModel by viewModels<LogsExtendedCopyViewModel>()
 
-    override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?) = FragmentLogsExtendedCopyBinding.inflate(inflater, container, false)
+    @Composable
+    override fun Content() {
+        val state by viewModel.state.collectAsStateWithLifecycle()
 
-    override fun FragmentLogsExtendedCopyBinding.onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?,
-    ) {
-        scrollView.applyInsetter {
-            type(navigationBars = true) {
-                padding(vertical = true)
-            }
-        }
-        toolbar.setupBackButtonForNavController()
-    }
-
-    override fun render(state: LogsExtendedCopyViewState) {
-        binding.logText.text = state.text
-    }
-
-    override fun handleSideEffect(sideEffect: LogsExtendedCopySideEffect) {
-        // All side effects are business logic, handled by EffectHandler
-        // No UI side effects for this screen
+        LogsExtendedCopyScreenContent(
+            state = state,
+            onNavigateBack = { findNavController().navigateUp() },
+        )
     }
 }
