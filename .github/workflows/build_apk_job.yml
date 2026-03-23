@@ -5,7 +5,7 @@ on:
         description: 'Whether to checkout keystore repository'
         required: false
         type: boolean
-        default: true
+        default: false
       version_name:
         description: 'Version name for the APK'
         required: false
@@ -18,9 +18,6 @@ on:
         default: ''
 
 env:
-  KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-  ALIAS: ${{ secrets.ALIAS }}
-  KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
   VERSION_NAME: ${{ inputs.version_name }}
   VERSION_CODE: ${{ inputs.version_code }}
 
@@ -38,15 +35,7 @@ jobs:
           java-version: 21
           distribution: oracle
           cache: 'gradle'
-
-      - name: Checkout keystore repository
-        if: ${{ inputs.checkout_keystore }}
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ secrets.KEYSTORE_GIT_REPOSITORY }}
-          token: ${{ secrets.KEYSTORE_ACCESS_TOKEN }}
-          path: app/keystore
-
+          
       - name: Build APK
         run: bash ./gradlew :app:assembleRelease --stacktrace --no-daemon
 
