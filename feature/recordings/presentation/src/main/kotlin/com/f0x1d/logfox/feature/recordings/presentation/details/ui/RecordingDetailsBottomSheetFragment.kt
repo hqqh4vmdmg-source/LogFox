@@ -34,7 +34,7 @@ internal class RecordingDetailsBottomSheetFragment : BaseComposeBottomSheetFragm
 
     @Composable
     override fun Content() {
-        val state by viewModel.viewState.collectAsStateWithLifecycle()
+        val state by viewModel.state.collectAsStateWithLifecycle()
 
         LaunchedEffect(Unit) {
             viewModel.sideEffects.collect { effect ->
