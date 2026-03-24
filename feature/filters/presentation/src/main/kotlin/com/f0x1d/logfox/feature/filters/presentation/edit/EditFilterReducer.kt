@@ -16,9 +16,9 @@ internal class EditFilterReducer @Inject constructor(
         state: EditFilterState,
         command: EditFilterCommand,
     ): ReduceResult<EditFilterState, EditFilterSideEffect> = when (command) {
-        is EditFilterCommand.Load -> {
-            state.withSideEffects(EditFilterSideEffect.LoadFilter(args.filterId))
-        }
+        is EditFilterCommand.Load -> state.withSideEffects(
+            EditFilterSideEffect.LoadFilter(args.filterId),
+        )
 
         is EditFilterCommand.FilterLoaded -> {
             val enabledLogLevels = MutableList(LogLevel.entries.size) { false }
@@ -41,37 +41,21 @@ internal class EditFilterReducer @Inject constructor(
             ).noSideEffects()
         }
 
-        is EditFilterCommand.UpdateUid -> {
-            state.copy(uid = command.uid).noSideEffects()
-        }
+        is EditFilterCommand.UpdateUid -> state.copy(uid = command.uid).noSideEffects()
 
-        is EditFilterCommand.UpdatePid -> {
-            state.copy(pid = command.pid).noSideEffects()
-        }
+        is EditFilterCommand.UpdatePid -> state.copy(pid = command.pid).noSideEffects()
 
-        is EditFilterCommand.UpdateTid -> {
-            state.copy(tid = command.tid).noSideEffects()
-        }
+        is EditFilterCommand.UpdateTid -> state.copy(tid = command.tid).noSideEffects()
 
-        is EditFilterCommand.UpdatePackageName -> {
-            state.copy(packageName = command.packageName).noSideEffects()
-        }
+        is EditFilterCommand.UpdatePackageName -> state.copy(packageName = command.packageName).noSideEffects()
 
-        is EditFilterCommand.UpdateTag -> {
-            state.copy(tag = command.tag).noSideEffects()
-        }
+        is EditFilterCommand.UpdateTag -> state.copy(tag = command.tag).noSideEffects()
 
-        is EditFilterCommand.UpdateContent -> {
-            state.copy(content = command.content).noSideEffects()
-        }
+        is EditFilterCommand.UpdateContent -> state.copy(content = command.content).noSideEffects()
 
-        is EditFilterCommand.ToggleIncluding -> {
-            state.copy(including = !state.including).noSideEffects()
-        }
+        is EditFilterCommand.ToggleIncluding -> state.copy(including = !state.including).noSideEffects()
 
-        is EditFilterCommand.ToggleEnabled -> {
-            state.copy(enabled = !state.enabled).noSideEffects()
-        }
+        is EditFilterCommand.ToggleEnabled -> state.copy(enabled = !state.enabled).noSideEffects()
 
         is EditFilterCommand.FilterLevel -> {
             val newEnabledLogLevels = state.enabledLogLevels.mapIndexed { index, enabled ->
@@ -80,42 +64,33 @@ internal class EditFilterReducer @Inject constructor(
             state.copy(enabledLogLevels = newEnabledLogLevels).noSideEffects()
         }
 
-        is EditFilterCommand.Save -> {
-            state.withSideEffects(
-                EditFilterSideEffect.SaveFilter(
-                    filter = state.filter,
-                    including = state.including,
-                    enabled = state.enabled,
-                    enabledLogLevels = state.enabledLogLevels.toEnabledLogLevels(),
-                    uid = state.uid,
-                    pid = state.pid,
-                    tid = state.tid,
-                    packageName = state.packageName,
-                    tag = state.tag,
-                    content = state.content,
-                ),
-                EditFilterSideEffect.Close,
-            )
-        }
+        is EditFilterCommand.Save -> state.withSideEffects(
+            EditFilterSideEffect.SaveFilter(
+                filter = state.filter,
+                including = state.including,
+                enabled = state.enabled,
+                enabledLogLevels = state.enabledLogLevels.toEnabledLogLevels(),
+                uid = state.uid,
+                pid = state.pid,
+                tid = state.tid,
+                packageName = state.packageName,
+                tag = state.tag,
+                content = state.content,
+            ),
+            EditFilterSideEffect.Close,
+        )
 
-        is EditFilterCommand.Export -> {
-            state.withSideEffects(
-                EditFilterSideEffect.ExportFilter(
-                    uri = command.uri,
-                    filter = state.filter,
-                ),
-            )
-        }
+        is EditFilterCommand.Export -> state.withSideEffects(
+            EditFilterSideEffect.ExportFilter(
+                uri = command.uri,
+                filter = state.filter,
+            ),
+        )
 
-        is EditFilterCommand.SelectApp -> {
-            state.withSideEffects(EditFilterSideEffect.NavigateToAppPicker)
-        }
+        is EditFilterCommand.SelectApp -> state.withSideEffects(EditFilterSideEffect.NavigateToAppPicker)
     }
 
-    private fun List<Boolean>.toEnabledLogLevels(): List<LogLevel> = mapIndexedNotNull {
-            index,
-            value,
-        ->
+    private fun List<Boolean>.toEnabledLogLevels(): List<LogLevel> = mapIndexedNotNull { index, value ->
         if (value) LogLevel.entries[index] else null
     }
 }
