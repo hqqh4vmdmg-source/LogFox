@@ -65,9 +65,7 @@ internal class RecordingsEffectHandler @Inject constructor(
                 }
             }
 
-            is RecordingsSideEffect.ClearRecordings -> {
-                clearAllRecordingsUseCase()
-            }
+            is RecordingsSideEffect.ClearRecordings -> clearAllRecordingsUseCase()
 
             is RecordingsSideEffect.SaveAll -> {
                 onCommand(
@@ -77,9 +75,7 @@ internal class RecordingsEffectHandler @Inject constructor(
                 onCommand(RecordingsCommand.SaveAllCompleted(recording))
             }
 
-            is RecordingsSideEffect.DeleteRecording -> {
-                deleteRecordingUseCase(effect.recordingId)
-            }
+            is RecordingsSideEffect.DeleteRecording -> deleteRecordingUseCase(effect.recordingId)
 
             // UI side effects - handled by Fragment, ignored here
             is RecordingsSideEffect.ShowSnackbar -> Unit
