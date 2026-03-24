@@ -35,29 +35,24 @@ internal class CrashDetailsEffectHandler @Inject constructor(
         onCommand: suspend (CrashDetailsCommand) -> Unit,
     ) {
         when (effect) {
-            is CrashDetailsSideEffect.LoadCrash -> {
-                getCrashAndLogByIdFlowUseCase(crashId).collect { value ->
+            is CrashDetailsSideEffect.LoadCrash -> getCrashAndLogByIdFlowUseCase(crashId)
+                .collect { value ->
                     value?.let { (crash, crashLog) ->
                         onCommand(CrashDetailsCommand.CrashLoaded(crash, crashLog))
                     }
                 }
-            }
 
-            is CrashDetailsSideEffect.SetWrapCrashLogLines -> {
-                setWrapCrashLogLinesUseCase(effect.wrap)
-            }
+            is CrashDetailsSideEffect.SetWrapCrashLogLines -> setWrapCrashLogLinesUseCase(effect.wrap)
 
-            is CrashDetailsSideEffect.ObservePreferences -> {
-                combine(
-                    getWrapCrashLogLinesFlowUseCase(),
-                    getUseSeparateNotificationsChannelsForCrashesFlowUseCase(),
-                ) { wrapCrashLogLines, useSeparateNotificationsChannelsForCrashes ->
-                    CrashDetailsCommand.PreferencesUpdated(
-                        wrapCrashLogLines = wrapCrashLogLines,
-                        useSeparateNotificationsChannelsForCrashes = useSeparateNotificationsChannelsForCrashes,
-                    )
-                }.collect(onCommand)
-            }
+            is CrashDetailsSideEffect.ObservePreferences -> combine(
+                getWrapCrashLogLinesFlowUseCase(),
+                getUseSeparateNotificationsChannelsForCrashesFlowUseCase(),
+            ) { wrapCrashLogLines, useSeparateNotificationsChannelsForCrashes ->
+                CrashDetailsCommand.PreferencesUpdated(
+                    wrapCrashLogLines = wrapCrashLogLines,
+                    useSeparateNotificationsChannelsForCrashes = useSeparateNotificationsChannelsForCrashes,
+                )
+            }.collect(onCommand)
 
             is CrashDetailsSideEffect.PrepareFileExport -> {
                 val extension = if (getExportLogsAsTxtUseCase()) "txt" else "log"
@@ -70,31 +65,23 @@ internal class CrashDetailsEffectHandler @Inject constructor(
                 onCommand(CrashDetailsCommand.ZipExportPickerReady(filename))
             }
 
-            is CrashDetailsSideEffect.ExportCrashToZip -> {
-                exportCrashToZipUseCase(crashId, effect.uri)
-            }
+            is CrashDetailsSideEffect.ExportCrashToZip -> exportCrashToZipUseCase(crashId, effect.uri)
 
-            is CrashDetailsSideEffect.ExportCrashToFile -> {
-                exportCrashToFileUseCase(crashId, effect.uri)
-            }
+            is CrashDetailsSideEffect.ExportCrashToFile -> exportCrashToFileUseCase(crashId, effect.uri)
 
-            is CrashDetailsSideEffect.ChangeBlacklist -> {
-                checkAppDisabledUseCase(effect.appCrash.packageName)
-            }
+            is CrashDetailsSideEffect.ChangeBlacklist -> checkAppDisabledUseCase(effect.appCrash.packageName)
 
-            is CrashDetailsSideEffect.DeleteCrash -> {
-                deleteCrashUseCase(effect.appCrash.id)
-            }
+            is CrashDetailsSideEffect.DeleteCrash -> deleteCrashUseCase(effect.appCrash.id)
 
             // UI side effects - handled by Fragment
-            is CrashDetailsSideEffect.OpenAppInfo -> Unit
-            is CrashDetailsSideEffect.OpenNotificationSettings -> Unit
-            is CrashDetailsSideEffect.ConfirmBlacklist -> Unit
-            is CrashDetailsSideEffect.ConfirmDelete -> Unit
-            is CrashDetailsSideEffect.CopyText -> Unit
-            is CrashDetailsSideEffect.ShareCrashLog -> Unit
-            is CrashDetailsSideEffect.Close -> Unit
-            is CrashDetailsSideEffect.LaunchFileExportPicker -> Unit
+            is CrashDetailsSideEffect.OpenAppInfo,
+            is CrashDetailsSideEffect.OpenNotificationSettings,
+            is CrashDetailsSideEffect.ConfirmBlacklist,
+            is CrashDetailsSideEffect.ConfirmDelete,
+            is CrashDetailsSideEffect.CopyText,
+            is CrashDetailsSideEffect.ShareCrashLog,
+            is CrashDetailsSideEffect.Close,
+            is CrashDetailsSideEffect.LaunchFileExportPicker,
             is CrashDetailsSideEffect.LaunchZipExportPicker -> Unit
         }
     }

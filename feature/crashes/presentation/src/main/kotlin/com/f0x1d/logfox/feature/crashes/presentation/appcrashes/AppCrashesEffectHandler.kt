@@ -23,24 +23,16 @@ internal class AppCrashesEffectHandler @Inject constructor(
         onCommand: suspend (AppCrashesCommand) -> Unit,
     ) {
         when (effect) {
-            is AppCrashesSideEffect.LoadCrashes -> {
-                getAllCrashesFlowUseCase()
-                    .map { crashes ->
-                        crashes.filter { crash ->
-                            crash.packageName == packageName
-                        }.map {
-                            AppCrashesCount(it)
-                        }
-                    }
-                    .flowOn(defaultDispatcher)
-                    .collect { crashes ->
-                        onCommand(AppCrashesCommand.CrashesLoaded(crashes))
-                    }
-            }
+            is AppCrashesSideEffect.LoadCrashes -> getAllCrashesFlowUseCase()
+                .map { crashes ->
+                    crashes.filter { crash ->
+                        crash.packageName == packageName
+                    }.map { AppCrashesCount(it) }
+                }
+                .flowOn(defaultDispatcher)
+                .collect { crashes -> onCommand(AppCrashesCommand.CrashesLoaded(crashes)) }
 
-            is AppCrashesSideEffect.DeleteCrash -> {
-                deleteCrashUseCase(effect.crashId)
-            }
+            is AppCrashesSideEffect.DeleteCrash -> deleteCrashUseCase(effect.crashId)
 
             // UI side effects - handled by Fragment
             is AppCrashesSideEffect.NavigateToCrashDetails -> Unit
