@@ -7,7 +7,5 @@ import javax.inject.Inject
 internal class UpdateCrashesSearchQueryUseCaseImpl @Inject constructor(
     private val crashesSearchLocalDataSource: CrashesSearchLocalDataSource,
 ) : UpdateCrashesSearchQueryUseCase {
-    override fun invoke(query: String) {
-        crashesSearchLocalDataSource.updateQuery(query)
-    }
+    override fun invoke(query: String) = crashesSearchLocalDataSource.updateQuery(query)
 }

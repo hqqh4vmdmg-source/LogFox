@@ -9,7 +9,6 @@ internal class SelectTerminalUseCaseImpl @Inject constructor(
     private val terminalSettingsRepository: TerminalSettingsRepository,
 ) : SelectTerminalUseCase {
 
-    override suspend fun invoke(type: TerminalType) {
+    override suspend fun invoke(type: TerminalType) =
         terminalSettingsRepository.selectedTerminalType().set(type)
-    }
 }

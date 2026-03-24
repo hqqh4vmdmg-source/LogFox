@@ -8,7 +8,5 @@ internal class SetLogsUpdateIntervalUseCaseImpl @Inject constructor(
     private val logsSettingsRepository: LogsSettingsRepository,
 ) : SetLogsUpdateIntervalUseCase {
 
-    override fun invoke(interval: Long) {
-        logsSettingsRepository.logsUpdateInterval().set(interval)
-    }
+    override fun invoke(interval: Long) = logsSettingsRepository.logsUpdateInterval().set(interval)
 }

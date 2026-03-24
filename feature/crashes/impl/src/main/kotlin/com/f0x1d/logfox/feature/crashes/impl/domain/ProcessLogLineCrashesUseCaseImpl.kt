@@ -9,7 +9,5 @@ internal class ProcessLogLineCrashesUseCaseImpl @Inject constructor(
     private val crashDetectingRepository: CrashDetectingRepository,
 ) : ProcessLogLineCrashesUseCase {
 
-    override suspend fun invoke(logLine: LogLine) {
-        crashDetectingRepository.processLogLine(logLine)
-    }
+    override suspend fun invoke(logLine: LogLine) = crashDetectingRepository.processLogLine(logLine)
 }

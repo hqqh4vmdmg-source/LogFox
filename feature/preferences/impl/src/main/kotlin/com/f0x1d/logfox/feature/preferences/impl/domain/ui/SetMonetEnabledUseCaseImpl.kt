@@ -8,7 +8,5 @@ internal class SetMonetEnabledUseCaseImpl @Inject constructor(
     private val uiSettingsRepository: UISettingsRepository,
 ) : SetMonetEnabledUseCase {
 
-    override fun invoke(enabled: Boolean) {
-        uiSettingsRepository.monetEnabled().set(enabled)
-    }
+    override fun invoke(enabled: Boolean) = uiSettingsRepository.monetEnabled().set(enabled)
 }

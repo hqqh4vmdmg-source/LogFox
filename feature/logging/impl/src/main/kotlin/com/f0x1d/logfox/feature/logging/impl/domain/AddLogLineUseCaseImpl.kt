@@ -10,7 +10,5 @@ internal class AddLogLineUseCaseImpl @Inject constructor(
     private val logsBufferDataSource: LogsBufferDataSource,
     private val getLogsDisplayLimitUseCase: GetLogsDisplayLimitUseCase,
 ) : AddLogLineUseCase {
-    override suspend fun invoke(logLine: LogLine) {
-        logsBufferDataSource.add(logLine, getLogsDisplayLimitUseCase())
-    }
+    override suspend fun invoke(logLine: LogLine) = logsBufferDataSource.add(logLine, getLogsDisplayLimitUseCase())
 }

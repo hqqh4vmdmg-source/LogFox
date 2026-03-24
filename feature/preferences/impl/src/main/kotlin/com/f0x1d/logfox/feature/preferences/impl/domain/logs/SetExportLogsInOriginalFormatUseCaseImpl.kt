@@ -8,7 +8,5 @@ internal class SetExportLogsInOriginalFormatUseCaseImpl @Inject constructor(
     private val logsSettingsRepository: LogsSettingsRepository,
 ) : SetExportLogsInOriginalFormatUseCase {
 
-    override fun invoke(inOriginalFormat: Boolean) {
-        logsSettingsRepository.exportLogsInOriginalFormat().set(inOriginalFormat)
-    }
+    override fun invoke(inOriginalFormat: Boolean) = logsSettingsRepository.exportLogsInOriginalFormat().set(inOriginalFormat)
 }

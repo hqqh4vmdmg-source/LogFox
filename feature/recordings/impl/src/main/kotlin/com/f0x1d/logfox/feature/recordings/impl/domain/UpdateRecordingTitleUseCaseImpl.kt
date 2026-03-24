@@ -7,7 +7,5 @@ import javax.inject.Inject
 internal class UpdateRecordingTitleUseCaseImpl @Inject constructor(
     private val recordingsRepository: RecordingsRepository,
 ) : UpdateRecordingTitleUseCase {
-    override suspend fun invoke(recordingId: Long, title: String) {
-        recordingsRepository.updateTitle(recordingId, title)
-    }
+    override suspend fun invoke(recordingId: Long, title: String) = recordingsRepository.updateTitle(recordingId, title)
 }

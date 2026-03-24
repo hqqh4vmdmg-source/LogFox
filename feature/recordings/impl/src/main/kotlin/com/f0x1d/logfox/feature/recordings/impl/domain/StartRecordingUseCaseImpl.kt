@@ -7,7 +7,5 @@ import javax.inject.Inject
 internal class StartRecordingUseCaseImpl @Inject constructor(
     private val recordingLocalDataSource: RecordingLocalDataSource,
 ) : StartRecordingUseCase {
-    override suspend fun invoke() {
-        recordingLocalDataSource.record()
-    }
+    override suspend fun invoke() = recordingLocalDataSource.record()
 }

@@ -8,7 +8,5 @@ internal class SetLogsDisplayLimitUseCaseImpl @Inject constructor(
     private val logsSettingsRepository: LogsSettingsRepository,
 ) : SetLogsDisplayLimitUseCase {
 
-    override fun invoke(limit: Int) {
-        logsSettingsRepository.logsDisplayLimit().set(limit)
-    }
+    override fun invoke(limit: Int) = logsSettingsRepository.logsDisplayLimit().set(limit)
 }

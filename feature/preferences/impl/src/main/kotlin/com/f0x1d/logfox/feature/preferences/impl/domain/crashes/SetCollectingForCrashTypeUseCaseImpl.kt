@@ -8,7 +8,5 @@ internal class SetCollectingForCrashTypeUseCaseImpl @Inject constructor(
     private val crashesSettingsRepository: CrashesSettingsRepository,
 ) : SetCollectingForCrashTypeUseCase {
 
-    override fun invoke(crashTypeName: String, collecting: Boolean) {
-        crashesSettingsRepository.setCollectingFor(crashTypeName, collecting)
-    }
+    override fun invoke(crashTypeName: String, collecting: Boolean) = crashesSettingsRepository.setCollectingFor(crashTypeName, collecting)
 }

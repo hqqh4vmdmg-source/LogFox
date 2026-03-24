@@ -7,7 +7,5 @@ import javax.inject.Inject
 internal class ClearAllRecordingsUseCaseImpl @Inject constructor(
     private val recordingsRepository: RecordingsRepository,
 ) : ClearAllRecordingsUseCase {
-    override suspend fun invoke() {
-        recordingsRepository.clear()
-    }
+    override suspend fun invoke() = recordingsRepository.clear()
 }

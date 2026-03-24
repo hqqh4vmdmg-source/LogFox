@@ -9,7 +9,5 @@ internal class ExportCrashToFileUseCaseImpl @Inject constructor(
     private val crashExportRepository: CrashExportRepository,
 ) : ExportCrashToFileUseCase {
 
-    override suspend fun invoke(crashId: Long, uri: Uri): Result<Unit> = runCatching {
-        crashExportRepository.exportToFile(crashId, uri)
-    }
+    override suspend fun invoke(crashId: Long, uri: Uri): Result<Unit> = runCatching = crashExportRepository.exportToFile(crashId, uri)
 }

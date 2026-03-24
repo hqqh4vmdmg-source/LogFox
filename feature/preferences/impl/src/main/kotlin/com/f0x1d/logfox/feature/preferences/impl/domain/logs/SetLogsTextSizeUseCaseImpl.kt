@@ -8,7 +8,5 @@ internal class SetLogsTextSizeUseCaseImpl @Inject constructor(
     private val logsSettingsRepository: LogsSettingsRepository,
 ) : SetLogsTextSizeUseCase {
 
-    override fun invoke(size: Int) {
-        logsSettingsRepository.logsTextSize().set(size)
-    }
+    override fun invoke(size: Int) = logsSettingsRepository.logsTextSize().set(size)
 }

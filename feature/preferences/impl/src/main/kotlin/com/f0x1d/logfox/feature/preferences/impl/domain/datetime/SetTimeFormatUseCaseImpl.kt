@@ -8,7 +8,5 @@ internal class SetTimeFormatUseCaseImpl @Inject constructor(
     private val dateTimeSettingsRepository: DateTimeSettingsRepository,
 ) : SetTimeFormatUseCase {
 
-    override fun invoke(format: String) {
-        dateTimeSettingsRepository.timeFormat().set(format)
-    }
+    override fun invoke(format: String) = dateTimeSettingsRepository.timeFormat().set(format)
 }
