@@ -45,5 +45,5 @@ private fun Context.resolveAttribute(@AttrRes attributeResId: Int) = TypedValue(
 
 private fun Context.resolveBoolean(@AttrRes attributeResId: Int, defaultValue: Boolean = false): Boolean {
     val value = resolveAttribute(attributeResId) ?: return defaultValue
-    return value.type == TypedValue.TYPE_INT_BOOLEAN && value.data != 0
+    return if (value.type == TypedValue.TYPE_INT_BOOLEAN) value.data != 0 else defaultValue
 }

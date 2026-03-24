@@ -142,7 +142,7 @@ internal class CrashesNotificationsLocalDataSourceImpl @Inject constructor(
     override fun cancelAllCrashNotifications() {
         context.notificationManager.activeNotifications.forEach { notification ->
             if (notification.tag?.contains('.') == true) {
-                context.notificationManagerCompat.cancel(notification.tag, notification.id)
+                context.notificationManager.cancel(notification.tag, notification.id)
             }
         }
     }
