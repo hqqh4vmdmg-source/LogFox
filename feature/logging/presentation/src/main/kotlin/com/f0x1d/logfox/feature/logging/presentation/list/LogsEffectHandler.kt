@@ -54,9 +54,7 @@ internal class LogsEffectHandler @Inject constructor(
                         filters = filters,
                         showLogValues = showLogValues,
                     )
-                }.collect { command ->
-                    onCommand(command)
-                }
+                }.collect(onCommand)
             }
 
             is LogsSideEffect.ObservePreferences -> {
@@ -70,9 +68,7 @@ internal class LogsEffectHandler @Inject constructor(
                         textSize = textSize,
                         logsExpanded = logsExpanded,
                     )
-                }.collect { command ->
-                    onCommand(command)
-                }
+                }.collect(onCommand)
             }
 
             is LogsSideEffect.SyncSelectedLines -> {
@@ -94,16 +90,12 @@ internal class LogsEffectHandler @Inject constructor(
             }
 
             is LogsSideEffect.FormatAndCopyLog -> {
-                val formattedText = formatLogLineUseCase(
-                    logLine = effect.logLine,
-                )
+                val formattedText = formatLogLineUseCase(effect.logLine)
                 onCommand(LogsCommand.CopyFormattedText(formattedText))
             }
 
             is LogsSideEffect.FormatAndCopyLogs -> {
-                val formattedText = effect.lines.joinToString("\n") { line ->
-                    formatLogLineUseCase(line)
-                }
+                val formattedText = effect.lines.joinToString("\n") { formatLogLineUseCase(it) }
                 onCommand(LogsCommand.CopyFormattedText(formattedText))
             }
 

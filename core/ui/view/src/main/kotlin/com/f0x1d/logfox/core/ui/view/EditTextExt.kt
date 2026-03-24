@@ -14,9 +14,9 @@ class ExtendedTextWatcher(
         editText.addTextChangedListener(this)
     }
 
-    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
-    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
 
     override fun afterTextChanged(e: Editable?) {
         if (enabled) {

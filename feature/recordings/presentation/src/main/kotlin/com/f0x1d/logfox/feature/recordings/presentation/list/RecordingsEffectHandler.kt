@@ -45,9 +45,7 @@ internal class RecordingsEffectHandler @Inject constructor(
                         recordings = recordings,
                         recordingState = recordingState,
                     )
-                }.collect { command ->
-                    onCommand(command)
-                }
+                }.collect(onCommand)
             }
 
             is RecordingsSideEffect.ToggleStartStop -> {

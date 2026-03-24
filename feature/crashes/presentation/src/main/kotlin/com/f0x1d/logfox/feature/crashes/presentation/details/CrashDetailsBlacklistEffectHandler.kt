@@ -33,9 +33,7 @@ internal class CrashDetailsBlacklistEffectHandler @Inject constructor(
                     }
             }
 
-            else -> {
-                // Handled by other effect handlers
-            }
+            else -> Unit // Handled by other effect handlers
         }
     }
 }
