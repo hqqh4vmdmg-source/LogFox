@@ -74,8 +74,8 @@ internal class EditFilterReducer @Inject constructor(
         }
 
         is EditFilterCommand.FilterLevel -> {
-            val newEnabledLogLevels = state.enabledLogLevels.toMutableList().apply {
-                this[command.which] = command.filtering
+            val newEnabledLogLevels = state.enabledLogLevels.mapIndexed { index, enabled ->
+                if (index == command.which) command.filtering else enabled
             }
             state.copy(enabledLogLevels = newEnabledLogLevels).noSideEffects()
         }

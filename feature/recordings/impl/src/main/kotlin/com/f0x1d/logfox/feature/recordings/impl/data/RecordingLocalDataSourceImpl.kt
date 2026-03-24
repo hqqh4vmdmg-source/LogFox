@@ -21,7 +21,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -48,7 +47,7 @@ internal class RecordingLocalDataSourceImpl @Inject constructor(
     private var filtersCollectionJob: Job? = null
 
     private val recordingsDir = File("${context.filesDir.absolutePath}/recordings").apply {
-        if (!exists()) mkdirs()
+        mkdirs()
     }
 
     private val state = MutableStateFlow(RecordingState.IDLE)
@@ -77,7 +76,7 @@ internal class RecordingLocalDataSourceImpl @Inject constructor(
 
         startFiltersCollection()
 
-        state.update { RecordingState.RECORDING }
+        state.value = RecordingState.RECORDING
         notificationsLocalDataSource.sendRecordingNotification()
     }
 
@@ -96,17 +95,17 @@ internal class RecordingLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun pause() = withContext(ioDispatcher) {
-        state.update { RecordingState.PAUSED }
+        state.value = RecordingState.PAUSED
         notificationsLocalDataSource.sendRecordingPausedNotification()
     }
 
     override suspend fun resume() = withContext(ioDispatcher) {
-        state.update { RecordingState.RECORDING }
+        state.value = RecordingState.RECORDING
         notificationsLocalDataSource.sendRecordingNotification()
     }
 
     override suspend fun end(): LogRecording? = withContext(ioDispatcher) {
-        state.update { RecordingState.SAVING }
+        state.value = RecordingState.SAVING
         stopFiltersCollection()
         dumpLines()
         notificationsLocalDataSource.cancelRecordingNotification()
@@ -121,7 +120,7 @@ internal class RecordingLocalDataSourceImpl @Inject constructor(
             it.copy(id = logRecordingDataSource.insert(it.toEntity()))
         }
 
-        state.update { RecordingState.IDLE }
+        state.value = RecordingState.IDLE
 
         return@withContext logRecording
     }

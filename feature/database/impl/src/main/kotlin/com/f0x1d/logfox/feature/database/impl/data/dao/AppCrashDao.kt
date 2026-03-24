@@ -60,12 +60,10 @@ internal interface AppCrashDao {
 
     @Transaction
     suspend fun clearIfNeeded() {
-        val itemsToDelete = getAll(deleted = true).filter {
-            (System.currentTimeMillis() - (it.deletedTime ?: 0)) >= DAYS_30
-        }.also {
-            if (it.isEmpty()) return
+        val itemsToDelete = getAll(deleted = true).filter { entity ->
+            (System.currentTimeMillis() - (entity.deletedTime ?: 0L)) >= DAYS_30
         }
-
+        if (itemsToDelete.isEmpty()) return
         _delete(itemsToDelete)
     }
 
