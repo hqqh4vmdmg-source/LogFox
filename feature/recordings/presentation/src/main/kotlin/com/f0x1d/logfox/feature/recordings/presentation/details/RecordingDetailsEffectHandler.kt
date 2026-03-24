@@ -31,14 +31,12 @@ internal class RecordingDetailsEffectHandler @Inject constructor(
         onCommand: suspend (RecordingDetailsCommand) -> Unit,
     ) {
         when (effect) {
-            is RecordingDetailsSideEffect.LoadRecording -> {
-                getRecordingByIdFlowUseCase(recordingId)
-                    .distinctUntilChanged()
-                    .take(1)
-                    .collect { recording ->
-                        onCommand(RecordingDetailsCommand.RecordingLoaded(recording))
-                    }
-            }
+            is RecordingDetailsSideEffect.LoadRecording -> getRecordingByIdFlowUseCase(recordingId)
+                .distinctUntilChanged()
+                .take(1)
+                .collect { recording ->
+                    onCommand(RecordingDetailsCommand.RecordingLoaded(recording))
+                }
 
             is RecordingDetailsSideEffect.PrepareFileExport -> {
                 val recording = getRecordingByIdFlowUseCase(recordingId).firstOrNull()
@@ -70,8 +68,8 @@ internal class RecordingDetailsEffectHandler @Inject constructor(
             }
 
             // UI side effects - handled by Fragment
-            is RecordingDetailsSideEffect.LaunchFileExportPicker -> Unit
-            is RecordingDetailsSideEffect.LaunchZipExportPicker -> Unit
+            is RecordingDetailsSideEffect.LaunchFileExportPicker,
+            is RecordingDetailsSideEffect.LaunchZipExportPicker,
             is RecordingDetailsSideEffect.ShareFile -> Unit
         }
     }

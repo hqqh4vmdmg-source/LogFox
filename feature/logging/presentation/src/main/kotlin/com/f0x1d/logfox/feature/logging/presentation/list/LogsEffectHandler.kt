@@ -39,37 +39,33 @@ internal class LogsEffectHandler @Inject constructor(
 
     override suspend fun handle(effect: LogsSideEffect, onCommand: suspend (LogsCommand) -> Unit) {
         when (effect) {
-            is LogsSideEffect.LoadLogs -> {
-                combine(
-                    getLogsFlowUseCase(),
-                    getAllEnabledFiltersFlowUseCase(),
-                    getQueryFlowUseCase(),
-                    getCaseSensitiveFlowUseCase(),
-                    getShowLogValuesFlowUseCase(),
-                ) { logs, filters, query, caseSensitive, showLogValues ->
-                    LogsCommand.LogsLoaded(
-                        logs = logs,
-                        query = query,
-                        caseSensitive = caseSensitive,
-                        filters = filters,
-                        showLogValues = showLogValues,
-                    )
-                }.collect(onCommand)
-            }
+            is LogsSideEffect.LoadLogs -> combine(
+                getLogsFlowUseCase(),
+                getAllEnabledFiltersFlowUseCase(),
+                getQueryFlowUseCase(),
+                getCaseSensitiveFlowUseCase(),
+                getShowLogValuesFlowUseCase(),
+            ) { logs, filters, query, caseSensitive, showLogValues ->
+                LogsCommand.LogsLoaded(
+                    logs = logs,
+                    query = query,
+                    caseSensitive = caseSensitive,
+                    filters = filters,
+                    showLogValues = showLogValues,
+                )
+            }.collect(onCommand)
 
-            is LogsSideEffect.ObservePreferences -> {
-                combine(
-                    getResumeLoggingWithBottomTouchFlowUseCase(),
-                    getLogsTextSizeFlowUseCase(),
-                    getLogsExpandedFlowUseCase(),
-                ) { resumeLoggingWithBottomTouch, textSize, logsExpanded ->
-                    LogsCommand.PreferencesUpdated(
-                        resumeLoggingWithBottomTouch = resumeLoggingWithBottomTouch,
-                        textSize = textSize,
-                        logsExpanded = logsExpanded,
-                    )
-                }.collect(onCommand)
-            }
+            is LogsSideEffect.ObservePreferences -> combine(
+                getResumeLoggingWithBottomTouchFlowUseCase(),
+                getLogsTextSizeFlowUseCase(),
+                getLogsExpandedFlowUseCase(),
+            ) { resumeLoggingWithBottomTouch, textSize, logsExpanded ->
+                LogsCommand.PreferencesUpdated(
+                    resumeLoggingWithBottomTouch = resumeLoggingWithBottomTouch,
+                    textSize = textSize,
+                    logsExpanded = logsExpanded,
+                )
+            }.collect(onCommand)
 
             is LogsSideEffect.SyncSelectedLines -> updateSelectedLogLinesUseCase(selectedLines = effect.lines)
 

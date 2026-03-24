@@ -126,69 +126,67 @@ internal class PreferencesUIEffectHandler @Inject constructor(
         onCommand: suspend (PreferencesUICommand) -> Unit,
     ) {
         when (effect) {
-            is PreferencesUISideEffect.LoadPreferences -> {
+            is PreferencesUISideEffect.LoadPreferences -> combine(
                 combine(
-                    combine(
-                        getNightThemeFlowUseCase(),
-                        getMonetEnabledFlowUseCase(),
-                        getDateFormatFlowUseCase(),
-                        getTimeFormatFlowUseCase(),
-                        getOpenCrashesOnStartupFlowUseCase(),
-                    ) { nightTheme, monetEnabled, dateFormat, timeFormat, openCrashesOnStartup ->
-                        ThemeAndDatePrefs(nightTheme, monetEnabled, dateFormat, timeFormat, openCrashesOnStartup)
-                    },
-                    combine(
-                        getShowLogDateFlowUseCase(),
-                        getShowLogTimeFlowUseCase(),
-                        getShowLogUidFlowUseCase(),
-                        getShowLogPidFlowUseCase(),
-                        getShowLogTidFlowUseCase(),
-                    ) { date, time, uid, pid, tid ->
-                        ShowLogFirstColumns(date, time, uid, pid, tid)
-                    },
-                    combine(
-                        getShowLogPackageFlowUseCase(),
-                        getShowLogTagFlowUseCase(),
-                        getShowLogContentFlowUseCase(),
-                        getExportLogsInOriginalFormatFlowUseCase(),
-                        getWrapCrashLogLinesFlowUseCase(),
-                    ) { pkg, tag, content, exportOriginal, wrapLines ->
-                        ShowLogSecondColumns(pkg, tag, content, exportOriginal, wrapLines)
-                    },
-                    combine(
-                        getLogsUpdateIntervalFlowUseCase(),
-                        getLogsTextSizeFlowUseCase(),
-                        getLogsDisplayLimitFlowUseCase(),
-                        getLogsExpandedFlowUseCase(),
-                        getResumeLoggingWithBottomTouchFlowUseCase(),
-                    ) { updateInterval, textSize, displayLimit, expanded, resumeWithTouch ->
-                        LogsBehaviourPrefs(updateInterval, textSize, displayLimit, expanded, resumeWithTouch)
-                    },
-                ) { themeDate, showFirst, showSecond, logsBehaviour ->
-                    PreferencesUICommand.PreferencesLoaded(
-                        nightTheme = themeDate.nightTheme,
-                        monetEnabled = themeDate.monetEnabled,
-                        dateFormat = themeDate.dateFormat,
-                        timeFormat = themeDate.timeFormat,
-                        openCrashesOnStartup = themeDate.openCrashesOnStartup,
-                        showLogDate = showFirst.showDate,
-                        showLogTime = showFirst.showTime,
-                        showLogUid = showFirst.showUid,
-                        showLogPid = showFirst.showPid,
-                        showLogTid = showFirst.showTid,
-                        showLogPackage = showSecond.showPackage,
-                        showLogTag = showSecond.showTag,
-                        showLogContent = showSecond.showContent,
-                        exportLogsInOriginalFormat = showSecond.exportInOriginalFormat,
-                        wrapCrashLogLines = showSecond.wrapCrashLogLines,
-                        logsUpdateInterval = logsBehaviour.updateInterval,
-                        logsTextSize = logsBehaviour.textSize,
-                        logsDisplayLimit = logsBehaviour.displayLimit,
-                        logsExpanded = logsBehaviour.expanded,
-                        resumeLogsWithTouch = logsBehaviour.resumeWithTouch,
-                    )
-                }.collect(onCommand)
-            }
+                    getNightThemeFlowUseCase(),
+                    getMonetEnabledFlowUseCase(),
+                    getDateFormatFlowUseCase(),
+                    getTimeFormatFlowUseCase(),
+                    getOpenCrashesOnStartupFlowUseCase(),
+                ) { nightTheme, monetEnabled, dateFormat, timeFormat, openCrashesOnStartup ->
+                    ThemeAndDatePrefs(nightTheme, monetEnabled, dateFormat, timeFormat, openCrashesOnStartup)
+                },
+                combine(
+                    getShowLogDateFlowUseCase(),
+                    getShowLogTimeFlowUseCase(),
+                    getShowLogUidFlowUseCase(),
+                    getShowLogPidFlowUseCase(),
+                    getShowLogTidFlowUseCase(),
+                ) { date, time, uid, pid, tid ->
+                    ShowLogFirstColumns(date, time, uid, pid, tid)
+                },
+                combine(
+                    getShowLogPackageFlowUseCase(),
+                    getShowLogTagFlowUseCase(),
+                    getShowLogContentFlowUseCase(),
+                    getExportLogsInOriginalFormatFlowUseCase(),
+                    getWrapCrashLogLinesFlowUseCase(),
+                ) { pkg, tag, content, exportOriginal, wrapLines ->
+                    ShowLogSecondColumns(pkg, tag, content, exportOriginal, wrapLines)
+                },
+                combine(
+                    getLogsUpdateIntervalFlowUseCase(),
+                    getLogsTextSizeFlowUseCase(),
+                    getLogsDisplayLimitFlowUseCase(),
+                    getLogsExpandedFlowUseCase(),
+                    getResumeLoggingWithBottomTouchFlowUseCase(),
+                ) { updateInterval, textSize, displayLimit, expanded, resumeWithTouch ->
+                    LogsBehaviourPrefs(updateInterval, textSize, displayLimit, expanded, resumeWithTouch)
+                },
+            ) { themeDate, showFirst, showSecond, logsBehaviour ->
+                PreferencesUICommand.PreferencesLoaded(
+                    nightTheme = themeDate.nightTheme,
+                    monetEnabled = themeDate.monetEnabled,
+                    dateFormat = themeDate.dateFormat,
+                    timeFormat = themeDate.timeFormat,
+                    openCrashesOnStartup = themeDate.openCrashesOnStartup,
+                    showLogDate = showFirst.showDate,
+                    showLogTime = showFirst.showTime,
+                    showLogUid = showFirst.showUid,
+                    showLogPid = showFirst.showPid,
+                    showLogTid = showFirst.showTid,
+                    showLogPackage = showSecond.showPackage,
+                    showLogTag = showSecond.showTag,
+                    showLogContent = showSecond.showContent,
+                    exportLogsInOriginalFormat = showSecond.exportInOriginalFormat,
+                    wrapCrashLogLines = showSecond.wrapCrashLogLines,
+                    logsUpdateInterval = logsBehaviour.updateInterval,
+                    logsTextSize = logsBehaviour.textSize,
+                    logsDisplayLimit = logsBehaviour.displayLimit,
+                    logsExpanded = logsBehaviour.expanded,
+                    resumeLogsWithTouch = logsBehaviour.resumeWithTouch,
+                )
+            }.collect(onCommand)
 
             is PreferencesUISideEffect.SaveNightTheme -> {
                 val theme = if (effect.themeIndex == 0) {
