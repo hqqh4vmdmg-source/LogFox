@@ -121,7 +121,7 @@ internal class RecordingsRepositoryImpl @Inject constructor(
 
     override fun getAllAsFlow(): Flow<List<LogRecording>> = logRecordingDataSource
         .getAllAsFlow()
-        .map { list -> list.map { it.toDomainModel() } }
+        .map { it.map { e -> e.toDomainModel() } }
         .distinctUntilChanged()
         .flowOn(ioDispatcher)
 

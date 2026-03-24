@@ -14,10 +14,10 @@ internal class UserFilterDataSourceImpl @Inject constructor(
 ) : UserFilterDataSource {
 
     override fun getAllAsFlow(): Flow<List<UserFilterEntity>> =
-        dao.getAllAsFlow().map { list -> list.map { it.toData() } }
+        dao.getAllAsFlow().map { it.map { e -> e.toData() } }
 
     override fun getAllEnabledAsFlow(): Flow<List<UserFilterEntity>> =
-        dao.getAllEnabledAsFlow().map { list -> list.map { it.toData() } }
+        dao.getAllEnabledAsFlow().map { it.map { e -> e.toData() } }
 
     override suspend fun getAll(): List<UserFilterEntity> = dao.getAll().map { it.toData() }
 

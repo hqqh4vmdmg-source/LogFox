@@ -28,9 +28,7 @@ internal class PreferencesCrashesEffectHandler @Inject constructor(
                         collectJni = collectJni,
                         collectAnr = collectAnr,
                     )
-                }.collect { command ->
-                    onCommand(command)
-                }
+                }.collect(onCommand)
             }
 
             is PreferencesCrashesSideEffect.SaveCollectJava -> {

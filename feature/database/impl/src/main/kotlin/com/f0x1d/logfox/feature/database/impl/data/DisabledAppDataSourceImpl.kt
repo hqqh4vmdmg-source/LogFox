@@ -16,7 +16,7 @@ internal class DisabledAppDataSourceImpl @Inject constructor(
     override suspend fun getAll(): List<DisabledAppEntity> = dao.getAll().map { it.toData() }
 
     override fun getAllAsFlow(): Flow<List<DisabledAppEntity>> =
-        dao.getAllAsFlow().map { list -> list.map { it.toData() } }
+        dao.getAllAsFlow().map { it.map { e -> e.toData() } }
 
     override suspend fun getById(id: Long): DisabledAppEntity? = dao.getById(id)?.toData()
 

@@ -22,19 +22,13 @@ internal class AppInfoDataSourceImpl @Inject constructor(
             context.packageManager.getPackageInfo(packageName, 0)
         }.getOrNull()
 
-        val appName = packageInfo?.applicationInfo
-            ?.let(context.packageManager::getApplicationLabel)
-            ?.toString()
-
-        val versionName = packageInfo?.versionName
-
-        val versionCode = packageInfo?.let(PackageInfoCompat::getLongVersionCode)
-
         return AppInfo(
-            appName = appName,
+            appName = packageInfo?.applicationInfo
+                ?.let(context.packageManager::getApplicationLabel)
+                ?.toString(),
             packageName = packageName,
-            versionName = versionName,
-            versionCode = versionCode,
+            versionName = packageInfo?.versionName,
+            versionCode = packageInfo?.let(PackageInfoCompat::getLongVersionCode),
         )
     }
 }

@@ -187,9 +187,7 @@ internal class PreferencesUIEffectHandler @Inject constructor(
                         logsExpanded = logsBehaviour.expanded,
                         resumeLogsWithTouch = logsBehaviour.resumeWithTouch,
                     )
-                }.collect { command ->
-                    onCommand(command)
-                }
+                }.collect(onCommand)
             }
 
             is PreferencesUISideEffect.SaveNightTheme -> {

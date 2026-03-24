@@ -56,9 +56,7 @@ internal class CrashDetailsEffectHandler @Inject constructor(
                         wrapCrashLogLines = wrapCrashLogLines,
                         useSeparateNotificationsChannelsForCrashes = useSeparateNotificationsChannelsForCrashes,
                     )
-                }.collect { command ->
-                    onCommand(command)
-                }
+                }.collect(onCommand)
             }
 
             is CrashDetailsSideEffect.PrepareFileExport -> {

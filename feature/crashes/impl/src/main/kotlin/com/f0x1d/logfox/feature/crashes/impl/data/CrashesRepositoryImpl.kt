@@ -21,7 +21,7 @@ internal class CrashesRepositoryImpl @Inject constructor(
 ) : CrashesRepository {
 
     override fun getAllAsFlow(): Flow<List<AppCrash>> = appCrashDataSource.getAllAsFlow()
-        .map { list -> list.map { it.toDomainModel() } }
+        .map { it.map { e -> e.toDomainModel() } }
         .distinctUntilChanged()
         .flowOn(ioDispatcher)
 

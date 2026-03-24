@@ -17,7 +17,7 @@ internal class LogRecordingDataSourceImpl @Inject constructor(
         dao.getAll(cached).map { it.toData() }
 
     override fun getAllAsFlow(cached: Boolean): Flow<List<LogRecordingEntity>> =
-        dao.getAllAsFlow(cached).map { list -> list.map { it.toData() } }
+        dao.getAllAsFlow(cached).map { it.map { e -> e.toData() } }
 
     override suspend fun getById(id: Long): LogRecordingEntity? = dao.getById(id)?.toData()
 

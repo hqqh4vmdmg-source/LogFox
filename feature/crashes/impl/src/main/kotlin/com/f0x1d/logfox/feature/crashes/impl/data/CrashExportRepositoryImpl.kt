@@ -90,12 +90,10 @@ internal class CrashExportRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun formatLogFileContent(file: File): String {
-        val lines = file.readLines()
-        return lines.mapIndexed { index, line ->
-            logLineParser.parse(index.toLong(), line)?.let { logLine ->
-                logLineFormatterRepository.formatForExport(logLine)
-            } ?: line
+    private fun formatLogFileContent(file: File): String =
+        file.readLines().mapIndexed { index, line ->
+            logLineParser.parse(index.toLong(), line)
+                ?.let(logLineFormatterRepository::formatForExport)
+                ?: line
         }.joinToString("\n")
-    }
 }
