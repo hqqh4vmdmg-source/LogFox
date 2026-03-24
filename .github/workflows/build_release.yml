@@ -7,9 +7,6 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
-  KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-  ALIAS: ${{ secrets.ALIAS }}
-  KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
 jobs:
   extract_version:
@@ -35,10 +32,8 @@ jobs:
     needs: extract_version
     uses: ./.github/workflows/build_apk_job.yml
     with:
-      checkout_keystore: true
       version_name: ${{ needs.extract_version.outputs.version_name }}
       version_code: ${{ needs.extract_version.outputs.version_code }}
-    secrets: inherit
 
   release:
     name: Create GitHub Release
@@ -50,7 +45,7 @@ jobs:
       - name: Download APK
         uses: actions/download-artifact@v4
         with:
-          name: logfox-release
+          name: logfox-debug
           path: ./apk
 
       - name: Create Release
