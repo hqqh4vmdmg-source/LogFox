@@ -8,6 +8,7 @@ import androidx.annotation.AttrRes
 import androidx.core.view.WindowCompat
 import com.f0x1d.logfox.core.compat.contrastedNavBarAvailable
 import com.f0x1d.logfox.core.compat.gesturesAvailable
+import com.f0x1d.logfox.core.compat.isAtLeastAndroid15
 import com.f0x1d.logfox.core.ui.theme.R
 
 fun Window.enableEdgeToEdge(isContrastEnforced: Boolean = true) {
@@ -23,16 +24,18 @@ fun Window.enableEdgeToEdge(isContrastEnforced: Boolean = true) {
         isAppearanceLightNavigationBars = isLightTheme
     }
 
-    navigationBarColor = when {
-        !contrastedNavBarAvailable -> context.getColor(
-            R.color.transparent_black,
-        )
+    if (!isAtLeastAndroid15) {
+        navigationBarColor = when {
+            !contrastedNavBarAvailable -> context.getColor(
+                R.color.transparent_black,
+            )
 
-        !gesturesAvailable && isContrastEnforced -> context.getColor(
-            R.color.navbar_transparent_background,
-        )
+            !gesturesAvailable && isContrastEnforced -> context.getColor(
+                R.color.navbar_transparent_background,
+            )
 
-        else -> Color.TRANSPARENT
+            else -> Color.TRANSPARENT
+        }
     }
 }
 

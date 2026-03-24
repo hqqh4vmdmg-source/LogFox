@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.IBinder
 import android.os.ParcelFileDescriptor.AutoCloseInputStream
 import android.os.ParcelFileDescriptor.AutoCloseOutputStream
+import androidx.core.content.pm.PackageInfoCompat
 import com.f0x1d.logfox.core.di.IODispatcher
 import com.f0x1d.logfox.feature.strings.Strings
 import com.f0x1d.logfox.feature.terminals.api.base.Terminal
@@ -47,7 +48,9 @@ internal class ShizukuTerminal @Inject constructor(
             .debuggable(BuildConfig.DEBUG)
             .version(
                 context.run {
-                    packageManager.getPackageInfo(packageName, 0).versionCode
+                    PackageInfoCompat.getLongVersionCode(
+                        packageManager.getPackageInfo(packageName, 0),
+                    ).toInt()
                 },
             )
             .tag(context.getString(Strings.app_name))

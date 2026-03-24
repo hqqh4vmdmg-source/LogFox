@@ -6,6 +6,7 @@ on:
       - 'v*'
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
   KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
   ALIAS: ${{ secrets.ALIAS }}
   KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
