@@ -89,10 +89,8 @@ internal class RecordingNotificationsLocalDataSourceImpl @Inject constructor(
         )
     }
 
-    override fun cancelRecordingNotification() {
-        context.notificationManagerCompat.cancel(
-            RecordingNotificationsLocalDataSource.RECORDING_NOTIFICATIONS_TAG,
-            RecordingNotificationsLocalDataSource.RECORDING_NOTIFICATIONS_ID,
-        )
-    }
+    override fun cancelRecordingNotification() = context.notificationManagerCompat.cancel(
+        RecordingNotificationsLocalDataSource.RECORDING_NOTIFICATIONS_TAG,
+        RecordingNotificationsLocalDataSource.RECORDING_NOTIFICATIONS_ID,
+    )
 }

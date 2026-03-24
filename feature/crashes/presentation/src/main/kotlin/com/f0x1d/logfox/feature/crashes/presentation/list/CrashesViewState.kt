@@ -1,8 +1,10 @@
 package com.f0x1d.logfox.feature.crashes.presentation.list
 
+import androidx.compose.runtime.Immutable
 import com.f0x1d.logfox.feature.crashes.presentation.common.model.AppCrashesCountItem
 import com.f0x1d.logfox.feature.preferences.api.CrashesSort
 
+@Immutable
 internal data class CrashesViewState(
     val crashes: List<AppCrashesCountItem>,
     val searchedCrashes: List<AppCrashesCountItem>,

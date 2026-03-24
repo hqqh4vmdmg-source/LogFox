@@ -11,7 +11,5 @@ internal class CrashesSearchLocalDataSourceImpl @Inject constructor() : CrashesS
 
     override val queryFlow: Flow<String> = _queryFlow.asStateFlow()
 
-    override fun updateQuery(query: String) {
-        _queryFlow.value = query
-    }
+    override fun updateQuery(query: String) { _queryFlow.value = query }
 }

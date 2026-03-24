@@ -1,5 +1,8 @@
 package com.f0x1d.logfox.feature.preferences.presentation.ui.settings
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 internal data class PreferencesUIViewState(
     val nightTheme: Int,
     val monetEnabled: Boolean,
