@@ -12,24 +12,16 @@ internal class SearchLogsReducer @Inject constructor() : Reducer<SearchLogsState
         state: SearchLogsState,
         command: SearchLogsCommand,
     ): ReduceResult<SearchLogsState, SearchLogsSideEffect> = when (command) {
-        is SearchLogsCommand.Load -> {
-            state.withSideEffects(SearchLogsSideEffect.LoadQuery)
-        }
+        is SearchLogsCommand.Load -> state.withSideEffects(SearchLogsSideEffect.LoadQuery)
 
-        is SearchLogsCommand.QueryLoaded -> {
-            state.copy(query = command.query).noSideEffects()
-        }
+        is SearchLogsCommand.QueryLoaded -> state.copy(query = command.query).noSideEffects()
 
-        is SearchLogsCommand.CaseSensitiveLoaded -> {
-            state.copy(caseSensitive = command.caseSensitive).noSideEffects()
-        }
+        is SearchLogsCommand.CaseSensitiveLoaded -> state.copy(caseSensitive = command.caseSensitive).noSideEffects()
 
-        is SearchLogsCommand.UpdateQuery -> {
-            state.withSideEffects(
-                SearchLogsSideEffect.SaveQuery(command.query),
-                SearchLogsSideEffect.Dismiss,
-            )
-        }
+        is SearchLogsCommand.UpdateQuery -> state.withSideEffects(
+            SearchLogsSideEffect.SaveQuery(command.query),
+            SearchLogsSideEffect.Dismiss,
+        )
 
         is SearchLogsCommand.ToggleCaseSensitive -> {
             val newCaseSensitive = !state.caseSensitive

@@ -12,12 +12,8 @@ internal class LogsExtendedCopyReducer @Inject constructor() : Reducer<LogsExten
         state: LogsExtendedCopyState,
         command: LogsExtendedCopyCommand,
     ): ReduceResult<LogsExtendedCopyState, LogsExtendedCopySideEffect> = when (command) {
-        is LogsExtendedCopyCommand.Load -> {
-            state.withSideEffects(LogsExtendedCopySideEffect.LoadSelectedLines)
-        }
+        is LogsExtendedCopyCommand.Load -> state.withSideEffects(LogsExtendedCopySideEffect.LoadSelectedLines)
 
-        is LogsExtendedCopyCommand.TextLoaded -> {
-            state.copy(text = command.text).noSideEffects()
-        }
+        is LogsExtendedCopyCommand.TextLoaded -> state.copy(text = command.text).noSideEffects()
     }
 }
