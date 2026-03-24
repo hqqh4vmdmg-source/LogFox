@@ -38,15 +38,15 @@ internal class CrashDetailsFragment : BaseComposeFragment() {
 
     private val zipCrashLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument("application/zip"),
-    ) {
-        it?.let { uri -> viewModel.send(CrashDetailsCommand.ExportCrashToZip(uri)) }
+    ) { uri ->
+        uri?.let { viewModel.send(CrashDetailsCommand.ExportCrashToZip(it)) }
     }
 
     // no plain because android will append .txt itself
     private val exportCrashLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument("text/*"),
-    ) {
-        it?.let { uri -> viewModel.send(CrashDetailsCommand.ExportCrashToFile(uri)) }
+    ) { uri ->
+        uri?.let { viewModel.send(CrashDetailsCommand.ExportCrashToFile(it)) }
     }
 
     @SuppressLint("InlinedApi")
@@ -65,18 +65,18 @@ internal class CrashDetailsFragment : BaseComposeFragment() {
 
                     is CrashDetailsSideEffect.ConfirmDelete -> showDeleteDialog = true
 
-                    is CrashDetailsSideEffect.OpenAppInfo -> {
+                    is CrashDetailsSideEffect.OpenAppInfo -> startActivity(
                         Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                             data = Uri.fromParts("package", sideEffect.packageName, null)
-                        }.let(::startActivity)
-                    }
+                        },
+                    )
 
-                    is CrashDetailsSideEffect.OpenNotificationSettings -> {
+                    is CrashDetailsSideEffect.OpenNotificationSettings -> startActivity(
                         Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
                             putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
                             putExtra(Settings.EXTRA_CHANNEL_ID, sideEffect.channelId)
-                        }.let(::startActivity)
-                    }
+                        },
+                    )
 
                     is CrashDetailsSideEffect.CopyText -> {
                         requireContext().copyText(sideEffect.text)

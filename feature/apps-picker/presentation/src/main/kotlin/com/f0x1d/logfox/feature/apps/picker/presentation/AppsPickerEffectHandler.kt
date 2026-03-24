@@ -20,9 +20,7 @@ internal class AppsPickerEffectHandler @Inject constructor(
     ) {
         when (effect) {
             is AppsPickerSideEffect.LoadApps -> {
-                val apps = withContext(defaultDispatcher) {
-                    getInstalledAppsUseCase()
-                }
+                val apps = withContext(defaultDispatcher) { getInstalledAppsUseCase() }
                 onCommand(AppsPickerCommand.AppsLoaded(apps))
             }
 

@@ -69,32 +69,22 @@ internal class CrashesEffectHandler @Inject constructor(
                     }
             }
 
-            is CrashesSideEffect.UpdateSearchQuery -> {
-                updateCrashesSearchQueryUseCase(effect.query)
-            }
+            is CrashesSideEffect.UpdateSearchQuery -> updateCrashesSearchQueryUseCase(effect.query)
 
             is CrashesSideEffect.UpdateSortPreferences -> {
                 setCrashesSortTypeUseCase(effect.sortType)
                 setCrashesSortReversedOrderUseCase(effect.sortInReversedOrder)
             }
 
-            is CrashesSideEffect.DeleteCrashesByPackageName -> {
-                deleteAllCrashesByPackageNameUseCase(effect.packageName)
-            }
+            is CrashesSideEffect.DeleteCrashesByPackageName -> deleteAllCrashesByPackageNameUseCase(effect.packageName)
 
-            is CrashesSideEffect.DeleteCrash -> {
-                deleteCrashUseCase(effect.crashId)
-            }
+            is CrashesSideEffect.DeleteCrash -> deleteCrashUseCase(effect.crashId)
 
-            is CrashesSideEffect.ClearAllCrashes -> {
-                clearAllCrashesUseCase()
-            }
+            is CrashesSideEffect.ClearAllCrashes -> clearAllCrashesUseCase()
 
-            is CrashesSideEffect.CheckAppDisabled -> {
-                when (effect.disabled) {
-                    null -> checkAppDisabledUseCase(effect.packageName)
-                    else -> checkAppDisabledUseCase(effect.packageName, effect.disabled)
-                }
+            is CrashesSideEffect.CheckAppDisabled -> when (effect.disabled) {
+                null -> checkAppDisabledUseCase(effect.packageName)
+                else -> checkAppDisabledUseCase(effect.packageName, effect.disabled)
             }
 
             // UI side effects - handled by Fragment

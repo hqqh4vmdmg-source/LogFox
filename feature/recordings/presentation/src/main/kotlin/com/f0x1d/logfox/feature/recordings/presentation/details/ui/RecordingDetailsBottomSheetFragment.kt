@@ -22,14 +22,14 @@ internal class RecordingDetailsBottomSheetFragment : BaseComposeBottomSheetFragm
     // no plain because android will append .txt itself
     private val logExportLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument("text/*"),
-    ) {
-        it?.let { uri -> viewModel.send(RecordingDetailsCommand.ExportFile(uri)) }
+    ) { uri ->
+        uri?.let { viewModel.send(RecordingDetailsCommand.ExportFile(it)) }
     }
 
     private val zipLogLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument("application/zip"),
-    ) {
-        it?.let { uri -> viewModel.send(RecordingDetailsCommand.ExportZipFile(uri)) }
+    ) { uri ->
+        uri?.let { viewModel.send(RecordingDetailsCommand.ExportZipFile(it)) }
     }
 
     @Composable

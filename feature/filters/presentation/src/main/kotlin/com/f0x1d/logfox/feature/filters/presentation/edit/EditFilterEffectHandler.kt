@@ -61,9 +61,7 @@ internal class EditFilterEffectHandler @Inject constructor(
                 }
             }
 
-            is EditFilterSideEffect.ExportFilter -> {
-                exportFiltersToUriUseCase(effect.uri, listOfNotNull(effect.filter))
-            }
+            is EditFilterSideEffect.ExportFilter -> exportFiltersToUriUseCase(effect.uri, listOfNotNull(effect.filter))
 
             // UI side effects - handled by Fragment
             is EditFilterSideEffect.NavigateToAppPicker -> Unit

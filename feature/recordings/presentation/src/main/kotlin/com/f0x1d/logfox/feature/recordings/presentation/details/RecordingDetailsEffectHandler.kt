@@ -61,18 +61,12 @@ internal class RecordingDetailsEffectHandler @Inject constructor(
                 onCommand(RecordingDetailsCommand.ShareFileReady(recording.file))
             }
 
-            is RecordingDetailsSideEffect.ExportFile -> {
-                exportRecordingFileUseCase(recordingId, effect.uri)
-            }
+            is RecordingDetailsSideEffect.ExportFile -> exportRecordingFileUseCase(recordingId, effect.uri)
 
-            is RecordingDetailsSideEffect.ExportZipFile -> {
-                exportRecordingZipUseCase(recordingId, effect.uri)
-            }
+            is RecordingDetailsSideEffect.ExportZipFile -> exportRecordingZipUseCase(recordingId, effect.uri)
 
-            is RecordingDetailsSideEffect.UpdateTitle -> {
-                titleUpdateMutex.withLock {
-                    updateRecordingTitleUseCase(effect.recordingId, effect.title)
-                }
+            is RecordingDetailsSideEffect.UpdateTitle -> titleUpdateMutex.withLock {
+                updateRecordingTitleUseCase(effect.recordingId, effect.title)
             }
 
             // UI side effects - handled by Fragment
