@@ -71,17 +71,11 @@ internal class LogsEffectHandler @Inject constructor(
                 }.collect(onCommand)
             }
 
-            is LogsSideEffect.SyncSelectedLines -> {
-                updateSelectedLogLinesUseCase(selectedLines = effect.lines)
-            }
+            is LogsSideEffect.SyncSelectedLines -> updateSelectedLogLinesUseCase(selectedLines = effect.lines)
 
-            is LogsSideEffect.CreateRecordingFromLines -> {
-                createRecordingFromLinesUseCase(lines = effect.lines)
-            }
+            is LogsSideEffect.CreateRecordingFromLines -> createRecordingFromLinesUseCase(lines = effect.lines)
 
-            is LogsSideEffect.ExportLogsTo -> {
-                exportLogsToUriUseCase(effect.lines, effect.uri)
-            }
+            is LogsSideEffect.ExportLogsTo -> exportLogsToUriUseCase(effect.lines, effect.uri)
 
             is LogsSideEffect.PrepareExport -> {
                 val extension = if (getExportLogsAsTxtUseCase()) "txt" else "log"
@@ -99,17 +93,11 @@ internal class LogsEffectHandler @Inject constructor(
                 onCommand(LogsCommand.CopyFormattedText(formattedText))
             }
 
-            is LogsSideEffect.ClearLogs -> {
-                loggingServiceDelegate.clearLogs()
-            }
+            is LogsSideEffect.ClearLogs -> loggingServiceDelegate.clearLogs()
 
-            is LogsSideEffect.RestartLogging -> {
-                loggingServiceDelegate.restartLogging()
-            }
+            is LogsSideEffect.RestartLogging -> loggingServiceDelegate.restartLogging()
 
-            is LogsSideEffect.KillService -> {
-                loggingServiceDelegate.killService()
-            }
+            is LogsSideEffect.KillService -> loggingServiceDelegate.killService()
 
             // UI side effects - handled by Fragment
             else -> Unit

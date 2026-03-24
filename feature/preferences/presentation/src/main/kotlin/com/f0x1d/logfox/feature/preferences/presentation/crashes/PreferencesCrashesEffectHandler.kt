@@ -31,17 +31,14 @@ internal class PreferencesCrashesEffectHandler @Inject constructor(
                 }.collect(onCommand)
             }
 
-            is PreferencesCrashesSideEffect.SaveCollectJava -> {
+            is PreferencesCrashesSideEffect.SaveCollectJava ->
                 setCollectingForCrashTypeUseCase(CrashTypeNames.JAVA, effect.collect)
-            }
 
-            is PreferencesCrashesSideEffect.SaveCollectJni -> {
+            is PreferencesCrashesSideEffect.SaveCollectJni ->
                 setCollectingForCrashTypeUseCase(CrashTypeNames.JNI, effect.collect)
-            }
 
-            is PreferencesCrashesSideEffect.SaveCollectAnr -> {
+            is PreferencesCrashesSideEffect.SaveCollectAnr ->
                 setCollectingForCrashTypeUseCase(CrashTypeNames.ANR, effect.collect)
-            }
         }
     }
 }

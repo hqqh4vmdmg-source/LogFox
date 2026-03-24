@@ -200,67 +200,43 @@ internal class PreferencesUIEffectHandler @Inject constructor(
                 AppCompatDelegate.setDefaultNightMode(theme)
             }
 
-            is PreferencesUISideEffect.SaveMonetEnabled -> {
-                setMonetEnabledUseCase(effect.enabled)
+            is PreferencesUISideEffect.SaveMonetEnabled -> setMonetEnabledUseCase(effect.enabled)
+
+            is PreferencesUISideEffect.SaveDateFormat -> setDateFormatUseCase(effect.format)
+
+            is PreferencesUISideEffect.SaveTimeFormat -> setTimeFormatUseCase(effect.format)
+
+            is PreferencesUISideEffect.SaveOpenCrashesOnStartup -> setOpenCrashesOnStartupUseCase(effect.openOnStartup)
+
+            is PreferencesUISideEffect.SaveLogsFormat -> when (effect.which) {
+                0 -> setShowLogDateUseCase(effect.checked)
+                1 -> setShowLogTimeUseCase(effect.checked)
+                2 -> setShowLogUidUseCase(effect.checked)
+                3 -> setShowLogPidUseCase(effect.checked)
+                4 -> setShowLogTidUseCase(effect.checked)
+                5 -> setShowLogPackageUseCase(effect.checked)
+                6 -> setShowLogTagUseCase(effect.checked)
+                7 -> setShowLogContentUseCase(effect.checked)
             }
 
-            is PreferencesUISideEffect.SaveDateFormat -> {
-                setDateFormatUseCase(effect.format)
-            }
-
-            is PreferencesUISideEffect.SaveTimeFormat -> {
-                setTimeFormatUseCase(effect.format)
-            }
-
-            is PreferencesUISideEffect.SaveOpenCrashesOnStartup -> {
-                setOpenCrashesOnStartupUseCase(effect.openOnStartup)
-            }
-
-            is PreferencesUISideEffect.SaveLogsFormat -> {
-                when (effect.which) {
-                    0 -> setShowLogDateUseCase(effect.checked)
-                    1 -> setShowLogTimeUseCase(effect.checked)
-                    2 -> setShowLogUidUseCase(effect.checked)
-                    3 -> setShowLogPidUseCase(effect.checked)
-                    4 -> setShowLogTidUseCase(effect.checked)
-                    5 -> setShowLogPackageUseCase(effect.checked)
-                    6 -> setShowLogTagUseCase(effect.checked)
-                    7 -> setShowLogContentUseCase(effect.checked)
-                }
-            }
-
-            is PreferencesUISideEffect.SaveExportLogsInOriginalFormat -> {
+            is PreferencesUISideEffect.SaveExportLogsInOriginalFormat ->
                 setExportLogsInOriginalFormatUseCase(effect.inOriginalFormat)
-            }
 
-            is PreferencesUISideEffect.SaveWrapCrashLogLines -> {
-                setWrapCrashLogLinesUseCase(effect.wrap)
-            }
+            is PreferencesUISideEffect.SaveWrapCrashLogLines -> setWrapCrashLogLinesUseCase(effect.wrap)
 
-            is PreferencesUISideEffect.SaveLogsUpdateInterval -> {
-                setLogsUpdateIntervalUseCase(effect.interval)
-            }
+            is PreferencesUISideEffect.SaveLogsUpdateInterval -> setLogsUpdateIntervalUseCase(effect.interval)
 
-            is PreferencesUISideEffect.SaveLogsTextSize -> {
-                setLogsTextSizeUseCase(effect.size)
-            }
+            is PreferencesUISideEffect.SaveLogsTextSize -> setLogsTextSizeUseCase(effect.size)
 
-            is PreferencesUISideEffect.SaveLogsDisplayLimit -> {
-                setLogsDisplayLimitUseCase(effect.limit)
-            }
+            is PreferencesUISideEffect.SaveLogsDisplayLimit -> setLogsDisplayLimitUseCase(effect.limit)
 
-            is PreferencesUISideEffect.SaveLogsExpanded -> {
-                setLogsExpandedUseCase(effect.expanded)
-            }
+            is PreferencesUISideEffect.SaveLogsExpanded -> setLogsExpandedUseCase(effect.expanded)
 
-            is PreferencesUISideEffect.SaveResumeLogsWithTouch -> {
+            is PreferencesUISideEffect.SaveResumeLogsWithTouch ->
                 setResumeLoggingWithBottomTouchUseCase(effect.resumeWithTouch)
-            }
 
             // UI side effects - handled by Fragment
-            is PreferencesUISideEffect.RecreateActivity -> {
-                Unit
-            }
+            is PreferencesUISideEffect.RecreateActivity -> Unit
         }
     }
 }
