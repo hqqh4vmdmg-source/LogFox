@@ -20,6 +20,7 @@ import androidx.transition.TransitionManager
 import com.f0x1d.logfox.R
 import com.f0x1d.logfox.core.compat.contrastedNavBarAvailable
 import com.f0x1d.logfox.core.compat.gesturesAvailable
+import com.f0x1d.logfox.core.compat.isAtLeastAndroid15
 import com.f0x1d.logfox.core.context.hasNotificationsPermission
 import com.f0x1d.logfox.core.context.isHorizontalOrientation
 import com.f0x1d.logfox.core.ui.base.activity.BaseActivity
@@ -167,7 +168,7 @@ class MainActivity :
             else -> true
         }
 
-        if (!gesturesAvailable && contrastedNavBarAvailable) {
+        if (!gesturesAvailable && contrastedNavBarAvailable && !isAtLeastAndroid15) {
             window.navigationBarColor = when {
                 barShown && !isHorizontalOrientation -> Color.TRANSPARENT
 

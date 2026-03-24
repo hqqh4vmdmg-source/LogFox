@@ -18,6 +18,7 @@ on:
         default: ''
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
   VERSION_NAME: ${{ inputs.version_name }}
   VERSION_CODE: ${{ inputs.version_code }}
 

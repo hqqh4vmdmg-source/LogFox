@@ -6,10 +6,14 @@ import android.os.Build.VERSION_CODES.Q
 import android.os.Build.VERSION_CODES.R
 import android.os.Build.VERSION_CODES.S
 import android.os.Build.VERSION_CODES.TIRAMISU
+import android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM
 import androidx.annotation.ChecksSdkIntAtLeast
 
 @get:ChecksSdkIntAtLeast(api = TIRAMISU)
 val isAtLeastAndroid13 = SDK_INT >= TIRAMISU
+
+@get:ChecksSdkIntAtLeast(api = VANILLA_ICE_CREAM)
+val isAtLeastAndroid15 = SDK_INT >= VANILLA_ICE_CREAM
 
 @get:ChecksSdkIntAtLeast(api = Q)
 val gesturesAvailable = SDK_INT >= Q
