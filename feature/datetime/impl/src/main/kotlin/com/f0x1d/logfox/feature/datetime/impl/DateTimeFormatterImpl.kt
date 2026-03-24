@@ -9,9 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
 
-internal class DateTimeFormatterImpl
-@Inject
-constructor(
+internal class DateTimeFormatterImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val dateTimeSettingsRepository: DateTimeSettingsRepository,
 ) : DateTimeFormatter {
@@ -26,10 +24,11 @@ constructor(
 
     override fun formatTime(time: Long): String = tryFormatBy(timeFormatter, time)
 
-    override fun formatForExport(time: Long) = formatDate(time)
-        .withReplacedBadSymbolsForFileName + "-" +
-        formatTime(time)
-            .withReplacedBadSymbolsForFileName
+    override fun formatForExport(time: Long): String {
+        val date = formatDate(time).withReplacedBadSymbolsForFileName
+        val timeStr = formatTime(time).withReplacedBadSymbolsForFileName
+        return "$date-$timeStr"
+    }
 
     private fun tryFormatBy(formatter: SimpleDateFormat, time: Long) = try {
         formatter.format(time)

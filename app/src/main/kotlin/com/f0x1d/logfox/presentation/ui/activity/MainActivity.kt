@@ -153,31 +153,25 @@ class MainActivity :
         destination: NavDestination,
         arguments: Bundle?,
     ) {
-        val barShown = when (destination.id) {
-            Directions.setupFragment -> false
-            Directions.logsExtendedCopyFragment -> false
-            Directions.filtersFragment -> false
-            Directions.editFilterFragment -> false
-            Directions.appsPickerFragment -> false
-            Directions.appCrashesFragment -> false
-            Directions.crashDetailsFragment -> false
-            else -> true
-        }
-        val animateBarTransition = when (destination.id) {
-            Directions.setupFragment -> false
-            else -> true
-        }
+        val barShown = destination.id !in setOf(
+            Directions.setupFragment,
+            Directions.logsExtendedCopyFragment,
+            Directions.filtersFragment,
+            Directions.editFilterFragment,
+            Directions.appsPickerFragment,
+            Directions.appCrashesFragment,
+            Directions.crashDetailsFragment,
+        )
+        val animateBarTransition = destination.id != Directions.setupFragment
 
         if (!gesturesAvailable && contrastedNavBarAvailable && !isAtLeastAndroid15) {
-            window.navigationBarColor = when {
-                barShown && !isHorizontalOrientation -> Color.TRANSPARENT
-
-                else -> getColor(
-                    com.f0x1d.logfox.core.ui.theme.R.color.navbar_transparent_background,
-                )
+            window.navigationBarColor = if (barShown && !isHorizontalOrientation) {
+                Color.TRANSPARENT
+            } else {
+                getColor(com.f0x1d.logfox.core.ui.theme.R.color.navbar_transparent_background)
             }
         } else if (gesturesAvailable) {
-            window.isNavigationBarContrastEnforced = !(barShown && !isHorizontalOrientation)
+            window.isNavigationBarContrastEnforced = !barShown || isHorizontalOrientation
         }
 
         if (this.barShown != barShown) {
@@ -185,17 +179,9 @@ class MainActivity :
 
             binding.root.also {
                 if (animateBarTransition) {
-                    TransitionManager.beginDelayedTransition(
-                        it,
-                        changeBoundsTransition,
-                    )
+                    TransitionManager.beginDelayedTransition(it, changeBoundsTransition)
                 }
-
-                val scene = when (barShown) {
-                    true -> barScene
-                    else -> noBarScene
-                }
-                scene.applyTo(it)
+                (if (barShown) barScene else noBarScene).applyTo(it)
             }
         }
     }

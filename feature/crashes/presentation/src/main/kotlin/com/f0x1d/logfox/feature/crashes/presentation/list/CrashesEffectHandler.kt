@@ -19,9 +19,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-internal class CrashesEffectHandler
-@Inject
-constructor(
+internal class CrashesEffectHandler @Inject constructor(
     private val getAllCrashesFlowUseCase: GetAllCrashesFlowUseCase,
     private val deleteAllCrashesByPackageNameUseCase: DeleteAllCrashesByPackageNameUseCase,
     private val deleteCrashUseCase: DeleteCrashUseCase,
@@ -47,21 +45,15 @@ constructor(
                 ) { crashes, sortType, sortInReversedOrder ->
                     val groupedCrashes = crashes.groupBy { it.packageName }
 
-                    val appCrashes =
-                        groupedCrashes
-                            .map {
-                                AppCrashesCount(
-                                    lastCrash = it.value.first(),
-                                    count = it.value.size,
-                                )
-                            }.let(sortType.sorter)
-                            .let { result ->
-                                if (sortInReversedOrder) {
-                                    result.asReversed()
-                                } else {
-                                    result
-                                }
-                            }
+                    val appCrashes = groupedCrashes
+                        .map {
+                            AppCrashesCount(
+                                lastCrash = it.value.first(),
+                                count = it.value.size,
+                            )
+                        }
+                        .let(sortType.sorter)
+                        .let { if (sortInReversedOrder) it.asReversed() else it }
 
                     Triple(appCrashes, sortType, sortInReversedOrder)
                 }.distinctUntilChanged()
