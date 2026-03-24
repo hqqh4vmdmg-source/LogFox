@@ -40,17 +40,10 @@ fun Window.enableEdgeToEdge(isContrastEnforced: Boolean = true) {
 }
 
 private fun Context.resolveAttribute(@AttrRes attributeResId: Int) = TypedValue().let {
-    when (theme.resolveAttribute(attributeResId, it, true)) {
-        true -> it
-        else -> null
-    }
+    if (theme.resolveAttribute(attributeResId, it, true)) it else null
 }
 
-private fun Context.resolveBoolean(@AttrRes attributeResId: Int, defaultValue: Boolean = false) = resolveAttribute(
-    attributeResId = attributeResId,
-).let {
-    when (it != null && it.type == TypedValue.TYPE_INT_BOOLEAN) {
-        true -> it.data != 0
-        else -> defaultValue
-    }
+private fun Context.resolveBoolean(@AttrRes attributeResId: Int, defaultValue: Boolean = false): Boolean {
+    val value = resolveAttribute(attributeResId) ?: return defaultValue
+    return value.type == TypedValue.TYPE_INT_BOOLEAN && value.data != 0
 }
