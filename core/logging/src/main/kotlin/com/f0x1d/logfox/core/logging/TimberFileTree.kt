@@ -37,8 +37,12 @@ class TimberFileTree @Inject constructor(
     }
 
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-        val exception = t?.stackTraceToString()?.let { "\n$it" } ?: ""
-        val line = "${tag ?: "NO_TAG"}: $message" + exception
+        val line = buildString {
+            append(tag ?: "NO_TAG")
+            append(": ")
+            append(message)
+            t?.stackTraceToString()?.let { append("\n$it") }
+        }
 
         channel.trySend(line)
     }

@@ -28,9 +28,7 @@ internal class AppInfoDataSourceImpl @Inject constructor(
 
         val versionName = packageInfo?.versionName
 
-        val versionCode = packageInfo?.let {
-            PackageInfoCompat.getLongVersionCode(it)
-        }
+        val versionCode = packageInfo?.let(PackageInfoCompat::getLongVersionCode)
 
         return AppInfo(
             appName = appName,

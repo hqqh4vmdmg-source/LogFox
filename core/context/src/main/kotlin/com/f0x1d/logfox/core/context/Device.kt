@@ -13,9 +13,7 @@ internal class Device {
         "MANUFACTURER" to Build.MANUFACTURER,
         "BRAND" to Build.BRAND,
         "MODEL" to Build.MODEL,
-    )
-        .map { "${it.key}: ${it.value}" }
-        .joinToString("\n")
+    ).entries.joinToString(separator = "\n") { "${it.key}: ${it.value}" }
 
     override fun toString() = data
 }

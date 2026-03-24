@@ -49,14 +49,13 @@ abstract class BaseComposeBottomSheetFragment : BottomSheetDialogFragment() {
     abstract fun Content()
 
     @SuppressLint("RestrictedApi")
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        dialog.window?.enableEdgeToEdge(isContrastEnforced = false)
-        dialog.behavior.skipCollapsed = true
-        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        dialog.behavior.disableShapeAnimations()
-        return dialog
-    }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        (super.onCreateDialog(savedInstanceState) as BottomSheetDialog).apply {
+            window?.enableEdgeToEdge(isContrastEnforced = false)
+            behavior.skipCollapsed = true
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            behavior.disableShapeAnimations()
+        }
 
     @EntryPoint
     @InstallIn(SingletonComponent::class)

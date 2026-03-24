@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
@@ -57,7 +58,7 @@ private fun Context.baseShareIntent(block: (Intent) -> Unit) {
 
         startActivity(Intent.createChooser(intent, getString(Strings.share)))
     } catch (e: Exception) {
-        e.printStackTrace()
+        Log.e("ContextExt", "Failed to share", e)
         toast(Strings.too_big_log)
     }
 }
@@ -78,10 +79,8 @@ fun Context.hasNotificationsPermission() = if (shouldRequestNotificationsPermiss
     true
 }
 
-fun Context.doIfNotificationsAllowed(block: NotificationManagerCompat.() -> Unit) = if (hasNotificationsPermission()) {
-    block(notificationManagerCompat)
-} else {
-    Unit
+fun Context.doIfNotificationsAllowed(block: NotificationManagerCompat.() -> Unit) {
+    if (hasNotificationsPermission()) block(notificationManagerCompat)
 }
 
 val Context.isHorizontalOrientation get() = resources.configuration.orientation ==

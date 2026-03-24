@@ -143,7 +143,7 @@ constructor(
 
     override fun cancelAllCrashNotifications() = context.notificationManager.run {
         activeNotifications.forEach {
-            if (it.tag != null && it.tag.contains(".")) cancel(it.tag, it.id)
+            if (it.tag?.contains(".") == true) cancel(it.tag, it.id)
         }
     }
 

@@ -52,10 +52,12 @@ internal class CrashesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteAllByPackageName(packageName: String) = withContext(ioDispatcher) {
-        appCrashDataSource.getAllByPackageName(packageName).forEach {
-            it.toDomainModel().deleteAssociatedFiles()
-            notificationsLocalDataSource.cancelCrashNotificationFor(it.toDomainModel())
-        }
+        appCrashDataSource.getAllByPackageName(packageName)
+            .map { it.toDomainModel() }
+            .forEach { crash ->
+                crash.deleteAssociatedFiles()
+                notificationsLocalDataSource.cancelCrashNotificationFor(crash)
+            }
 
         appCrashDataSource.deleteByPackageName(packageName)
     }
