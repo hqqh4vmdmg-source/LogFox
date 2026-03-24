@@ -11,8 +11,8 @@ internal class PreferencesLinksReducer @Inject constructor() : Reducer<Preferenc
         state: PreferencesLinksState,
         command: PreferencesLinksCommand,
     ): ReduceResult<PreferencesLinksState, PreferencesLinksSideEffect> = when (command) {
-        is PreferencesLinksCommand.OpenUrl -> {
-            state.withSideEffects(PreferencesLinksSideEffect.OpenUrl(command.url))
-        }
+        is PreferencesLinksCommand.OpenUrl -> state.withSideEffects(
+            PreferencesLinksSideEffect.OpenUrl(command.url),
+        )
     }
 }

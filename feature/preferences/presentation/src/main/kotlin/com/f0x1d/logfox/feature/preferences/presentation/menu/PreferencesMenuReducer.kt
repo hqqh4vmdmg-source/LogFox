@@ -12,28 +12,28 @@ internal class PreferencesMenuReducer @Inject constructor(private val timberLogF
         state: PreferencesMenuState,
         command: PreferencesMenuCommand,
     ): ReduceResult<PreferencesMenuState, PreferencesMenuSideEffect> = when (command) {
-        is PreferencesMenuCommand.UISettingsClicked -> {
-            state.withSideEffects(PreferencesMenuSideEffect.NavigateToUISettings)
-        }
+        is PreferencesMenuCommand.UISettingsClicked -> state.withSideEffects(
+            PreferencesMenuSideEffect.NavigateToUISettings,
+        )
 
-        is PreferencesMenuCommand.ServiceSettingsClicked -> {
-            state.withSideEffects(PreferencesMenuSideEffect.NavigateToServiceSettings)
-        }
+        is PreferencesMenuCommand.ServiceSettingsClicked -> state.withSideEffects(
+            PreferencesMenuSideEffect.NavigateToServiceSettings,
+        )
 
-        is PreferencesMenuCommand.CrashesSettingsClicked -> {
-            state.withSideEffects(PreferencesMenuSideEffect.NavigateToCrashesSettings)
-        }
+        is PreferencesMenuCommand.CrashesSettingsClicked -> state.withSideEffects(
+            PreferencesMenuSideEffect.NavigateToCrashesSettings,
+        )
 
-        is PreferencesMenuCommand.NotificationsSettingsClicked -> {
-            state.withSideEffects(PreferencesMenuSideEffect.NavigateToNotificationsSettings)
-        }
+        is PreferencesMenuCommand.NotificationsSettingsClicked -> state.withSideEffects(
+            PreferencesMenuSideEffect.NavigateToNotificationsSettings,
+        )
 
-        is PreferencesMenuCommand.LinksClicked -> {
-            state.withSideEffects(PreferencesMenuSideEffect.NavigateToLinks)
-        }
+        is PreferencesMenuCommand.LinksClicked -> state.withSideEffects(
+            PreferencesMenuSideEffect.NavigateToLinks,
+        )
 
-        is PreferencesMenuCommand.ShareLogsClicked -> {
-            state.withSideEffects(PreferencesMenuSideEffect.ShareLogs(timberLogFile))
-        }
+        is PreferencesMenuCommand.ShareLogsClicked -> state.withSideEffects(
+            PreferencesMenuSideEffect.ShareLogs(timberLogFile),
+        )
     }
 }
