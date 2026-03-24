@@ -28,5 +28,3 @@ send:
       with:
         name: logfox-release
         path: ./apk
-  ```
-  
