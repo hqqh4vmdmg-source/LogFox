@@ -5,6 +5,7 @@ import com.f0x1d.logfox.core.tea.Reducer
 import com.f0x1d.logfox.core.tea.noSideEffects
 import com.f0x1d.logfox.core.tea.withSideEffects
 import com.f0x1d.logfox.feature.crashes.api.data.notificationChannelId
+import java.util.Locale
 import javax.inject.Inject
 
 internal class CrashDetailsReducer @Inject constructor() : Reducer<CrashDetailsState, CrashDetailsCommand, CrashDetailsSideEffect> {
@@ -173,8 +174,8 @@ internal class CrashDetailsReducer @Inject constructor() : Reducer<CrashDetailsS
             val query = command.query
             val crashLog = state.crashLog.orEmpty()
             val ranges = if (query.isNotEmpty()) {
-                val lowerLog = crashLog.lowercase(java.util.Locale.ENGLISH)
-                val lowerQuery = query.lowercase(java.util.Locale.ENGLISH)
+                val lowerLog = crashLog.lowercase(Locale.ENGLISH)
+                val lowerQuery = query.lowercase(Locale.ENGLISH)
                 buildList {
                     var index = 0
                     while (true) {
