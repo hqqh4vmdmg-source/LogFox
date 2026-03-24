@@ -9,15 +9,9 @@ import javax.inject.Inject
 internal class LoggingServiceDelegateImpl @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : LoggingServiceDelegate {
-    override fun clearLogs() {
-        context.sendService<LoggingService>(LoggingService.ACTION_CLEAR_LOGS)
-    }
+    override fun clearLogs() = context.sendService<LoggingService>(LoggingService.ACTION_CLEAR_LOGS)
 
-    override fun restartLogging() {
-        context.sendService<LoggingService>(LoggingService.ACTION_RESTART_LOGGING)
-    }
+    override fun restartLogging() = context.sendService<LoggingService>(LoggingService.ACTION_RESTART_LOGGING)
 
-    override fun killService() {
-        context.sendService<LoggingService>(LoggingService.ACTION_KILL_SERVICE)
-    }
+    override fun killService() = context.sendService<LoggingService>(LoggingService.ACTION_KILL_SERVICE)
 }

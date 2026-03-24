@@ -132,12 +132,8 @@ internal class CrashesNotificationsLocalDataSourceImpl @Inject constructor(
         }
     }
 
-    override fun cancelCrashNotificationFor(appCrash: AppCrash) {
-        context.notificationManagerCompat.cancel(
-            appCrash.packageName,
-            appCrash.notificationId,
-        )
-    }
+    override fun cancelCrashNotificationFor(appCrash: AppCrash) =
+        context.notificationManagerCompat.cancel(appCrash.packageName, appCrash.notificationId)
 
     override fun cancelAllCrashNotifications() {
         context.notificationManager.activeNotifications.forEach { notification ->

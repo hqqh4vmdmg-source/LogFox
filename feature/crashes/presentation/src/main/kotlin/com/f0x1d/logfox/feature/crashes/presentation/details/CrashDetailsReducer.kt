@@ -32,65 +32,36 @@ internal class CrashDetailsReducer @Inject constructor() : Reducer<CrashDetailsS
             useSeparateNotificationsChannelsForCrashes = command.useSeparateNotificationsChannelsForCrashes,
         ).noSideEffects()
 
-        is CrashDetailsCommand.OpenAppInfoClicked -> {
-            val appCrash = state.crash
-            if (appCrash != null) {
-                state.withSideEffects(
-                    CrashDetailsSideEffect.OpenAppInfo(appCrash.packageName),
-                )
-            } else {
-                state.noSideEffects()
-            }
-        }
+        is CrashDetailsCommand.OpenAppInfoClicked -> state.crash?.let { appCrash ->
+            state.withSideEffects(CrashDetailsSideEffect.OpenAppInfo(appCrash.packageName))
+        } ?: state.noSideEffects()
 
-        is CrashDetailsCommand.OpenNotificationSettingsClicked -> {
-            val appCrash = state.crash
-            if (appCrash != null) {
-                state.withSideEffects(
-                    CrashDetailsSideEffect.OpenNotificationSettings(appCrash.notificationChannelId),
-                )
-            } else {
-                state.noSideEffects()
-            }
-        }
+        is CrashDetailsCommand.OpenNotificationSettingsClicked -> state.crash?.let { appCrash ->
+            state.withSideEffects(
+                CrashDetailsSideEffect.OpenNotificationSettings(appCrash.notificationChannelId),
+            )
+        } ?: state.noSideEffects()
 
-        is CrashDetailsCommand.BlacklistClicked -> {
-            val appCrash = state.crash
-            if (appCrash != null) {
-                if (state.blacklisted == false) {
-                    state.withSideEffects(CrashDetailsSideEffect.ConfirmBlacklist)
-                } else {
-                    state.withSideEffects(CrashDetailsSideEffect.ChangeBlacklist(appCrash))
-                }
+        is CrashDetailsCommand.BlacklistClicked -> state.crash?.let { appCrash ->
+            if (state.blacklisted == false) {
+                state.withSideEffects(CrashDetailsSideEffect.ConfirmBlacklist)
             } else {
-                state.noSideEffects()
-            }
-        }
-
-        is CrashDetailsCommand.ConfirmBlacklist -> {
-            val appCrash = state.crash
-            if (appCrash != null) {
                 state.withSideEffects(CrashDetailsSideEffect.ChangeBlacklist(appCrash))
-            } else {
-                state.noSideEffects()
             }
-        }
+        } ?: state.noSideEffects()
 
-        is CrashDetailsCommand.DeleteClicked -> state.withSideEffects(
-            CrashDetailsSideEffect.ConfirmDelete,
-        )
+        is CrashDetailsCommand.ConfirmBlacklist -> state.crash?.let { appCrash ->
+            state.withSideEffects(CrashDetailsSideEffect.ChangeBlacklist(appCrash))
+        } ?: state.noSideEffects()
 
-        is CrashDetailsCommand.ConfirmDelete -> {
-            val appCrash = state.crash
-            if (appCrash != null) {
-                state.withSideEffects(
-                    CrashDetailsSideEffect.DeleteCrash(appCrash),
-                    CrashDetailsSideEffect.Close,
-                )
-            } else {
-                state.noSideEffects()
-            }
-        }
+        is CrashDetailsCommand.DeleteClicked -> state.withSideEffects(CrashDetailsSideEffect.ConfirmDelete)
+
+        is CrashDetailsCommand.ConfirmDelete -> state.crash?.let { appCrash ->
+            state.withSideEffects(
+                CrashDetailsSideEffect.DeleteCrash(appCrash),
+                CrashDetailsSideEffect.Close,
+            )
+        } ?: state.noSideEffects()
 
         is CrashDetailsCommand.ExportCrashToFileClicked -> {
             val appCrash = state.crash
@@ -106,69 +77,38 @@ internal class CrashDetailsReducer @Inject constructor() : Reducer<CrashDetailsS
             }
         }
 
-        is CrashDetailsCommand.ExportCrashToZipClicked -> {
-            val appCrash = state.crash
-            if (appCrash != null) {
-                state.withSideEffects(
-                    CrashDetailsSideEffect.PrepareZipExport(
-                        packageName = appCrash.packageName,
-                        dateAndTime = appCrash.dateAndTime,
-                    ),
-                )
-            } else {
-                state.noSideEffects()
-            }
-        }
-
-        is CrashDetailsCommand.FileExportPickerReady -> {
+        is CrashDetailsCommand.ExportCrashToZipClicked -> state.crash?.let { appCrash ->
             state.withSideEffects(
-                CrashDetailsSideEffect.LaunchFileExportPicker(filename = command.filename),
-            )
-        }
-
-        is CrashDetailsCommand.ZipExportPickerReady -> {
-            state.withSideEffects(
-                CrashDetailsSideEffect.LaunchZipExportPicker(filename = command.filename),
-            )
-        }
-
-        is CrashDetailsCommand.ExportCrashToFile -> {
-            state.withSideEffects(
-                CrashDetailsSideEffect.ExportCrashToFile(
-                    uri = command.uri,
+                CrashDetailsSideEffect.PrepareZipExport(
+                    packageName = appCrash.packageName,
+                    dateAndTime = appCrash.dateAndTime,
                 ),
             )
-        }
+        } ?: state.noSideEffects()
 
-        is CrashDetailsCommand.ExportCrashToZip -> {
-            state.withSideEffects(
-                CrashDetailsSideEffect.ExportCrashToZip(
-                    uri = command.uri,
-                ),
-            )
-        }
+        is CrashDetailsCommand.FileExportPickerReady -> state.withSideEffects(
+            CrashDetailsSideEffect.LaunchFileExportPicker(filename = command.filename),
+        )
 
-        is CrashDetailsCommand.CopyCrashLog -> {
-            val crashLog = state.crashLog
-            if (crashLog != null) {
-                state.withSideEffects(
-                    CrashDetailsSideEffect.CopyText(crashLog),
-                )
-            } else {
-                state.noSideEffects()
-            }
-        }
+        is CrashDetailsCommand.ZipExportPickerReady -> state.withSideEffects(
+            CrashDetailsSideEffect.LaunchZipExportPicker(filename = command.filename),
+        )
 
-        is CrashDetailsCommand.ShareCrashLog -> {
-            val crashLog = state.crashLog
-            if (crashLog != null) {
-                state.withSideEffects(
-                    CrashDetailsSideEffect.ShareCrashLog(crashLog),
-                )
-            } else {
-                state.noSideEffects()
-            }
-        }
+        is CrashDetailsCommand.ExportCrashToFile -> state.withSideEffects(
+            CrashDetailsSideEffect.ExportCrashToFile(uri = command.uri),
+        )
+
+        is CrashDetailsCommand.ExportCrashToZip -> state.withSideEffects(
+            CrashDetailsSideEffect.ExportCrashToZip(uri = command.uri),
+        )
+
+        is CrashDetailsCommand.CopyCrashLog -> state.crashLog?.let { crashLog ->
+            state.withSideEffects(CrashDetailsSideEffect.CopyText(crashLog))
+        } ?: state.noSideEffects()
+
+        is CrashDetailsCommand.ShareCrashLog -> state.crashLog?.let { crashLog ->
+            state.withSideEffects(CrashDetailsSideEffect.ShareCrashLog(crashLog))
+        } ?: state.noSideEffects()
 
         is CrashDetailsCommand.SearchInLog -> {
             val query = command.query

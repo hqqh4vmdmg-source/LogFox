@@ -17,12 +17,10 @@ internal class AppInfoDataSourceImpl @Inject constructor(
             ?.toString()
     }.getOrNull()
 
-    override fun getAppInfo(packageName: String): AppInfo {
-        val packageInfo = runCatching {
-            context.packageManager.getPackageInfo(packageName, 0)
-        }.getOrNull()
-
-        return AppInfo(
+    override fun getAppInfo(packageName: String): AppInfo = runCatching {
+        context.packageManager.getPackageInfo(packageName, 0)
+    }.getOrNull().let { packageInfo ->
+        AppInfo(
             appName = packageInfo?.applicationInfo
                 ?.let(context.packageManager::getApplicationLabel)
                 ?.toString(),
@@ -31,4 +29,3 @@ internal class AppInfoDataSourceImpl @Inject constructor(
             versionCode = packageInfo?.let(PackageInfoCompat::getLongVersionCode),
         )
     }
-}

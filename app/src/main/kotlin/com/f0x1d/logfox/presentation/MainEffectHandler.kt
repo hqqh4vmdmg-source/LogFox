@@ -26,12 +26,10 @@ internal class MainEffectHandler @Inject constructor(
             MainSideEffect.SaveNotificationsPermissionAsked ->
                 setAskedNotificationsPermissionUseCase(true)
 
-            MainSideEffect.HandleBackExit -> {
-                if (getStopLoggingOnBackExitUseCase()) {
-                    loggingServiceDelegate.killService()
-                } else {
-                    onCommand(MainCommand.FinishActivityRequested)
-                }
+            MainSideEffect.HandleBackExit -> if (getStopLoggingOnBackExitUseCase()) {
+                loggingServiceDelegate.killService()
+            } else {
+                onCommand(MainCommand.FinishActivityRequested)
             }
 
             // Handled by Activity
