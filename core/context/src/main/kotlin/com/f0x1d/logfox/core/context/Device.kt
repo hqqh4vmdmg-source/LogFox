@@ -4,16 +4,16 @@ import android.os.Build
 
 internal class Device {
 
-    private val data = mapOf<String, String>(
-        "SDK" to Build.VERSION.SDK_INT.toString(),
-        "PRODUCT_NAME" to Build.PRODUCT,
-        "DEVICE_NAME" to Build.DEVICE,
-        "BOARD_NAME" to Build.BOARD,
-        "SUPPORTED_ABIS" to Build.SUPPORTED_ABIS.joinToString(),
-        "MANUFACTURER" to Build.MANUFACTURER,
-        "BRAND" to Build.BRAND,
-        "MODEL" to Build.MODEL,
-    ).entries.joinToString(separator = "\n") { "${it.key}: ${it.value}" }
+    private val data = buildString {
+        appendLine("SDK: ${Build.VERSION.SDK_INT}")
+        appendLine("PRODUCT_NAME: ${Build.PRODUCT}")
+        appendLine("DEVICE_NAME: ${Build.DEVICE}")
+        appendLine("BOARD_NAME: ${Build.BOARD}")
+        appendLine("SUPPORTED_ABIS: ${Build.SUPPORTED_ABIS.joinToString()}")
+        appendLine("MANUFACTURER: ${Build.MANUFACTURER}")
+        appendLine("BRAND: ${Build.BRAND}")
+        append("MODEL: ${Build.MODEL}")
+    }
 
     override fun toString() = data
 }

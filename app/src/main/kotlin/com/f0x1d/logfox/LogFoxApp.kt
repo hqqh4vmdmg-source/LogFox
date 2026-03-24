@@ -41,40 +41,32 @@ class LogFoxApp : Application(), ImageLoaderFactory {
         AppCompatDelegate.setDefaultNightMode(uiSettingsRepository.nightTheme().value)
         DynamicColors.applyToActivitiesIfAvailable(
             this,
-            DynamicColorsOptions
-                .Builder()
+            DynamicColorsOptions.Builder()
                 .setPrecondition { _, _ -> uiSettingsRepository.monetEnabled().value }
                 .build(),
         )
 
-        notificationManagerCompat.apply {
-            val loggingStatusChannel =
-                NotificationChannelCompat
-                    .Builder(
-                        LOGGING_STATUS_CHANNEL_ID,
-                        NotificationManagerCompat.IMPORTANCE_MIN,
-                    ).setName(getString(Strings.logging_status))
-                    .setShowBadge(false)
-                    .build()
+        registerNotificationChannels()
+    }
 
-            val recordingStatusChannel =
-                NotificationChannelCompat
-                    .Builder(
-                        RECORDING_STATUS_CHANNEL_ID,
-                        NotificationManagerCompat.IMPORTANCE_DEFAULT,
-                    ).setName(getString(Strings.recording_status))
-                    .setLightsEnabled(false)
-                    .setVibrationEnabled(false)
-                    .setSound(null, null)
-                    .build()
+    private fun registerNotificationChannels() {
+        val loggingStatusChannel = NotificationChannelCompat
+            .Builder(LOGGING_STATUS_CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_MIN)
+            .setName(getString(Strings.logging_status))
+            .setShowBadge(false)
+            .build()
 
-            createNotificationChannelsCompat(
-                listOf(
-                    loggingStatusChannel,
-                    recordingStatusChannel,
-                ),
-            )
-        }
+        val recordingStatusChannel = NotificationChannelCompat
+            .Builder(RECORDING_STATUS_CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_DEFAULT)
+            .setName(getString(Strings.recording_status))
+            .setLightsEnabled(false)
+            .setVibrationEnabled(false)
+            .setSound(null, null)
+            .build()
+
+        notificationManagerCompat.createNotificationChannelsCompat(
+            listOf(loggingStatusChannel, recordingStatusChannel),
+        )
     }
 
     override fun newImageLoader(): ImageLoader = imageLoaderProvider.get()

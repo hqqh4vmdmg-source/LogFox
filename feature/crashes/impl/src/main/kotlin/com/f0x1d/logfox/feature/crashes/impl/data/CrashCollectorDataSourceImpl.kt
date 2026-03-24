@@ -23,7 +23,7 @@ internal class CrashCollectorDataSourceImpl @Inject constructor(
 ) : CrashCollectorDataSource {
 
     private val logsDir = File(context.filesDir, "crashes").apply {
-        if (!exists()) mkdirs()
+        mkdirs()
     }
 
     override suspend fun collectCrash(appCrash: AppCrash, logLines: List<LogLine>) {

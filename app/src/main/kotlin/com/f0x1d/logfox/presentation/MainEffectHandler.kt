@@ -21,23 +21,10 @@ internal class MainEffectHandler @Inject constructor(
 
     override suspend fun handle(effect: MainSideEffect, onCommand: suspend (MainCommand) -> Unit) {
         when (effect) {
-            MainSideEffect.StartLoggingServiceIfNeeded -> {
-                if (context.hasPermissionToReadLogs) {
-                    Intent(context, LoggingService::class.java).let {
-                        if (startForegroundServiceAvailable) {
-                            context.startForegroundService(it)
-                        } else {
-                            context.startService(it)
-                        }
-                    }
-                } else {
-                    onCommand(MainCommand.ShowSetup)
-                }
-            }
+            MainSideEffect.StartLoggingServiceIfNeeded -> startLoggingServiceIfNeeded(onCommand)
 
-            MainSideEffect.SaveNotificationsPermissionAsked -> {
+            MainSideEffect.SaveNotificationsPermissionAsked ->
                 setAskedNotificationsPermissionUseCase(true)
-            }
 
             MainSideEffect.HandleBackExit -> {
                 if (getStopLoggingOnBackExitUseCase()) {
@@ -47,9 +34,22 @@ internal class MainEffectHandler @Inject constructor(
                 }
             }
 
-            MainSideEffect.FinishActivity -> Unit // Handled by Activity
+            // Handled by Activity
+            MainSideEffect.FinishActivity,
+            MainSideEffect.OpenSetup -> Unit
+        }
+    }
 
-            MainSideEffect.OpenSetup -> Unit // Handled by Activity
+    private suspend fun startLoggingServiceIfNeeded(onCommand: suspend (MainCommand) -> Unit) {
+        if (!context.hasPermissionToReadLogs) {
+            onCommand(MainCommand.ShowSetup)
+            return
+        }
+        val intent = Intent(context, LoggingService::class.java)
+        if (startForegroundServiceAvailable) {
+            context.startForegroundService(intent)
+        } else {
+            context.startService(intent)
         }
     }
 }

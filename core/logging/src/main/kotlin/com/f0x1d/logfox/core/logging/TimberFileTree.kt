@@ -41,9 +41,11 @@ class TimberFileTree @Inject constructor(
             append(tag ?: "NO_TAG")
             append(": ")
             append(message)
-            t?.stackTraceToString()?.let { append("\n$it") }
+            t?.stackTraceToString()?.let {
+                append('\n')
+                append(it)
+            }
         }
-
         channel.trySend(line)
     }
 }

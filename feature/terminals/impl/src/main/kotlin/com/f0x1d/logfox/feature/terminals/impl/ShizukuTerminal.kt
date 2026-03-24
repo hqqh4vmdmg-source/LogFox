@@ -96,7 +96,7 @@ internal class ShizukuTerminal @Inject constructor(
         object : ServiceConnection {
             override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
                 if (binder == null || !binder.pingBinder()) {
-                    if (resumed.not()) {
+                    if (!resumed) {
                         resume(false)
                         resumed = true
                     }
@@ -105,7 +105,7 @@ internal class ShizukuTerminal @Inject constructor(
 
                 userService = IUserService.Stub.asInterface(binder)
 
-                if (resumed.not()) {
+                if (!resumed) {
                     resume(true)
                     resumed = true
                 }

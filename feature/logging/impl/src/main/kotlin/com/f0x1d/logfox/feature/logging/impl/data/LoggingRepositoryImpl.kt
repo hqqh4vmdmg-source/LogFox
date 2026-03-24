@@ -32,11 +32,9 @@ internal class LoggingRepositoryImpl @Inject constructor(
     ): Flow<LogLine> = flow {
         val formattedTimestamp = startLogsTime?.let { formatTimestampForLogcat(it) }
 
-        val command = LoggingRepository.COMMAND + if (formattedTimestamp == null) {
-            emptyArray()
-        } else {
-            arrayOf("-T", formattedTimestamp)
-        }
+        val command = LoggingRepository.COMMAND + (
+            formattedTimestamp?.let { arrayOf("-T", it) } ?: emptyArray()
+        )
         Timber.d("Starting logging with command: ${command.joinToString(" ")}")
 
         emitLines(
@@ -64,7 +62,7 @@ internal class LoggingRepositoryImpl @Inject constructor(
         startingId: Long,
         readLineTimeout: Duration,
     ) {
-        if (terminal.isSupported().not()) {
+        if (!terminal.isSupported()) {
             Timber.d("Terminal $terminal is not supported")
             throw TerminalNotSupportedException()
         }
@@ -76,34 +74,19 @@ internal class LoggingRepositoryImpl @Inject constructor(
         Timber.d("Starting with id $idsCounter")
 
         try {
-            Timber.d("Started scope")
-
             process.output.bufferedReader().use { reader ->
-                Timber.d("Got reader")
-
                 while (true) {
-                    Timber.d("Started awaiting line")
                     val line = withTimeout(readLineTimeout) {
                         reader.readLineCancellable()
                     }
-                    Timber.d("Got line $line")
 
-                    val logLine = logLineParser.parse(
-                        id = idsCounter++,
-                        line = line,
-                    )
-                    Timber.d("Parsed $line to $logLine")
-
-                    if (logLine == null) continue
-
-                    emit(logLine)
+                    val logLine = logLineParser.parse(id = idsCounter++, line = line)
+                    logLine?.let { emit(it) }
                 }
             }
         } finally {
             Timber.d("Destroying process")
-            runCatching {
-                process.destroy()
-            }
+            runCatching { process.destroy() }
         }
     }
 

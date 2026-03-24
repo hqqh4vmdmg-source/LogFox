@@ -88,11 +88,7 @@ class UserService() : IUserService.Stub() {
 
         serviceScope.launch {
             AutoCloseOutputStream(pipe[1]).use {
-                try {
-                    inputStream.copyTo(it)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+                runCatching { inputStream.copyTo(it) }
             }
         }
 
@@ -105,11 +101,7 @@ class UserService() : IUserService.Stub() {
         val pipe = ParcelFileDescriptor.createPipe()
         serviceScope.launch {
             AutoCloseInputStream(pipe[0]).use {
-                try {
-                    it.copyTo(process.outputStream)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+                runCatching { it.copyTo(process.outputStream) }
             }
         }
 

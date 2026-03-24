@@ -172,7 +172,7 @@ internal class LoggingServiceEffectHandler @Inject constructor(
                             error.localizedMessage ?: error.message ?: "Unknown error",
                         )
                         onCommand(LoggingServiceCommand.ShowToast(message))
-                        error.printStackTrace()
+                        Timber.e(error, "Logging error for terminal $terminal")
                         // Wait and retry
                         delay(RETRY_DELAY_MS)
                         onCommand(

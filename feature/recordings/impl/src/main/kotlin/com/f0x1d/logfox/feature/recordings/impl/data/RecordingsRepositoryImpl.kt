@@ -43,7 +43,7 @@ internal class RecordingsRepositoryImpl @Inject constructor(
 ) : RecordingsRepository {
 
     private val recordingsDir = File("${context.filesDir.absolutePath}/recordings").apply {
-        if (!exists()) mkdirs()
+        mkdirs()
     }
 
     override suspend fun saveAll(): LogRecording = withContext(ioDispatcher) {
@@ -80,7 +80,6 @@ internal class RecordingsRepositoryImpl @Inject constructor(
             withContext(mainDispatcher) {
                 context.toast(Strings.error_saving_logs)
             }
-            e.printStackTrace()
         } catch (_: TimeoutCancellationException) {
             // Collection of logs finished!
         }
