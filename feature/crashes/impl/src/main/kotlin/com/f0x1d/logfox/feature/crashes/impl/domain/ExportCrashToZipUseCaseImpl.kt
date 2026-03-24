@@ -9,5 +9,7 @@ internal class ExportCrashToZipUseCaseImpl @Inject constructor(
     private val crashExportRepository: CrashExportRepository,
 ) : ExportCrashToZipUseCase {
 
-    override suspend fun invoke(crashId: Long, uri: Uri): Result<Unit> = runCatching = crashExportRepository.exportToZip(crashId, uri)
+    override suspend fun invoke(crashId: Long, uri: Uri): Result<Unit> = runCatching {
+        crashExportRepository.exportToZip(crashId, uri)
+    }
 }

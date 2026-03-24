@@ -12,5 +12,7 @@ internal class ExportFiltersToUriUseCaseImpl @Inject constructor(
     private val gson: Gson,
 ) : ExportFiltersToUriUseCase {
 
-    override suspend fun invoke(uri: Uri, filters: List<UserFilter>): Result<Unit> = runCatching = exportRepository.writeContentToUri(uri, gson.toJson(filters))
+    override suspend fun invoke(uri: Uri, filters: List<UserFilter>): Result<Unit> = runCatching {
+        exportRepository.writeContentToUri(uri, gson.toJson(filters))
+    }
 }

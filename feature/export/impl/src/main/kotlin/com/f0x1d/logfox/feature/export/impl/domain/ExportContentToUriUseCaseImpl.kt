@@ -9,5 +9,7 @@ internal class ExportContentToUriUseCaseImpl @Inject constructor(
     private val exportRepository: ExportRepository,
 ) : ExportContentToUriUseCase {
 
-    override suspend fun invoke(uri: Uri, content: String): Result<Unit> = runCatching = exportRepository.writeContentToUri(uri, content)
+    override suspend fun invoke(uri: Uri, content: String): Result<Unit> = runCatching {
+        exportRepository.writeContentToUri(uri, content)
+    }
 }
