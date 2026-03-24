@@ -53,9 +53,7 @@ abstract class BaseStoreViewModel<ViewState, State, Command, SideEffect>(
         }
     }
 
-    fun send(command: Command) {
-        store.send(command)
-    }
+    fun send(command: Command) = store.send(command)
 
     override fun onCleared() {
         super.onCleared()

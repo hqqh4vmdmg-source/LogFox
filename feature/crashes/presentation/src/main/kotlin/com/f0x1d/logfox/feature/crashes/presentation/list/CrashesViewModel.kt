@@ -45,9 +45,8 @@ internal class CrashesViewModel @Inject constructor(
 
     override fun providePickerTopAppBarTitle(context: Context): String = context.getString(Strings.blacklist)
 
-    override fun onAppChecked(app: InstalledApp, checked: Boolean) {
+    override fun onAppChecked(app: InstalledApp, checked: Boolean) =
         send(CrashesCommand.CheckAppDisabled(app.packageName, checked))
-    }
 
     override fun onAppSelected(app: InstalledApp): Boolean {
         send(CrashesCommand.CheckAppDisabled(app.packageName))

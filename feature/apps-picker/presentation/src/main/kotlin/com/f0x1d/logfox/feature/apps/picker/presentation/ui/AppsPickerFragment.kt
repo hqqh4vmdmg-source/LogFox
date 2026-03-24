@@ -98,9 +98,7 @@ class AppsPickerFragment : Fragment() {
 
     private fun handleSideEffect(sideEffect: AppsPickerSideEffect) {
         when (sideEffect) {
-            is AppsPickerSideEffect.PopBackStack -> {
-                findNavController().popBackStack()
-            }
+            is AppsPickerSideEffect.PopBackStack -> findNavController().popBackStack()
 
             is AppsPickerSideEffect.HandleAppSelection -> {
                 if (resultHandler?.onAppSelected(sideEffect.app) == true) {

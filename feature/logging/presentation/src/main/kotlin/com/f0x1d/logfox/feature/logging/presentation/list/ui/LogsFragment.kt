@@ -3,7 +3,9 @@ package com.f0x1d.logfox.feature.logging.presentation.list.ui
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -16,8 +18,6 @@ import com.f0x1d.logfox.feature.logging.presentation.list.LogsViewModel
 import com.f0x1d.logfox.feature.logging.presentation.list.ui.compose.LogsScreenContent
 import com.f0x1d.logfox.feature.navigation.api.Directions
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 
 @AndroidEntryPoint
 internal class LogsFragment : BaseComposeFragment() {

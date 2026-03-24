@@ -29,12 +29,10 @@ internal class AppCrashesFragment : BaseComposeFragment() {
         LaunchedEffect(viewModel) {
             viewModel.sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is AppCrashesSideEffect.NavigateToCrashDetails -> {
-                        findNavController().navigate(
-                            resId = Directions.action_appCrashesFragment_to_crashDetailsFragment,
-                            args = bundleOf("crash_id" to sideEffect.crashId),
-                        )
-                    }
+                    is AppCrashesSideEffect.NavigateToCrashDetails -> findNavController().navigate(
+                        resId = Directions.action_appCrashesFragment_to_crashDetailsFragment,
+                        args = bundleOf("crash_id" to sideEffect.crashId),
+                    )
 
                     else -> Unit
                 }
