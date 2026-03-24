@@ -44,6 +44,20 @@ jobs:
           mkdir -p app/keystore
           echo "$KEYSTORE_BASE64" | base64 --decode > app/keystore/main.jks
 
+      - name: Convert Keystore to JKS
+        if: inputs.checkout_keystore
+        env:
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+        run: |
+          keytool -importkeystore \
+            -srckeystore app/keystore/main.jks \
+            -destkeystore app/keystore/main.jks.tmp \
+            -deststoretype JKS \
+            -srcstorepass "$KEY_STORE_PASSWORD" \
+            -deststorepass "$KEY_STORE_PASSWORD" \
+            -noprompt
+          mv app/keystore/main.jks.tmp app/keystore/main.jks
+
       - name: Build APK
         env:
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
