@@ -47,9 +47,8 @@ internal class CrashesFragment : BaseComposeFragment() {
                         )
                     }
 
-                    is CrashesSideEffect.NavigateToBlacklist -> {
+                    is CrashesSideEffect.NavigateToBlacklist ->
                         findNavController().navigate(Directions.action_crashesFragment_to_appsPickerFragment)
-                    }
 
                     else -> Unit
                 }
