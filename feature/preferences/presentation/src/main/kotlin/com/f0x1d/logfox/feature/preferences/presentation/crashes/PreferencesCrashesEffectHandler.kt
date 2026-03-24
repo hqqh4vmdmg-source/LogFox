@@ -17,19 +17,17 @@ internal class PreferencesCrashesEffectHandler @Inject constructor(
         onCommand: suspend (PreferencesCrashesCommand) -> Unit,
     ) {
         when (effect) {
-            is PreferencesCrashesSideEffect.LoadPreferences -> {
-                combine(
-                    getCollectingForCrashTypeFlowUseCase(CrashTypeNames.JAVA),
-                    getCollectingForCrashTypeFlowUseCase(CrashTypeNames.JNI),
-                    getCollectingForCrashTypeFlowUseCase(CrashTypeNames.ANR),
-                ) { collectJava, collectJni, collectAnr ->
-                    PreferencesCrashesCommand.PreferencesLoaded(
-                        collectJava = collectJava,
-                        collectJni = collectJni,
-                        collectAnr = collectAnr,
-                    )
-                }.collect(onCommand)
-            }
+            is PreferencesCrashesSideEffect.LoadPreferences -> combine(
+                getCollectingForCrashTypeFlowUseCase(CrashTypeNames.JAVA),
+                getCollectingForCrashTypeFlowUseCase(CrashTypeNames.JNI),
+                getCollectingForCrashTypeFlowUseCase(CrashTypeNames.ANR),
+            ) { collectJava, collectJni, collectAnr ->
+                PreferencesCrashesCommand.PreferencesLoaded(
+                    collectJava = collectJava,
+                    collectJni = collectJni,
+                    collectAnr = collectAnr,
+                )
+            }.collect(onCommand)
 
             is PreferencesCrashesSideEffect.SaveCollectJava ->
                 setCollectingForCrashTypeUseCase(CrashTypeNames.JAVA, effect.collect)

@@ -37,37 +37,35 @@ internal class CrashesEffectHandler @Inject constructor(
         onCommand: suspend (CrashesCommand) -> Unit,
     ) {
         when (effect) {
-            is CrashesSideEffect.LoadCrashes -> {
-                combine(
-                    getAllCrashesFlowUseCase(),
-                    getCrashesSortTypeFlowUseCase(),
-                    getCrashesSortReversedOrderFlowUseCase(),
-                ) { crashes, sortType, sortInReversedOrder ->
-                    val groupedCrashes = crashes.groupBy { it.packageName }
+            is CrashesSideEffect.LoadCrashes -> combine(
+                getAllCrashesFlowUseCase(),
+                getCrashesSortTypeFlowUseCase(),
+                getCrashesSortReversedOrderFlowUseCase(),
+            ) { crashes, sortType, sortInReversedOrder ->
+                val groupedCrashes = crashes.groupBy { it.packageName }
 
-                    val appCrashes = groupedCrashes
-                        .map {
-                            AppCrashesCount(
-                                lastCrash = it.value.first(),
-                                count = it.value.size,
-                            )
-                        }
-                        .let(sortType.sorter)
-                        .let { if (sortInReversedOrder) it.asReversed() else it }
-
-                    Triple(appCrashes, sortType, sortInReversedOrder)
-                }.distinctUntilChanged()
-                    .flowOn(defaultDispatcher)
-                    .collect { (crashes, sortType, sortInReversedOrder) ->
-                        onCommand(
-                            CrashesCommand.CrashesLoaded(
-                                crashes = crashes,
-                                sortType = sortType,
-                                sortInReversedOrder = sortInReversedOrder,
-                            ),
+                val appCrashes = groupedCrashes
+                    .map {
+                        AppCrashesCount(
+                            lastCrash = it.value.first(),
+                            count = it.value.size,
                         )
                     }
-            }
+                    .let(sortType.sorter)
+                    .let { if (sortInReversedOrder) it.asReversed() else it }
+
+                Triple(appCrashes, sortType, sortInReversedOrder)
+            }.distinctUntilChanged()
+                .flowOn(defaultDispatcher)
+                .collect { (crashes, sortType, sortInReversedOrder) ->
+                    onCommand(
+                        CrashesCommand.CrashesLoaded(
+                            crashes = crashes,
+                            sortType = sortType,
+                            sortInReversedOrder = sortInReversedOrder,
+                        ),
+                    )
+                }
 
             is CrashesSideEffect.UpdateSearchQuery -> updateCrashesSearchQueryUseCase(effect.query)
 
@@ -88,8 +86,8 @@ internal class CrashesEffectHandler @Inject constructor(
             }
 
             // UI side effects - handled by Fragment
-            is CrashesSideEffect.NavigateToCrashDetails -> Unit
-            is CrashesSideEffect.NavigateToAppCrashes -> Unit
+            is CrashesSideEffect.NavigateToCrashDetails,
+            is CrashesSideEffect.NavigateToAppCrashes,
             is CrashesSideEffect.NavigateToBlacklist -> Unit
         }
     }

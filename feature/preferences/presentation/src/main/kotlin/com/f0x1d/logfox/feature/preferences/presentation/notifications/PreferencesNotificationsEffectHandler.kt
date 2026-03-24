@@ -48,7 +48,7 @@ internal class PreferencesNotificationsEffectHandler @Inject constructor(
                 setShowingNotificationsForCrashTypeUseCase(CrashTypeNames.ANR, effect.enabled)
 
             // UI side effects - handled by Fragment
-            is PreferencesNotificationsSideEffect.OpenLoggingChannelSettings -> Unit
+            is PreferencesNotificationsSideEffect.OpenLoggingChannelSettings,
             is PreferencesNotificationsSideEffect.OpenAppNotificationSettings -> Unit
         }
     }

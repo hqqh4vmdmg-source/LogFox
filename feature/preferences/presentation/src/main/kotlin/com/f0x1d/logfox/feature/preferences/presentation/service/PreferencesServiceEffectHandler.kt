@@ -27,8 +27,8 @@ internal class PreferencesServiceEffectHandler @Inject constructor(
         onCommand: suspend (PreferencesServiceCommand) -> Unit,
     ) {
         when (effect) {
-            is PreferencesServiceSideEffect.LoadPreferences -> {
-                getSelectedTerminalTypeFlowUseCase().collect { selectedType ->
+            is PreferencesServiceSideEffect.LoadPreferences -> getSelectedTerminalTypeFlowUseCase()
+                .collect { selectedType ->
                     onCommand(
                         PreferencesServiceCommand.PreferencesLoaded(
                             selectedTerminalType = selectedType,
@@ -45,7 +45,6 @@ internal class PreferencesServiceEffectHandler @Inject constructor(
                         ),
                     )
                 }
-            }
 
             is PreferencesServiceSideEffect.CheckTerminalSupport -> onCommand(
                 if (terminals.getValue(effect.type).isSupported()) {
@@ -81,8 +80,8 @@ internal class PreferencesServiceEffectHandler @Inject constructor(
             is PreferencesServiceSideEffect.RestartLogging -> loggingServiceDelegate.restartLogging()
 
             // UI side effects - handled by Fragment
-            is PreferencesServiceSideEffect.ShowTerminalRestartDialog -> Unit
-            is PreferencesServiceSideEffect.ShowTerminalUnavailableToast -> Unit
+            is PreferencesServiceSideEffect.ShowTerminalRestartDialog,
+            is PreferencesServiceSideEffect.ShowTerminalUnavailableToast,
             is PreferencesServiceSideEffect.ShowAndroid13WarningDialog -> Unit
         }
     }
