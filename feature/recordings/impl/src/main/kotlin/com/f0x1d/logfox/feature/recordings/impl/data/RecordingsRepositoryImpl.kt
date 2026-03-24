@@ -84,10 +84,9 @@ internal class RecordingsRepositoryImpl @Inject constructor(
             // Collection of logs finished!
         }
 
+        val recordingTitle = "${context.getString(Strings.record_file)} ${logRecordingDataSource.count() + 1}"
         LogRecording(
-            title = "${context.getString(
-                Strings.record_file,
-            )} ${logRecordingDataSource.count() + 1}",
+            title = recordingTitle,
             dateAndTime = recordingTime,
             file = recordingFile,
         ).let {
@@ -104,17 +103,12 @@ internal class RecordingsRepositoryImpl @Inject constructor(
         )
 
         recordingFile.writeText(
-            lines.joinToString("\n") {
-                logLineFormatterRepository.formatForExport(
-                    logLine = it,
-                )
-            },
+            lines.joinToString("\n") { logLineFormatterRepository.formatForExport(it) },
         )
 
+        val title = "${context.getString(Strings.record_file)} ${logRecordingDataSource.count() + 1}"
         LogRecording(
-            title = "${context.getString(
-                Strings.record_file,
-            )} ${logRecordingDataSource.count() + 1}",
+            title = title,
             dateAndTime = recordingTime,
             file = recordingFile,
         ).let { logRecordingDataSource.insert(it.toEntity()) }

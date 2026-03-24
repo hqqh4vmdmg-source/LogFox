@@ -153,13 +153,8 @@ internal class RecordingLocalDataSourceImpl @Inject constructor(
         val content = linesMutex.withLock {
             if (recordedLines.isEmpty()) return@withLock ""
 
-            val formatted = recordedLines.joinToString("\n") {
-                logLineFormatterRepository.formatForExport(
-                    logLine = it,
-                )
-            }
+            val formatted = recordedLines.joinToString("\n") { logLineFormatterRepository.formatForExport(it) }
             recordedLines.clear()
-
             formatted
         }
 
