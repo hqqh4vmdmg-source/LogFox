@@ -16,10 +16,6 @@ internal class ExecuteGrantViaRootUseCaseImpl @Inject constructor(
     private val grantCommand: Array<String>
         get() = arrayOf("pm", "grant", context.packageName, Manifest.permission.READ_LOGS)
 
-    override suspend fun invoke(): Boolean = if (rootTerminal.isSupported()) {
-        rootTerminal.executeNow(*grantCommand)
-        true
-    } else {
-        false
-    }
+    override suspend fun invoke(): Boolean = rootTerminal.isSupported() &&
+        rootTerminal.executeNow(*grantCommand).isSuccessful
 }

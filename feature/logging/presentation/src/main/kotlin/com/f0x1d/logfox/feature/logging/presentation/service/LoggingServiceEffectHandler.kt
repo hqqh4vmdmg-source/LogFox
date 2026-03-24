@@ -119,7 +119,6 @@ internal class LoggingServiceEffectHandler @Inject constructor(
                     while (true) {
                         delay(getLogsUpdateIntervalUseCase())
                         val logs = getLogsSnapshotUseCase()
-                        Timber.d("Sending ${logs.size} logs to store")
                         updateLogsUseCase(logs)
                     }
                 }
@@ -146,6 +145,8 @@ internal class LoggingServiceEffectHandler @Inject constructor(
                 val terminal = effect.terminal
 
                 when {
+                    error is CancellationException -> Unit // Ignore cancellation
+
                     error is TerminalNotSupportedException -> {
                         if (shouldFallbackToDefaultTerminalUseCase()) {
                             val message = context.getString(Strings.terminal_unavailable_falling_back)
@@ -156,16 +157,11 @@ internal class LoggingServiceEffectHandler @Inject constructor(
                                 )
                             )
                         } else {
-                            // Wait and retry with same terminal
                             delay(RETRY_DELAY_MS)
-                            onCommand(
-                                LoggingServiceCommand.TerminalSelected(terminal)
-                            )
+                            onCommand(LoggingServiceCommand.TerminalSelected(terminal))
                         }
                     }
-                    error is CancellationException -> {
-                        // Ignore cancellation
-                    }
+
                     else -> {
                         val message = context.getString(
                             Strings.error,
@@ -173,11 +169,8 @@ internal class LoggingServiceEffectHandler @Inject constructor(
                         )
                         onCommand(LoggingServiceCommand.ShowToast(message))
                         Timber.e(error, "Logging error for terminal $terminal")
-                        // Wait and retry
                         delay(RETRY_DELAY_MS)
-                        onCommand(
-                            LoggingServiceCommand.TerminalSelected(terminal)
-                        )
+                        onCommand(LoggingServiceCommand.TerminalSelected(terminal))
                     }
                 }
             }
