@@ -26,7 +26,7 @@ internal class FiltersEffectHandler @Inject constructor(
         when (effect) {
             is FiltersSideEffect.LoadFilters -> getAllFiltersFlowUseCase()
                 .distinctUntilChanged()
-                .collect { filters -> onCommand(FiltersCommand.FiltersLoaded(filters)) }
+                .collect { onCommand(FiltersCommand.FiltersLoaded(it)) }
 
             is FiltersSideEffect.ImportFilters -> importFiltersFromUriUseCase(effect.uri)
 
