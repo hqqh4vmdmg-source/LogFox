@@ -136,9 +136,10 @@ internal class CrashesNotificationsLocalDataSourceImpl @Inject constructor(
         context.notificationManagerCompat.cancel(appCrash.packageName, appCrash.notificationId)
 
     override fun cancelAllCrashNotifications() {
-        context.notificationManager.activeNotifications.forEach { notification ->
+        val nm = context.notificationManager
+        nm.activeNotifications.forEach { notification ->
             if (notification.tag?.contains('.') == true) {
-                context.notificationManager.cancel(notification.tag, notification.id)
+                nm.cancel(notification.tag, notification.id)
             }
         }
     }

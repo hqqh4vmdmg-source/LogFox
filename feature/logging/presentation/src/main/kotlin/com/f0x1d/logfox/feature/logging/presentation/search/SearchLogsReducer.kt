@@ -23,7 +23,8 @@ internal class SearchLogsReducer @Inject constructor() : Reducer<SearchLogsState
             SearchLogsSideEffect.Dismiss,
         )
 
-        is SearchLogsCommand.ToggleCaseSensitive -> (!state.caseSensitive).let { newCaseSensitive ->
+        is SearchLogsCommand.ToggleCaseSensitive -> {
+            val newCaseSensitive = !state.caseSensitive
             state.copy(caseSensitive = newCaseSensitive)
                 .withSideEffects(SearchLogsSideEffect.SaveCaseSensitive(newCaseSensitive))
         }
