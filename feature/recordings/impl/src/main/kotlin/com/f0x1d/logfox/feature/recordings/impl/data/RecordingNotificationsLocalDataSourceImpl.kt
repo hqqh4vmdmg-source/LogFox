@@ -37,15 +37,7 @@ internal class RecordingNotificationsLocalDataSourceImpl @Inject constructor(
                         action = RecordingReceiver.ACTION_PAUSE_LOGGING
                     },
                 )
-                .addAction(
-                    Icons.ic_stop,
-                    context.getString(Strings.stop),
-                    context.makeBroadcastPendingIntent<RecordingReceiver>(
-                        STOP_RECORDING_INTENT_ID,
-                    ) {
-                        action = RecordingReceiver.ACTION_STOP_LOGGING
-                    },
-                )
+                .addAction(Icons.ic_stop, context.getString(Strings.stop), buildStopPendingIntent())
                 .setOngoing(true)
                 .setSilent(true)
                 .build(),
@@ -68,25 +60,17 @@ internal class RecordingNotificationsLocalDataSourceImpl @Inject constructor(
                         action = RecordingReceiver.ACTION_RESUME_LOGGING
                     },
                 )
-                .addAction(
-                    Icons.ic_stop,
-                    context.getString(Strings.stop),
-                    context.makeBroadcastPendingIntent<RecordingReceiver>(
-                        STOP_RECORDING_INTENT_ID,
-                    ) {
-                        action = RecordingReceiver.ACTION_STOP_LOGGING
-                    },
-                )
-                .setDeleteIntent(
-                    context.makeBroadcastPendingIntent<RecordingReceiver>(
-                        STOP_RECORDING_INTENT_ID,
-                    ) {
-                        action = RecordingReceiver.ACTION_STOP_LOGGING
-                    },
-                )
+                .addAction(Icons.ic_stop, context.getString(Strings.stop), buildStopPendingIntent())
+                .setDeleteIntent(buildStopPendingIntent())
                 .setSilent(true)
                 .build(),
         )
+    }
+
+    private fun buildStopPendingIntent() = context.makeBroadcastPendingIntent<RecordingReceiver>(
+        STOP_RECORDING_INTENT_ID,
+    ) {
+        action = RecordingReceiver.ACTION_STOP_LOGGING
     }
 
     override fun cancelRecordingNotification() = context.notificationManagerCompat.cancel(

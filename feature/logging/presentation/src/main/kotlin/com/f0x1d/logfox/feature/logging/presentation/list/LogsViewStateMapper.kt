@@ -16,6 +16,7 @@ internal class LogsViewStateMapper @Inject constructor(
             query = state.query,
             caseSensitive = state.caseSensitive,
         )
+        val textSize = state.textSize.toFloat()
 
         return LogsViewState(
             logs = filteredLogs.map { line ->
@@ -27,7 +28,7 @@ internal class LogsViewStateMapper @Inject constructor(
                     ),
                     expanded = state.expandedOverrides.getOrElse(line.id) { state.logsExpanded },
                     selected = line.id in state.selectedIds,
-                    textSize = state.textSize.toFloat(),
+                    textSize = textSize,
                 )
             },
             logsChanged = state.logsChanged,
