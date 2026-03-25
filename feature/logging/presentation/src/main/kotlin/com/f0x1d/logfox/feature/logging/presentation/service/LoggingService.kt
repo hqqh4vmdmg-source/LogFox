@@ -50,9 +50,7 @@ class LoggingService : LifecycleService() {
 
         // Observe side effects for UI handling
         lifecycleScope.launch {
-            store.sideEffects.collect { sideEffect ->
-                handleSideEffect(sideEffect)
-            }
+            store.sideEffects.collect(::handleSideEffect)
         }
 
         // Start logging
