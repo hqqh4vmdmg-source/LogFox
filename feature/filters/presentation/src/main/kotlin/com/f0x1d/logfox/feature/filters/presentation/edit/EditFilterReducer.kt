@@ -21,10 +21,8 @@ internal class EditFilterReducer @Inject constructor(
         )
 
         is EditFilterCommand.FilterLoaded -> {
-            val enabledLogLevels = MutableList(LogLevel.entries.size) { false }
-            val allowedLevels = command.filter.allowedLevels.map { it.ordinal }
-            for (i in enabledLogLevels.indices) {
-                enabledLogLevels[i] = allowedLevels.contains(i)
+            val enabledLogLevels = List(LogLevel.entries.size) { i ->
+                command.filter.allowedLevels.any { it.ordinal == i }
             }
 
             state.copy(
@@ -57,12 +55,11 @@ internal class EditFilterReducer @Inject constructor(
 
         is EditFilterCommand.ToggleEnabled -> state.copy(enabled = !state.enabled).noSideEffects()
 
-        is EditFilterCommand.FilterLevel -> {
-            val newEnabledLogLevels = state.enabledLogLevels.mapIndexed { index, enabled ->
+        is EditFilterCommand.FilterLevel -> state.copy(
+            enabledLogLevels = state.enabledLogLevels.mapIndexed { index, enabled ->
                 if (index == command.which) command.filtering else enabled
-            }
-            state.copy(enabledLogLevels = newEnabledLogLevels).noSideEffects()
-        }
+            },
+        ).noSideEffects()
 
         is EditFilterCommand.Save -> state.withSideEffects(
             EditFilterSideEffect.SaveFilter(
