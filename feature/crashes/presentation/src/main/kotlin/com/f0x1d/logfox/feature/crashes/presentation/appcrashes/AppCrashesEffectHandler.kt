@@ -24,13 +24,9 @@ internal class AppCrashesEffectHandler @Inject constructor(
     ) {
         when (effect) {
             is AppCrashesSideEffect.LoadCrashes -> getAllCrashesFlowUseCase()
-                .map { crashes ->
-                    crashes.filter { crash ->
-                        crash.packageName == packageName
-                    }.map { AppCrashesCount(it) }
-                }
+                .map { it.filter { crash -> crash.packageName == packageName }.map(::AppCrashesCount) }
                 .flowOn(defaultDispatcher)
-                .collect { crashes -> onCommand(AppCrashesCommand.CrashesLoaded(crashes)) }
+                .collect { onCommand(AppCrashesCommand.CrashesLoaded(it)) }
 
             is AppCrashesSideEffect.DeleteCrash -> deleteCrashUseCase(effect.crashId)
 

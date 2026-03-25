@@ -73,21 +73,19 @@ internal class LogsEffectHandler @Inject constructor(
 
             is LogsSideEffect.ExportLogsTo -> exportLogsToUriUseCase(effect.lines, effect.uri)
 
-            is LogsSideEffect.PrepareExport -> {
-                val extension = if (getExportLogsAsTxtUseCase()) "txt" else "log"
-                val filename = "${dateTimeFormatter.formatForExport(System.currentTimeMillis())}.$extension"
-                onCommand(LogsCommand.ExportPickerReady(filename))
-            }
+            is LogsSideEffect.PrepareExport -> onCommand(
+                LogsCommand.ExportPickerReady(
+                    "${dateTimeFormatter.formatForExport(System.currentTimeMillis())}.${if (getExportLogsAsTxtUseCase()) "txt" else "log"}",
+                ),
+            )
 
-            is LogsSideEffect.FormatAndCopyLog -> {
-                val formattedText = formatLogLineUseCase(effect.logLine)
-                onCommand(LogsCommand.CopyFormattedText(formattedText))
-            }
+            is LogsSideEffect.FormatAndCopyLog -> onCommand(
+                LogsCommand.CopyFormattedText(formatLogLineUseCase(effect.logLine)),
+            )
 
-            is LogsSideEffect.FormatAndCopyLogs -> {
-                val formattedText = effect.lines.joinToString("\n") { formatLogLineUseCase(it) }
-                onCommand(LogsCommand.CopyFormattedText(formattedText))
-            }
+            is LogsSideEffect.FormatAndCopyLogs -> onCommand(
+                LogsCommand.CopyFormattedText(effect.lines.joinToString("\n") { formatLogLineUseCase(it) }),
+            )
 
             is LogsSideEffect.ClearLogs -> loggingServiceDelegate.clearLogs()
 
