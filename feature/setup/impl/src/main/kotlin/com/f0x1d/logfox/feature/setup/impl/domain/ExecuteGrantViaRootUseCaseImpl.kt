@@ -13,8 +13,7 @@ internal class ExecuteGrantViaRootUseCaseImpl @Inject constructor(
     @RootTerminal private val rootTerminal: Terminal,
 ) : ExecuteGrantViaRootUseCase {
 
-    private val grantCommand: Array<String>
-        get() = arrayOf("pm", "grant", context.packageName, Manifest.permission.READ_LOGS)
+    private val grantCommand = arrayOf("pm", "grant", context.packageName, Manifest.permission.READ_LOGS)
 
     override suspend fun invoke(): Boolean = rootTerminal.isSupported() &&
         rootTerminal.executeNow(*grantCommand).isSuccessful

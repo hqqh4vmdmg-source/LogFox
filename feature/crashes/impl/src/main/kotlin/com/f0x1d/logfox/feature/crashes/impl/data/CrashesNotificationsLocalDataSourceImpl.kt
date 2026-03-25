@@ -126,9 +126,7 @@ internal class CrashesNotificationsLocalDataSourceImpl @Inject constructor(
                     .setVibrationEnabled(true)
                     .build()
 
-            context.notificationManagerCompat.apply {
-                createNotificationChannelsCompat(listOf(crashesChannel))
-            }
+            context.notificationManagerCompat.createNotificationChannelsCompat(listOf(crashesChannel))
         }
     }
 
@@ -137,11 +135,9 @@ internal class CrashesNotificationsLocalDataSourceImpl @Inject constructor(
 
     override fun cancelAllCrashNotifications() {
         val nm = context.notificationManager
-        nm.activeNotifications.forEach { notification ->
-            if (notification.tag?.contains('.') == true) {
-                nm.cancel(notification.tag, notification.id)
-            }
-        }
+        nm.activeNotifications
+            .filter { it.tag?.contains('.') == true }
+            .forEach { nm.cancel(it.tag, it.id) }
     }
 
     companion object {

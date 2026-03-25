@@ -36,7 +36,7 @@ internal class CrashCollectorDataSourceImpl @Inject constructor(
         )
         if (existingCrashes.isNotEmpty()) return
 
-        val crashLog = logLines.joinToString(separator = "\n") { it.originalContent }
+        val crashLog = logLines.joinToString("\n", transform = LogLine::originalContent)
 
         val logFile = withContext(ioDispatcher) {
             File(logsDir, "${appCrash.dateAndTime}-crash.log").apply {

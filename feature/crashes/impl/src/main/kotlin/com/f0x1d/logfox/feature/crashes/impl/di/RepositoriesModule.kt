@@ -20,27 +20,17 @@ import dagger.hilt.components.SingletonComponent
 internal interface RepositoriesModule {
 
     @Binds
-    fun bindCrashesRepository(
-        impl: CrashesRepositoryImpl,
-    ): CrashesRepository
+    fun bindCrashesRepository(impl: CrashesRepositoryImpl): CrashesRepository
 
     @Binds
-    fun bindCrashLogRepository(
-        impl: CrashLogRepositoryImpl,
-    ): CrashLogRepository
+    fun bindCrashLogRepository(impl: CrashLogRepositoryImpl): CrashLogRepository
 
     @Binds
-    fun bindDisabledAppsRepository(
-        impl: DisabledAppsRepositoryImpl,
-    ): DisabledAppsRepository
+    fun bindDisabledAppsRepository(impl: DisabledAppsRepositoryImpl): DisabledAppsRepository
 
     @Binds
-    fun bindCrashDetectingRepository(
-        impl: CrashDetectingRepositoryImpl,
-    ): CrashDetectingRepository
+    fun bindCrashDetectingRepository(impl: CrashDetectingRepositoryImpl): CrashDetectingRepository
 
     @Binds
-    fun bindCrashExportRepository(
-        impl: CrashExportRepositoryImpl,
-    ): CrashExportRepository
+    fun bindCrashExportRepository(impl: CrashExportRepositoryImpl): CrashExportRepository
 }

@@ -28,13 +28,13 @@ internal class ExportRecordingZipUseCaseImpl @Inject constructor(
         exportRepository.writeZipToUri(uri) {
             if (includeDeviceInfo) {
                 putZipEntry(
-                    "device_${suffix}.txt",
+                    "device-$suffix.txt",
                     deviceData.encodeToByteArray(),
                 )
             }
 
             putZipEntry(
-                name = "recorded_${suffix}.$logExtension",
+                name = "recorded-$suffix.$logExtension",
                 file = recording.file,
             )
         }
