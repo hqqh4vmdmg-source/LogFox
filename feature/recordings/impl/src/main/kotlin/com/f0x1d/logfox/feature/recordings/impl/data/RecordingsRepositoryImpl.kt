@@ -87,9 +87,7 @@ internal class RecordingsRepositoryImpl @Inject constructor(
             title = recordingTitle,
             dateAndTime = recordingTime,
             file = recordingFile,
-        ).let {
-            it.copy(id = logRecordingDataSource.insert(it.toEntity()))
-        }
+        ).run { copy(id = logRecordingDataSource.insert(toEntity())) }
     }
 
     override suspend fun createRecordingFrom(lines: List<LogLine>): Unit = withContext(ioDispatcher) {

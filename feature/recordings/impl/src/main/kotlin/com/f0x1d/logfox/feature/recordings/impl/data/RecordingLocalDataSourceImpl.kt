@@ -117,9 +117,7 @@ internal class RecordingLocalDataSourceImpl @Inject constructor(
             title = "${context.getString(Strings.record_file)} ${logRecordingDataSource.count() + 1}",
             dateAndTime = recordingTime,
             file = file,
-        ).let {
-            it.copy(id = logRecordingDataSource.insert(it.toEntity()))
-        }
+        ).run { copy(id = logRecordingDataSource.insert(toEntity())) }
 
         state.value = RecordingState.IDLE
 

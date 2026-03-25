@@ -9,9 +9,5 @@ internal class FormatLogLineUseCaseImpl @Inject constructor(
     private val logLineFormatterRepository: LogLineFormatterRepository,
 ) : FormatLogLineUseCase {
 
-    override fun invoke(
-        logLine: LogLine,
-    ): String = logLineFormatterRepository.formatForExport(
-        logLine = logLine,
-    )
+    override fun invoke(logLine: LogLine): String = logLineFormatterRepository.formatForExport(logLine)
 }
