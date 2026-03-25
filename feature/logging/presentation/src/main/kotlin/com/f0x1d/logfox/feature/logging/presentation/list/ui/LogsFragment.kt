@@ -112,9 +112,7 @@ internal class LogsFragment : BaseComposeFragment() {
                         viewModel.send(LogsCommand.Pause)
                     }
                 },
-                onScrollFabClick = {
-                    viewModel.send(LogsCommand.Resume)
-                },
+                onScrollFabClick = { viewModel.send(LogsCommand.Resume) },
             )
         }
 

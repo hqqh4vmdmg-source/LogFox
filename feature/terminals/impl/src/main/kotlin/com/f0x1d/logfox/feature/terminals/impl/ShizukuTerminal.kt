@@ -71,9 +71,10 @@ internal class ShizukuTerminal @Inject constructor(
                     override fun onRequestPermissionResult(requestCode: Int, grantResult: Int) {
                         if (requestCode != SHIZUKU_PERMISSION_REQUEST_ID) return
 
-                        when (grantResult == PackageManager.PERMISSION_GRANTED) {
-                            true -> it.resumeWithServiceBinding()
-                            else -> it.resume(false)
+                        if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                            it.resumeWithServiceBinding()
+                        } else {
+                            it.resume(false)
                         }
 
                         Shizuku.removeRequestPermissionResultListener(this)

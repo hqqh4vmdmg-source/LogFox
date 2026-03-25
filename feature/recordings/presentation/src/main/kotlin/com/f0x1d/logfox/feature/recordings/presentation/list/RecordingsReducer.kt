@@ -31,15 +31,9 @@ internal class RecordingsReducer @Inject constructor() : Reducer<RecordingsState
             RecordingsSideEffect.DeleteRecording(command.recordingId),
         )
 
-        is RecordingsCommand.RecordingEnded -> {
-            val recording = command.recording
-            val recordingId = recording?.id
-            if (recordingId != null) {
-                state.withSideEffects(RecordingsSideEffect.OpenRecording(recordingId))
-            } else {
-                state.noSideEffects()
-            }
-        }
+        is RecordingsCommand.RecordingEnded -> command.recording?.id?.let { recordingId ->
+            state.withSideEffects(RecordingsSideEffect.OpenRecording(recordingId))
+        } ?: state.noSideEffects()
 
         is RecordingsCommand.SaveAllCompleted -> state.withSideEffects(
             RecordingsSideEffect.OpenRecording(command.recording.id),
