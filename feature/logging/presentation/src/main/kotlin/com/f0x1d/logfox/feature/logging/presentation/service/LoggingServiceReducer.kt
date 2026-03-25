@@ -27,33 +27,23 @@ internal class LoggingServiceReducer @Inject constructor() :
             LoggingServiceSideEffect.ScheduleLogUpdates,
         )
 
-        is LoggingServiceCommand.StopLogging -> {
-            val terminal = state.currentTerminal
-            if (terminal != null) {
-                state.copy(isLoggingActive = false).withSideEffects(
-                    LoggingServiceSideEffect.StopLogCollection,
-                    LoggingServiceSideEffect.CancelLogUpdates,
-                    LoggingServiceSideEffect.NotifyLoggingStopped,
-                    LoggingServiceSideEffect.ExitTerminal(terminal),
-                )
-            } else {
-                state.copy(isLoggingActive = false).noSideEffects()
-            }
-        }
+        is LoggingServiceCommand.StopLogging -> state.currentTerminal?.let { terminal ->
+            state.copy(isLoggingActive = false).withSideEffects(
+                LoggingServiceSideEffect.StopLogCollection,
+                LoggingServiceSideEffect.CancelLogUpdates,
+                LoggingServiceSideEffect.NotifyLoggingStopped,
+                LoggingServiceSideEffect.ExitTerminal(terminal),
+            )
+        } ?: state.copy(isLoggingActive = false).noSideEffects()
 
-        is LoggingServiceCommand.RestartLogging -> {
-            val terminal = state.currentTerminal
-            if (terminal != null) {
-                state.copy(isLoggingActive = false).withSideEffects(
-                    LoggingServiceSideEffect.StopLogCollection,
-                    LoggingServiceSideEffect.CancelLogUpdates,
-                    LoggingServiceSideEffect.ExitTerminal(terminal),
-                    LoggingServiceSideEffect.SelectTerminal,
-                )
-            } else {
-                state.withSideEffects(LoggingServiceSideEffect.SelectTerminal)
-            }
-        }
+        is LoggingServiceCommand.RestartLogging -> state.currentTerminal?.let { terminal ->
+            state.copy(isLoggingActive = false).withSideEffects(
+                LoggingServiceSideEffect.StopLogCollection,
+                LoggingServiceSideEffect.CancelLogUpdates,
+                LoggingServiceSideEffect.ExitTerminal(terminal),
+                LoggingServiceSideEffect.SelectTerminal,
+            )
+        } ?: state.withSideEffects(LoggingServiceSideEffect.SelectTerminal)
 
         is LoggingServiceCommand.ClearLogs -> state.withSideEffects(LoggingServiceSideEffect.ClearLogs)
 
@@ -84,16 +74,12 @@ internal class LoggingServiceReducer @Inject constructor() :
             ),
         )
 
-        is LoggingServiceCommand.LoggingFlowCompleted -> {
+        is LoggingServiceCommand.LoggingFlowCompleted ->
             // Logging flow completed normally (e.g., terminal process ended)
             // Restart the logging flow if still active
-            val terminal = state.currentTerminal
-            if (state.isLoggingActive && terminal != null) {
+            state.currentTerminal?.takeIf { state.isLoggingActive }?.let { terminal ->
                 state.withSideEffects(LoggingServiceSideEffect.StartLogCollection(terminal))
-            } else {
-                state.noSideEffects()
-            }
-        }
+            } ?: state.noSideEffects()
 
         is LoggingServiceCommand.ShowToast -> state.withSideEffects(
             LoggingServiceSideEffect.ShowToast(command.message),

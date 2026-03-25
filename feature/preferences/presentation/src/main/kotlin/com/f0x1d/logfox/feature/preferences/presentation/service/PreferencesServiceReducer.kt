@@ -53,10 +53,8 @@ internal class PreferencesServiceReducer @Inject constructor() : Reducer<Prefere
             fallbackToDefault = command.enabled,
         ).withSideEffects(PreferencesServiceSideEffect.SaveFallbackToDefault(command.enabled))
 
-        is PreferencesServiceCommand.StartOnBootChanged -> {
-            val newState = state.copy(startOnBoot = command.enabled)
-            val isDefaultTerminal = state.selectedTerminalType == TerminalType.Default
-            if (isAtLeastAndroid13 && command.enabled && isDefaultTerminal) {
+        is PreferencesServiceCommand.StartOnBootChanged -> state.copy(startOnBoot = command.enabled).let { newState ->
+            if (isAtLeastAndroid13 && command.enabled && state.selectedTerminalType == TerminalType.Default) {
                 newState.withSideEffects(
                     PreferencesServiceSideEffect.SaveStartOnBoot(command.enabled),
                     PreferencesServiceSideEffect.ShowAndroid13WarningDialog,
@@ -70,19 +68,19 @@ internal class PreferencesServiceReducer @Inject constructor() : Reducer<Prefere
             stopLoggingOnBackExit = command.enabled,
         ).withSideEffects(PreferencesServiceSideEffect.SaveStopLoggingOnBackExit(command.enabled))
 
-        is PreferencesServiceCommand.ShowLogsFromAppLaunchChanged -> {
-            val newState = state.copy(showLogsFromAppLaunch = command.enabled)
-            if (!command.enabled) {
-                newState.withSideEffects(
-                    PreferencesServiceSideEffect.SaveShowLogsFromAppLaunch(command.enabled),
-                    PreferencesServiceSideEffect.RestartLogging,
-                )
-            } else {
-                newState.withSideEffects(
-                    PreferencesServiceSideEffect.SaveShowLogsFromAppLaunch(command.enabled),
-                )
+        is PreferencesServiceCommand.ShowLogsFromAppLaunchChanged ->
+            state.copy(showLogsFromAppLaunch = command.enabled).let { newState ->
+                if (!command.enabled) {
+                    newState.withSideEffects(
+                        PreferencesServiceSideEffect.SaveShowLogsFromAppLaunch(command.enabled),
+                        PreferencesServiceSideEffect.RestartLogging,
+                    )
+                } else {
+                    newState.withSideEffects(
+                        PreferencesServiceSideEffect.SaveShowLogsFromAppLaunch(command.enabled),
+                    )
+                }
             }
-        }
 
         is PreferencesServiceCommand.IncludeDeviceInfoChanged -> state.copy(
             includeDeviceInfo = command.enabled,

@@ -54,16 +54,21 @@ internal class CrashDetailsEffectHandler @Inject constructor(
                 )
             }.collect(onCommand)
 
-            is CrashDetailsSideEffect.PrepareFileExport -> {
-                val extension = if (getExportLogsAsTxtUseCase()) "txt" else "log"
-                val filename = exportFilename(effect.packageName, effect.dateAndTime, extension)
-                onCommand(CrashDetailsCommand.FileExportPickerReady(filename))
-            }
+            is CrashDetailsSideEffect.PrepareFileExport -> onCommand(
+                CrashDetailsCommand.FileExportPickerReady(
+                    exportFilename(
+                        effect.packageName,
+                        effect.dateAndTime,
+                        if (getExportLogsAsTxtUseCase()) "txt" else "log",
+                    ),
+                ),
+            )
 
-            is CrashDetailsSideEffect.PrepareZipExport -> {
-                val filename = exportFilename(effect.packageName, effect.dateAndTime, "zip")
-                onCommand(CrashDetailsCommand.ZipExportPickerReady(filename))
-            }
+            is CrashDetailsSideEffect.PrepareZipExport -> onCommand(
+                CrashDetailsCommand.ZipExportPickerReady(
+                    exportFilename(effect.packageName, effect.dateAndTime, "zip"),
+                ),
+            )
 
             is CrashDetailsSideEffect.ExportCrashToZip -> exportCrashToZipUseCase(crashId, effect.uri)
 
