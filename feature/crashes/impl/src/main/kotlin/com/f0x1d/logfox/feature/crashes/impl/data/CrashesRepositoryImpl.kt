@@ -74,9 +74,7 @@ internal class CrashesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun clear() = withContext(ioDispatcher) {
-        getAll().forEach {
-            it.deleteAssociatedFiles()
-        }
+        getAll().forEach(AppCrash::deleteAssociatedFiles)
         appCrashDataSource.deleteAll()
 
         notificationsLocalDataSource.cancelAllCrashNotifications()

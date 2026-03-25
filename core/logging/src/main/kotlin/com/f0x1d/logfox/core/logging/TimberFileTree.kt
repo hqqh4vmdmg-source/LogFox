@@ -29,9 +29,7 @@ class TimberFileTree @Inject constructor(
             logsFile.writeText("")
 
             for (value in channel) {
-                logsFile.appendText(
-                    text = value + "\n",
-                )
+                logsFile.appendText(value + "\n")
             }
         }
     }

@@ -85,9 +85,7 @@ class AppsPickerFragment : Fragment() {
         )
 
         LaunchedEffect(viewModel) {
-            viewModel.sideEffects.collect { sideEffect ->
-                handleSideEffect(sideEffect)
-            }
+            viewModel.sideEffects.collect(::handleSideEffect)
         }
 
         AppsPickerScreenContent(
@@ -101,9 +99,7 @@ class AppsPickerFragment : Fragment() {
             is AppsPickerSideEffect.PopBackStack -> findNavController().popBackStack()
 
             is AppsPickerSideEffect.HandleAppSelection -> {
-                if (resultHandler?.onAppSelected(sideEffect.app) == true) {
-                    findNavController().popBackStack()
-                }
+                if (resultHandler?.onAppSelected(sideEffect.app) == true) findNavController().popBackStack()
             }
 
             // Business logic side effects are handled by EffectHandler

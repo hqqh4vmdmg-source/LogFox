@@ -52,10 +52,10 @@ class Store<State, Command, SideEffect>(
     }
 
     fun cancel() {
-        jobs.values.forEach { it.cancel() }
+        jobs.values.forEach(Job::cancel)
         jobs.clear()
 
         _sideEffects.close()
-        effectHandlers.forEach { it.close() }
+        effectHandlers.forEach(EffectHandler<*, *>::close)
     }
 }

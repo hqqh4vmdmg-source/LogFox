@@ -27,17 +27,12 @@ internal class RecordingDetailsReducer @Inject constructor() : Reducer<Recording
             RecordingDetailsSideEffect.ExportZipFile(command.uri),
         )
 
-        is RecordingDetailsCommand.UpdateTitle -> {
-            val recording = state.recording
-            if (recording != null) {
-                state.copy(currentTitle = command.title)
-                    .withSideEffects(
-                        RecordingDetailsSideEffect.UpdateTitle(command.title, recording.id),
-                    )
-            } else {
-                state.noSideEffects()
-            }
-        }
+        is RecordingDetailsCommand.UpdateTitle -> state.recording?.let { recording ->
+            state.copy(currentTitle = command.title)
+                .withSideEffects(
+                    RecordingDetailsSideEffect.UpdateTitle(command.title, recording.id),
+                )
+        } ?: state.noSideEffects()
 
         is RecordingDetailsCommand.ExportFileClicked -> state.withSideEffects(
             RecordingDetailsSideEffect.PrepareFileExport,
