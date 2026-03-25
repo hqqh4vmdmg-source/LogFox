@@ -98,7 +98,7 @@ internal class LoggingRepositoryImpl @Inject constructor(
             delay(100L)
         }
 
-        "not reachable"
+        error("unreachable")
     }
 
     private fun formatTimestampForLogcat(timeMillis: Long): String {

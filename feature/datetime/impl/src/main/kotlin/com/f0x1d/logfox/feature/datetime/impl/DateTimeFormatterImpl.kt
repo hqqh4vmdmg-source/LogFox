@@ -40,5 +40,9 @@ internal class DateTimeFormatterImpl @Inject constructor(
 
     private val String.withReplacedBadSymbolsForFileName get() =
         replace(":", "-")
-            .replace("[^a-zA-Z0-9\\-]".toRegex(), "_")
+            .replace(BAD_FILE_SYMBOLS_REGEX, "_")
+
+    private companion object {
+        val BAD_FILE_SYMBOLS_REGEX = "[^a-zA-Z0-9\\-]".toRegex()
+    }
 }

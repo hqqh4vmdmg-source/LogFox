@@ -21,6 +21,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -46,12 +47,12 @@ internal class RecordingLocalDataSourceImpl @Inject constructor(
     private val enabledFilters = MutableStateFlow<List<UserFilter>>(emptyList())
     private var filtersCollectionJob: Job? = null
 
-    private val recordingsDir = File("${context.filesDir.absolutePath}/recordings").apply {
+    private val recordingsDir = File(context.filesDir, "recordings").apply {
         mkdirs()
     }
 
     private val state = MutableStateFlow(RecordingState.IDLE)
-    override val recordingState: StateFlow<RecordingState> = state
+    override val recordingState: StateFlow<RecordingState> = state.asStateFlow()
 
     private var recordingTime = 0L
     private var recordingFile: File? = null

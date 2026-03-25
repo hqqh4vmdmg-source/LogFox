@@ -1,7 +1,6 @@
 package com.f0x1d.logfox.core.preferences.impl
 
 import com.f0x1d.logfox.core.preferences.api.PreferenceStateFlow
-
 import com.fredporciuncula.flow.preferences.Preference
 import kotlinx.coroutines.flow.FlowCollector
 
