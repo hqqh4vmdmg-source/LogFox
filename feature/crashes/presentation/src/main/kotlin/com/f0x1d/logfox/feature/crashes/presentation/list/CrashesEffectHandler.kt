@@ -45,10 +45,10 @@ internal class CrashesEffectHandler @Inject constructor(
                 val groupedCrashes = crashes.groupBy { it.packageName }
 
                 val appCrashes = groupedCrashes
-                    .map {
+                    .map { (_, groupedCrashList) ->
                         AppCrashesCount(
-                            lastCrash = it.value.first(),
-                            count = it.value.size,
+                            lastCrash = groupedCrashList.first(),
+                            count = groupedCrashList.size,
                         )
                     }
                     .let(sortType.sorter)

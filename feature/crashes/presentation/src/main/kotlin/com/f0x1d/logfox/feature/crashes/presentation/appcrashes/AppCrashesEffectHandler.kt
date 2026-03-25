@@ -24,7 +24,7 @@ internal class AppCrashesEffectHandler @Inject constructor(
     ) {
         when (effect) {
             is AppCrashesSideEffect.LoadCrashes -> getAllCrashesFlowUseCase()
-                .map { it.filter { crash -> crash.packageName == packageName }.map(::AppCrashesCount) }
+                .map { crashes -> crashes.filter { it.packageName == packageName }.map(::AppCrashesCount) }
                 .flowOn(defaultDispatcher)
                 .collect { onCommand(AppCrashesCommand.CrashesLoaded(it)) }
 

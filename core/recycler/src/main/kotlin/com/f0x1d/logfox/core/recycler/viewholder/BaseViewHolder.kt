@@ -8,7 +8,7 @@ abstract class BaseViewHolder<T, D : ViewBinding>(protected val binding: D) : Re
 
     @Suppress("UNCHECKED_CAST")
     protected val baseAdapter get() = bindingAdapter as? BaseListAdapter<T, D>
-    protected val elements: List<T> get() = baseAdapter?.currentList ?: emptyList()
+    protected val elements: List<T> get() = baseAdapter?.currentList.orEmpty()
     protected val currentItem: T? get() = elements.getOrNull(bindingAdapterPosition)
 
     protected abstract fun D.bindTo(data: T)
