@@ -23,7 +23,7 @@ internal class CrashDetailsBlacklistEffectHandler @Inject constructor(
         when (effect) {
             is CrashDetailsSideEffect.LoadCrash -> getCrashByIdFlowUseCase(crashId)
                 .flatMapLatest { crash ->
-                    crash?.let { isAppDisabledFlowUseCase(it.packageName) } ?: flowOf(null)
+                    crash?.packageName?.let(isAppDisabledFlowUseCase::invoke) ?: flowOf(null)
                 }
                 .collect { blacklisted ->
                     onCommand(CrashDetailsCommand.BlacklistStatusLoaded(blacklisted))

@@ -21,9 +21,7 @@ internal class EditFilterReducer @Inject constructor(
         )
 
         is EditFilterCommand.FilterLoaded -> {
-            val enabledLogLevels = List(LogLevel.entries.size) { i ->
-                command.filter.allowedLevels.any { it.ordinal == i }
-            }
+            val enabledLogLevels = LogLevel.entries.map { it in command.filter.allowedLevels }
 
             state.copy(
                 filter = command.filter,
@@ -87,7 +85,6 @@ internal class EditFilterReducer @Inject constructor(
         is EditFilterCommand.SelectApp -> state.withSideEffects(EditFilterSideEffect.NavigateToAppPicker)
     }
 
-    private fun List<Boolean>.toEnabledLogLevels(): List<LogLevel> = mapIndexedNotNull { index, value ->
-        if (value) LogLevel.entries[index] else null
-    }
+    private fun List<Boolean>.toEnabledLogLevels(): List<LogLevel> =
+        zip(LogLevel.entries).mapNotNull { (enabled, level) -> level.takeIf { enabled } }
 }
