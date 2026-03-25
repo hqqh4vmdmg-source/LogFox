@@ -85,21 +85,15 @@ internal class CrashDetailsFragment : BaseComposeFragment() {
                         }
                     }
 
-                    is CrashDetailsSideEffect.ShareCrashLog -> {
-                        requireContext().shareIntent(sideEffect.text)
-                    }
+                    is CrashDetailsSideEffect.ShareCrashLog -> requireContext().shareIntent(sideEffect.text)
 
-                    is CrashDetailsSideEffect.Close -> {
-                        findNavController().popBackStack()
-                    }
+                    is CrashDetailsSideEffect.Close -> findNavController().popBackStack()
 
-                    is CrashDetailsSideEffect.LaunchFileExportPicker -> {
+                    is CrashDetailsSideEffect.LaunchFileExportPicker ->
                         exportCrashLauncher.launch(sideEffect.filename)
-                    }
 
-                    is CrashDetailsSideEffect.LaunchZipExportPicker -> {
+                    is CrashDetailsSideEffect.LaunchZipExportPicker ->
                         zipCrashLauncher.launch(sideEffect.filename)
-                    }
 
                     else -> Unit
                 }

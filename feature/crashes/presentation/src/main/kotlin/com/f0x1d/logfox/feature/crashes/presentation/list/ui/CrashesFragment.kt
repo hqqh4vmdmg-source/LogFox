@@ -30,22 +30,18 @@ internal class CrashesFragment : BaseComposeFragment() {
         LaunchedEffect(viewModel) {
             viewModel.sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is CrashesSideEffect.NavigateToCrashDetails -> {
-                        findNavController().navigate(
-                            resId = Directions.action_crashesFragment_to_crashDetailsFragment,
-                            args = bundleOf("crash_id" to sideEffect.crashId),
-                        )
-                    }
+                    is CrashesSideEffect.NavigateToCrashDetails -> findNavController().navigate(
+                        resId = Directions.action_crashesFragment_to_crashDetailsFragment,
+                        args = bundleOf("crash_id" to sideEffect.crashId),
+                    )
 
-                    is CrashesSideEffect.NavigateToAppCrashes -> {
-                        findNavController().navigate(
-                            resId = Directions.action_crashesFragment_to_appCrashesFragment,
-                            args = bundleOf(
-                                "package_name" to sideEffect.packageName,
-                                "app_name" to sideEffect.appName,
-                            ),
-                        )
-                    }
+                    is CrashesSideEffect.NavigateToAppCrashes -> findNavController().navigate(
+                        resId = Directions.action_crashesFragment_to_appCrashesFragment,
+                        args = bundleOf(
+                            "package_name" to sideEffect.packageName,
+                            "app_name" to sideEffect.appName,
+                        ),
+                    )
 
                     is CrashesSideEffect.NavigateToBlacklist ->
                         findNavController().navigate(Directions.action_crashesFragment_to_appsPickerFragment)

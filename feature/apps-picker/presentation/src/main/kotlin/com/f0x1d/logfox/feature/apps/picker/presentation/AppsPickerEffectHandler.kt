@@ -32,7 +32,7 @@ internal class AppsPickerEffectHandler @Inject constructor(
             }
 
             // UI side effects are handled by Fragment
-            is AppsPickerSideEffect.PopBackStack -> Unit
+            is AppsPickerSideEffect.PopBackStack,
             is AppsPickerSideEffect.HandleAppSelection -> Unit
         }
     }

@@ -176,7 +176,7 @@ internal class LoggingServiceEffectHandler @Inject constructor(
             }
 
             // UI side effects - handled by Service, ignored here
-            is LoggingServiceSideEffect.ShowToast -> Unit
+            is LoggingServiceSideEffect.ShowToast,
             is LoggingServiceSideEffect.PerformKillService -> Unit
         }
     }
