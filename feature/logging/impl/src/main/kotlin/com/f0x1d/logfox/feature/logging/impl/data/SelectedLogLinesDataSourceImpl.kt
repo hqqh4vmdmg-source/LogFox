@@ -16,7 +16,7 @@ internal class SelectedLogLinesDataSourceImpl @Inject constructor(
 ) : SelectedLogLinesDataSource {
     private val mutableLines = MutableStateFlow(emptyList<LogLine>())
 
-    override val selectedLines: Flow<List<LogLine>> get() = mutableLines.asStateFlow()
+    override val selectedLines: Flow<List<LogLine>> = mutableLines.asStateFlow()
 
     override suspend fun updateSelectedLines(selectedLines: List<LogLine>) = withContext(defaultDispatcher) {
         mutableLines.value = selectedLines

@@ -16,17 +16,11 @@ import dagger.hilt.components.SingletonComponent
 internal interface DisabledAppsUseCaseModule {
 
     @Binds
-    fun bindGetAllDisabledAppsFlowUseCase(
-        getAllDisabledAppsFlowUseCaseImpl: GetAllDisabledAppsFlowUseCaseImpl,
-    ): GetAllDisabledAppsFlowUseCase
+    fun bindGetAllDisabledAppsFlowUseCase(impl: GetAllDisabledAppsFlowUseCaseImpl): GetAllDisabledAppsFlowUseCase
 
     @Binds
-    fun bindIsAppDisabledFlowUseCase(
-        isAppDisabledFlowUseCaseImpl: IsAppDisabledFlowUseCaseImpl,
-    ): IsAppDisabledFlowUseCase
+    fun bindIsAppDisabledFlowUseCase(impl: IsAppDisabledFlowUseCaseImpl): IsAppDisabledFlowUseCase
 
     @Binds
-    fun bindCheckAppDisabledUseCase(
-        checkAppDisabledUseCaseImpl: CheckAppDisabledUseCaseImpl,
-    ): CheckAppDisabledUseCase
+    fun bindCheckAppDisabledUseCase(impl: CheckAppDisabledUseCaseImpl): CheckAppDisabledUseCase
 }

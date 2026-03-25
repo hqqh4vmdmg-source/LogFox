@@ -16,8 +16,8 @@ internal class SearchDataSourceImpl @Inject constructor(
     private val mutableQuery = MutableStateFlow<String?>(null)
     private val mutableCaseSensitive = MutableStateFlow(false)
 
-    override val query: StateFlow<String?> get() = mutableQuery.asStateFlow()
-    override val caseSensitive: StateFlow<Boolean> get() = mutableCaseSensitive.asStateFlow()
+    override val query: StateFlow<String?> = mutableQuery.asStateFlow()
+    override val caseSensitive: StateFlow<Boolean> = mutableCaseSensitive.asStateFlow()
 
     override suspend fun updateQuery(query: String?) = withContext(defaultDispatcher) {
         mutableQuery.value = query

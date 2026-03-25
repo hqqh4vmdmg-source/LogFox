@@ -41,6 +41,5 @@ internal class ANRDataSource @Inject constructor(
         const val TAG = "ActivityManager"
         const val ANR_PREFIX = "ANR in "
         const val ANR_PREFIX_LENGTH = 7 // "ANR in ".length
-        const val UNKNOWN_PACKAGE = "unknown"
     }
 }

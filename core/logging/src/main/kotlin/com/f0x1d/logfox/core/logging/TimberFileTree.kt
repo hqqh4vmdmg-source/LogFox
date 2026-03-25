@@ -29,7 +29,7 @@ class TimberFileTree @Inject constructor(
             logsFile.writeText("")
 
             for (value in channel) {
-                logsFile.appendText(value + "\n")
+                logsFile.appendText("$value\n")
             }
         }
     }
@@ -39,9 +39,9 @@ class TimberFileTree @Inject constructor(
             append(tag ?: "NO_TAG")
             append(": ")
             append(message)
-            t?.stackTraceToString()?.let {
+            t?.let {
                 append('\n')
-                append(it)
+                append(it.stackTraceToString())
             }
         }
         channel.trySend(line)

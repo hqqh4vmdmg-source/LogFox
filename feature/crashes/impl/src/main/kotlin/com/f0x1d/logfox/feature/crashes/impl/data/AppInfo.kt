@@ -7,10 +7,10 @@ internal data class AppInfo(
     val versionCode: Long?,
 ) {
 
-    fun format(): String = buildList<String> {
-        appName?.let { add("APP_NAME: $it") }
-        add("PACKAGE: $packageName")
-        versionName?.let { add("VERSION_NAME: $it") }
-        versionCode?.let { add("VERSION_CODE: $it") }
-    }.joinToString("\n")
+    fun format(): String = buildString {
+        appName?.let { appendLine("APP_NAME: $it") }
+        appendLine("PACKAGE: $packageName")
+        versionName?.let { appendLine("VERSION_NAME: $it") }
+        versionCode?.let { append("VERSION_CODE: $it") }
+    }.trimEnd()
 }

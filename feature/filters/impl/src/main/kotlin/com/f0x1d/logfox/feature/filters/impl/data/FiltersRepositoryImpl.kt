@@ -21,7 +21,7 @@ internal class FiltersRepositoryImpl @Inject constructor(
 ) : FiltersRepository {
 
     override fun getAllEnabledAsFlow(): Flow<List<UserFilter>> = userFilterDataSource.getAllEnabledAsFlow()
-        .map { it.map { e -> e.toDomainModel() } }
+        .map { entities -> entities.map { it.toDomainModel() } }
         .distinctUntilChanged()
         .flowOn(ioDispatcher)
 
@@ -87,7 +87,7 @@ internal class FiltersRepositoryImpl @Inject constructor(
     private suspend fun update(newValue: () -> UserFilter) = update(newValue())
 
     override fun getAllAsFlow(): Flow<List<UserFilter>> = userFilterDataSource.getAllAsFlow()
-        .map { it.map { e -> e.toDomainModel() } }
+        .map { entities -> entities.map { it.toDomainModel() } }
         .distinctUntilChanged()
         .flowOn(ioDispatcher)
 

@@ -17,7 +17,7 @@ internal class LogsDataSourceImpl @Inject constructor(
 
     private val mutableLogs = MutableStateFlow(emptyList<LogLine>())
 
-    override val logs: Flow<List<LogLine>> get() = mutableLogs.asStateFlow()
+    override val logs: Flow<List<LogLine>> = mutableLogs.asStateFlow()
 
     override suspend fun updateLogs(logs: List<LogLine>) = withContext(defaultDispatcher) {
         mutableLogs.value = logs

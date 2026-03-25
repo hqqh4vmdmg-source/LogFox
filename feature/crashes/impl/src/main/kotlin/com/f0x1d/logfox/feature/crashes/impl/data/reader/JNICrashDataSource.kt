@@ -55,6 +55,5 @@ internal class JNICrashDataSource @Inject constructor(
         const val CRASH_HEADER = "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
         const val PACKAGE_START_MARKER = ">>> "
         const val PACKAGE_END_MARKER = " <<<"
-        const val UNKNOWN_PACKAGE = "unknown"
     }
 }

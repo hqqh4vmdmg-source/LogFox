@@ -32,57 +32,35 @@ import dagger.hilt.components.SingletonComponent
 internal interface FiltersUseCaseModule {
 
     @Binds
-    fun bindGetAllFiltersFlowUseCase(
-        getAllFiltersFlowUseCaseImpl: GetAllFiltersFlowUseCaseImpl,
-    ): GetAllFiltersFlowUseCase
+    fun bindGetAllFiltersFlowUseCase(impl: GetAllFiltersFlowUseCaseImpl): GetAllFiltersFlowUseCase
 
     @Binds
-    fun bindGetAllEnabledFiltersFlowUseCase(
-        getAllEnabledFiltersFlowUseCaseImpl: GetAllEnabledFiltersFlowUseCaseImpl,
-    ): GetAllEnabledFiltersFlowUseCase
+    fun bindGetAllEnabledFiltersFlowUseCase(impl: GetAllEnabledFiltersFlowUseCaseImpl): GetAllEnabledFiltersFlowUseCase
 
     @Binds
-    fun bindGetFilterByIdFlowUseCase(
-        getFilterByIdFlowUseCaseImpl: GetFilterByIdFlowUseCaseImpl,
-    ): GetFilterByIdFlowUseCase
+    fun bindGetFilterByIdFlowUseCase(impl: GetFilterByIdFlowUseCaseImpl): GetFilterByIdFlowUseCase
 
     @Binds
-    fun bindCreateFilterUseCase(
-        createFilterUseCaseImpl: CreateFilterUseCaseImpl,
-    ): CreateFilterUseCase
+    fun bindCreateFilterUseCase(impl: CreateFilterUseCaseImpl): CreateFilterUseCase
 
     @Binds
-    fun bindCreateAllFiltersUseCase(
-        createAllFiltersUseCaseImpl: CreateAllFiltersUseCaseImpl,
-    ): CreateAllFiltersUseCase
+    fun bindCreateAllFiltersUseCase(impl: CreateAllFiltersUseCaseImpl): CreateAllFiltersUseCase
 
     @Binds
-    fun bindUpdateFilterUseCase(
-        updateFilterUseCaseImpl: UpdateFilterUseCaseImpl,
-    ): UpdateFilterUseCase
+    fun bindUpdateFilterUseCase(impl: UpdateFilterUseCaseImpl): UpdateFilterUseCase
 
     @Binds
-    fun bindSwitchFilterUseCase(
-        switchFilterUseCaseImpl: SwitchFilterUseCaseImpl,
-    ): SwitchFilterUseCase
+    fun bindSwitchFilterUseCase(impl: SwitchFilterUseCaseImpl): SwitchFilterUseCase
 
     @Binds
-    fun bindDeleteFilterUseCase(
-        deleteFilterUseCaseImpl: DeleteFilterUseCaseImpl,
-    ): DeleteFilterUseCase
+    fun bindDeleteFilterUseCase(impl: DeleteFilterUseCaseImpl): DeleteFilterUseCase
 
     @Binds
-    fun bindClearAllFiltersUseCase(
-        clearAllFiltersUseCaseImpl: ClearAllFiltersUseCaseImpl,
-    ): ClearAllFiltersUseCase
+    fun bindClearAllFiltersUseCase(impl: ClearAllFiltersUseCaseImpl): ClearAllFiltersUseCase
 
     @Binds
-    fun bindExportFiltersToUriUseCase(
-        exportFiltersToUriUseCaseImpl: ExportFiltersToUriUseCaseImpl,
-    ): ExportFiltersToUriUseCase
+    fun bindExportFiltersToUriUseCase(impl: ExportFiltersToUriUseCaseImpl): ExportFiltersToUriUseCase
 
     @Binds
-    fun bindImportFiltersFromUriUseCase(
-        importFiltersFromUriUseCaseImpl: ImportFiltersFromUriUseCaseImpl,
-    ): ImportFiltersFromUriUseCase
+    fun bindImportFiltersFromUriUseCase(impl: ImportFiltersFromUriUseCaseImpl): ImportFiltersFromUriUseCase
 }

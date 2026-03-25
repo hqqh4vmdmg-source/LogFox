@@ -62,28 +62,28 @@ internal class CrashExportRepositoryImpl @Inject constructor(
         exportRepository.writeZipToUri(uri) {
             deviceInfo?.let {
                 putZipEntry(
-                    name = "device_${suffix}.txt",
+                    name = "device-$suffix.txt",
                     content = it.encodeToByteArray(),
                 )
             }
 
             appInfo?.let {
                 putZipEntry(
-                    name = "app_${suffix}.txt",
+                    name = "app-$suffix.txt",
                     content = it.encodeToByteArray(),
                 )
             }
 
             appCrash.logFile?.let { file ->
                 putZipEntry(
-                    name = "crash_${suffix}.$logExtension",
+                    name = "crash-$suffix.$logExtension",
                     content = formatLogFileContent(file).encodeToByteArray(),
                 )
             }
 
             appCrash.logDumpFile?.let { file ->
                 putZipEntry(
-                    name = "dump_${suffix}.$logExtension",
+                    name = "dump-$suffix.$logExtension",
                     content = formatLogFileContent(file).encodeToByteArray(),
                 )
             }

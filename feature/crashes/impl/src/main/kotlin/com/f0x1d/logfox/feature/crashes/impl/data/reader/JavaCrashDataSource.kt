@@ -42,6 +42,5 @@ internal class JavaCrashDataSource @Inject constructor(
         const val TAG = "AndroidRuntime"
         const val FATAL_EXCEPTION_PREFIX = "FATAL EXCEPTION: "
         const val PROCESS_PREFIX_LENGTH = 9 // "Process: ".length
-        const val UNKNOWN_PACKAGE = "unknown"
     }
 }

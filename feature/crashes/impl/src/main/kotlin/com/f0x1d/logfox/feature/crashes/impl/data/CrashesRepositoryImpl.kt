@@ -21,7 +21,7 @@ internal class CrashesRepositoryImpl @Inject constructor(
 ) : CrashesRepository {
 
     override fun getAllAsFlow(): Flow<List<AppCrash>> = appCrashDataSource.getAllAsFlow()
-        .map { it.map { e -> e.toDomainModel() } }
+        .map { entities -> entities.map { it.toDomainModel() } }
         .distinctUntilChanged()
         .flowOn(ioDispatcher)
 
@@ -53,7 +53,7 @@ internal class CrashesRepositoryImpl @Inject constructor(
 
     override suspend fun deleteAllByPackageName(packageName: String) = withContext(ioDispatcher) {
         appCrashDataSource.getAllByPackageName(packageName)
-            .map { it.toDomainModel() }
+            .map { entity -> entity.toDomainModel() }
             .forEach { crash ->
                 crash.deleteAssociatedFiles()
                 notificationsLocalDataSource.cancelCrashNotificationFor(crash)

@@ -11,16 +11,16 @@ import javax.inject.Singleton
 
 @Singleton
 internal class CrashDetectingRepositoryImpl @Inject constructor(
-    private val crashDataSources: Set<@JvmSuppressWildcards CrashDataSource>,
+    crashDataSources: Set<@JvmSuppressWildcards CrashDataSource>,
 ) : CrashDetectingRepository {
 
-    private val mutexes = crashDataSources.map { Mutex() }
+    private val sourcesWithMutexes = crashDataSources.map { it to Mutex() }
 
     override suspend fun processLogLine(line: LogLine) {
         coroutineScope {
-            crashDataSources.forEachIndexed { index, dataSource ->
+            sourcesWithMutexes.forEach { (dataSource, mutex) ->
                 launch {
-                    mutexes[index].withLock {
+                    mutex.withLock {
                         dataSource.process(line)
                     }
                 }

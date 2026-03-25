@@ -15,5 +15,5 @@ internal class CrashLogRepositoryImpl @Inject constructor(
             logLineParser.parse(index.toLong(), line)
                 ?.let(logLineFormatterRepository::formatOriginal)
                 ?: line
-        } ?: emptyList()
+        }.orEmpty()
 }

@@ -57,7 +57,7 @@ internal class RecordingLocalDataSourceImpl @Inject constructor(
     private var recordingFile: File? = null
     private val fileMutex = Mutex()
 
-    private val recordedLines = mutableListOf<LogLine>()
+    private val recordedLines = ArrayDeque<LogLine>()
     private val linesMutex = Mutex()
 
     override suspend fun record() = withContext(ioDispatcher) {
@@ -153,14 +153,14 @@ internal class RecordingLocalDataSourceImpl @Inject constructor(
         val content = linesMutex.withLock {
             if (recordedLines.isEmpty()) return@withLock ""
 
-            val formatted = recordedLines.joinToString("\n") { logLineFormatterRepository.formatForExport(it) }
+            val formatted = recordedLines.joinToString("\n", transform = logLineFormatterRepository::formatForExport)
             recordedLines.clear()
             formatted
         }
 
         if (content.isNotEmpty()) {
             fileMutex.withLock {
-                recordingFile?.appendText(content + "\n")
+                recordingFile?.appendText("$content\n")
             }
         }
     }
