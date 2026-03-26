@@ -1,15 +1,11 @@
 name: Staging
-
 on:
   workflow_dispatch:
-
   push:
     branches:
-      - 'master'
-
+      - master
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
-
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 jobs:
   extract_version:
     name: Extract Version
