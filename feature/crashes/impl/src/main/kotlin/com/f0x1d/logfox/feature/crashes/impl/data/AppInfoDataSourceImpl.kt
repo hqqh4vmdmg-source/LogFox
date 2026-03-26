@@ -28,3 +28,4 @@ internal class AppInfoDataSourceImpl @Inject constructor(
             versionCode = packageInfo?.let(PackageInfoCompat::getLongVersionCode),
         )
     }
+}

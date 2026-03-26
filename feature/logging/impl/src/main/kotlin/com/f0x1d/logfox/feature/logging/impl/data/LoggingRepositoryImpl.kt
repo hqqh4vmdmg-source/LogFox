@@ -81,7 +81,7 @@ internal class LoggingRepositoryImpl @Inject constructor(
                     }
 
                     val logLine = logLineParser.parse(id = idsCounter++, line = line)
-                    logLine?.let(::emit)
+                    if (logLine != null) emit(logLine)
                 }
             }
         } finally {

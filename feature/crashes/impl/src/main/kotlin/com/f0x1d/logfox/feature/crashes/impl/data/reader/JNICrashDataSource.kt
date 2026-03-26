@@ -19,7 +19,9 @@ internal class JNICrashDataSource @Inject constructor(
     override fun isFirstLine(line: LogLine): Boolean =
         line.isDebugTag && line.content == CRASH_HEADER
 
-    override fun filterLines(lines: MutableList<LogLine>) = lines.removeAll { !it.isDebugTag }
+    override fun filterLines(lines: MutableList<LogLine>) {
+        lines.removeAll { !it.isDebugTag }
+    }
 
     override fun shouldContinueCollecting(line: LogLine): Boolean {
         // Stop if a new crash starts
