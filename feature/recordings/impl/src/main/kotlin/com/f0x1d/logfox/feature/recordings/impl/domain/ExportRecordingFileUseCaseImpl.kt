@@ -18,7 +18,7 @@ internal class ExportRecordingFileUseCaseImpl @Inject constructor(
         val recording = recordingsRepository.getById(recordingId) ?: return
 
         if (getIncludeDeviceInfoInArchivesUseCase()) {
-            val prefix = deviceData + "\n\n"
+            val prefix = "$deviceData\n\n"
             exportRepository.writeContentAndFileToUri(uri, prefix, recording.file)
         } else {
             exportRepository.copyFileToUri(uri, recording.file)

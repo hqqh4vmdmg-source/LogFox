@@ -11,17 +11,21 @@ internal class LogsSettingsRepositoryImpl @Inject constructor(
     private val localDataSource: LogsSettingsLocalDataSource,
 ) : LogsSettingsRepository {
 
-    override fun logsUpdateInterval(): PreferenceStateFlow<Long> = localDataSource.logsUpdateInterval().asPreferenceStateFlow()
+    override fun logsUpdateInterval(): PreferenceStateFlow<Long> =
+        localDataSource.logsUpdateInterval().asPreferenceStateFlow()
 
     override fun logsTextSize(): PreferenceStateFlow<Int> = localDataSource.logsTextSize().asPreferenceStateFlow()
 
-    override fun logsDisplayLimit(): PreferenceStateFlow<Int> = localDataSource.logsDisplayLimit().asPreferenceStateFlow()
+    override fun logsDisplayLimit(): PreferenceStateFlow<Int> =
+        localDataSource.logsDisplayLimit().asPreferenceStateFlow()
 
     override fun logsExpanded(): PreferenceStateFlow<Boolean> = localDataSource.logsExpanded().asPreferenceStateFlow()
 
-    override fun resumeLoggingWithBottomTouch(): PreferenceStateFlow<Boolean> = localDataSource.resumeLoggingWithBottomTouch().asPreferenceStateFlow()
+    override fun resumeLoggingWithBottomTouch(): PreferenceStateFlow<Boolean> =
+        localDataSource.resumeLoggingWithBottomTouch().asPreferenceStateFlow()
 
-    override fun exportLogsInOriginalFormat(): PreferenceStateFlow<Boolean> = localDataSource.exportLogsInOriginalFormat().asPreferenceStateFlow()
+    override fun exportLogsInOriginalFormat(): PreferenceStateFlow<Boolean> =
+        localDataSource.exportLogsInOriginalFormat().asPreferenceStateFlow()
 
     override fun showLogDate(): PreferenceStateFlow<Boolean> = localDataSource.showLogDate().asPreferenceStateFlow()
 
@@ -33,9 +37,11 @@ internal class LogsSettingsRepositoryImpl @Inject constructor(
 
     override fun showLogTid(): PreferenceStateFlow<Boolean> = localDataSource.showLogTid().asPreferenceStateFlow()
 
-    override fun showLogPackage(): PreferenceStateFlow<Boolean> = localDataSource.showLogPackage().asPreferenceStateFlow()
+    override fun showLogPackage(): PreferenceStateFlow<Boolean> =
+        localDataSource.showLogPackage().asPreferenceStateFlow()
 
     override fun showLogTag(): PreferenceStateFlow<Boolean> = localDataSource.showLogTag().asPreferenceStateFlow()
 
-    override fun showLogContent(): PreferenceStateFlow<Boolean> = localDataSource.showLogContent().asPreferenceStateFlow()
+    override fun showLogContent(): PreferenceStateFlow<Boolean> =
+        localDataSource.showLogContent().asPreferenceStateFlow()
 }

@@ -11,7 +11,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicLong
 
 class Store<State, Command, SideEffect>(
     initialState: State,
@@ -25,7 +26,8 @@ class Store<State, Command, SideEffect>(
     private val _sideEffects = Channel<SideEffect>(capacity = Channel.UNLIMITED)
     val sideEffects: Flow<SideEffect> = _sideEffects.receiveAsFlow()
 
-    private val jobs = mutableMapOf<String, Job>()
+    private val jobs = ConcurrentHashMap<Long, Job>()
+    private val nextJobId = AtomicLong(0)
 
     fun send(command: Command) {
         val result = reducer.reduce(_state.value, command)
@@ -35,10 +37,10 @@ class Store<State, Command, SideEffect>(
             _sideEffects.trySend(sideEffect)
 
             effectHandlers.forEach { handler ->
-                val jobId = UUID.randomUUID().toString()
+                val jobId = nextJobId.getAndIncrement()
                 val job = scope.launch {
                     handler.handle(sideEffect) { cmd ->
-                        withContext(Dispatchers.Main) {
+                        withContext(Dispatchers.Main.immediate) {
                             send(cmd)
                         }
                     }
@@ -50,10 +52,10 @@ class Store<State, Command, SideEffect>(
     }
 
     fun cancel() {
-        jobs.values.forEach { it.cancel() }
+        jobs.values.forEach(Job::cancel)
         jobs.clear()
 
         _sideEffects.close()
-        effectHandlers.forEach { it.close() }
+        effectHandlers.forEach(EffectHandler<*, *>::close)
     }
 }

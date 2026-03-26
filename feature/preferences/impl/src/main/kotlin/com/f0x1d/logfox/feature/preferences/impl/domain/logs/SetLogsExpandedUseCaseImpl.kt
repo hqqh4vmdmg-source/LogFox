@@ -8,7 +8,5 @@ internal class SetLogsExpandedUseCaseImpl @Inject constructor(
     private val logsSettingsRepository: LogsSettingsRepository,
 ) : SetLogsExpandedUseCase {
 
-    override fun invoke(expanded: Boolean) {
-        logsSettingsRepository.logsExpanded().set(expanded)
-    }
+    override fun invoke(expanded: Boolean) = logsSettingsRepository.logsExpanded().set(expanded)
 }

@@ -1,7 +1,9 @@
 package com.f0x1d.logfox.feature.filters.presentation.edit
 
+import androidx.compose.runtime.Immutable
 import com.f0x1d.logfox.feature.filters.api.model.UserFilter
 
+@Immutable
 internal data class EditFilterViewState(
     val filter: UserFilter?,
     val including: Boolean,

@@ -8,7 +8,5 @@ import javax.inject.Inject
 internal class CreateRecordingFromLinesUseCaseImpl @Inject constructor(
     private val recordingsRepository: RecordingsRepository,
 ) : CreateRecordingFromLinesUseCase {
-    override suspend fun invoke(lines: List<LogLine>) {
-        recordingsRepository.createRecordingFrom(lines)
-    }
+    override suspend fun invoke(lines: List<LogLine>) = recordingsRepository.createRecordingFrom(lines)
 }

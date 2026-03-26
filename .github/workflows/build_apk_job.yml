@@ -31,14 +31,13 @@ jobs:
           java-version: 21
           distribution: oracle
           cache: 'gradle'
-          
-      
-      - name: Build APK
-        run: bash ./gradlew :app:assembleRelease --stacktrace --no-daemon
+
+      - name: Build Debug APK
+        run: bash ./gradlew :app:assembleDebug --stacktrace --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: logfox-release
+          name: logfox-debug
           compression-level: 0
-          path: app/build/outputs/apk/release/LogFox-*.apk
+          path: app/build/outputs/apk/debug/LogFox-*.apk

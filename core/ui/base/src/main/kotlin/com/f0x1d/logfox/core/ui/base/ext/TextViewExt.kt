@@ -12,20 +12,16 @@ fun TextView.doAfterTextChanged(
     callback: (Editable?) -> Unit,
 ) {
     val textWatcher = object : TextWatcher {
-        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
-        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
         override fun afterTextChanged(s: Editable) = callback(s)
     }
 
     fragment.viewLifecycleOwner.lifecycle.addObserver(
         object : DefaultLifecycleObserver {
-            override fun onResume(owner: LifecycleOwner) {
-                addTextChangedListener(textWatcher)
-            }
+            override fun onResume(owner: LifecycleOwner) = addTextChangedListener(textWatcher)
 
-            override fun onPause(owner: LifecycleOwner) {
-                removeTextChangedListener(textWatcher)
-            }
+            override fun onPause(owner: LifecycleOwner) = removeTextChangedListener(textWatcher)
         },
     )
 }

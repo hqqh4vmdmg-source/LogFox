@@ -6,7 +6,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,9 +16,9 @@ internal class SelectedLogLinesDataSourceImpl @Inject constructor(
 ) : SelectedLogLinesDataSource {
     private val mutableLines = MutableStateFlow(emptyList<LogLine>())
 
-    override val selectedLines: Flow<List<LogLine>> get() = mutableLines.asStateFlow()
+    override val selectedLines: Flow<List<LogLine>> = mutableLines.asStateFlow()
 
     override suspend fun updateSelectedLines(selectedLines: List<LogLine>) = withContext(defaultDispatcher) {
-        mutableLines.update { selectedLines.toMutableList() }
+        mutableLines.value = selectedLines
     }
 }

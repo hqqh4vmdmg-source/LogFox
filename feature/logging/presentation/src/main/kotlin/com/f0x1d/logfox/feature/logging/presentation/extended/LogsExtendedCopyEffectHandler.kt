@@ -20,17 +20,10 @@ internal class LogsExtendedCopyEffectHandler @Inject constructor(
         onCommand: suspend (LogsExtendedCopyCommand) -> Unit,
     ) {
         when (effect) {
-            is LogsExtendedCopySideEffect.LoadSelectedLines -> {
-                getSelectedLogLinesFlowUseCase()
-                    .map { lines ->
-                        lines.joinToString("\n") { line ->
-                            formatLogLineUseCase(line)
-                        }
-                    }.flowOn(defaultDispatcher)
-                    .collect { text ->
-                        onCommand(LogsExtendedCopyCommand.TextLoaded(text))
-                    }
-            }
+            is LogsExtendedCopySideEffect.LoadSelectedLines -> getSelectedLogLinesFlowUseCase()
+                .map { lines -> lines.joinToString("\n") { formatLogLineUseCase(it) } }
+                .flowOn(defaultDispatcher)
+                .collect { text -> onCommand(LogsExtendedCopyCommand.TextLoaded(text)) }
         }
     }
 }

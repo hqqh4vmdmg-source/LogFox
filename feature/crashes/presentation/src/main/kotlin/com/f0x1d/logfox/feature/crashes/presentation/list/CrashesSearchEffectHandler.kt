@@ -23,27 +23,23 @@ internal class CrashesSearchEffectHandler @Inject constructor(
         onCommand: suspend (CrashesCommand) -> Unit,
     ) {
         when (effect) {
-            is CrashesSideEffect.LoadCrashes -> {
-                combine(
-                    getAllCrashesFlowUseCase().distinctUntilChanged(),
-                    getCrashesSearchQueryFlowUseCase(),
-                ) { crashes, query -> crashes to query }
-                    .map { (crashes, query) ->
-                        crashes.filter { crash ->
-                            crash.packageName.contains(query, ignoreCase = true) ||
-                                crash.appName?.contains(query, ignoreCase = true) == true
-                        }.map { AppCrashesCount(it) }
-                    }
-                    .distinctUntilChanged()
-                    .flowOn(defaultDispatcher)
-                    .collect { searchedCrashes ->
-                        onCommand(CrashesCommand.SearchedCrashesLoaded(searchedCrashes))
-                    }
-            }
+            is CrashesSideEffect.LoadCrashes -> combine(
+                getAllCrashesFlowUseCase().distinctUntilChanged(),
+                getCrashesSearchQueryFlowUseCase(),
+            ) { crashes, query -> crashes to query }
+                .map { (crashes, query) ->
+                    crashes.filter { crash ->
+                        crash.packageName.contains(query, ignoreCase = true) ||
+                            crash.appName?.contains(query, ignoreCase = true) == true
+                    }.map { AppCrashesCount(it) }
+                }
+                .distinctUntilChanged()
+                .flowOn(defaultDispatcher)
+                .collect { searchedCrashes ->
+                    onCommand(CrashesCommand.SearchedCrashesLoaded(searchedCrashes))
+                }
 
-            else -> {
-                // Handled by other effect handlers
-            }
+            else -> Unit // Handled by other effect handlers
         }
     }
 }

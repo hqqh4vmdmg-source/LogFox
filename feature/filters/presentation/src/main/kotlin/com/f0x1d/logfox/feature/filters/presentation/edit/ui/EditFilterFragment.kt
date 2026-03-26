@@ -40,13 +40,10 @@ internal class EditFilterFragment : BaseComposeFragment() {
         LaunchedEffect(viewModel) {
             viewModel.sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is EditFilterSideEffect.NavigateToAppPicker -> {
+                    is EditFilterSideEffect.NavigateToAppPicker ->
                         findNavController().navigate(Directions.action_editFilterFragment_to_appsPickerFragment)
-                    }
 
-                    is EditFilterSideEffect.Close -> {
-                        findNavController().popBackStack()
-                    }
+                    is EditFilterSideEffect.Close -> findNavController().popBackStack()
 
                     // Business logic side effects are handled by EffectHandler
                     else -> Unit

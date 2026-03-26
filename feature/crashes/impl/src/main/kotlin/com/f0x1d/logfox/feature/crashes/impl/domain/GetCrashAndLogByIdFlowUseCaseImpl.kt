@@ -18,7 +18,7 @@ internal class GetCrashAndLogByIdFlowUseCaseImpl @Inject constructor(
                 it to runCatching {
                     crashLogRepository
                         .readCrashLog(it)
-                        .joinToString(separator = "\n")
+                        .joinToString("\n")
                 }.getOrNull()
             }
         }

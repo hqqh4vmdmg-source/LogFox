@@ -8,7 +8,5 @@ internal class SetShowLogContentUseCaseImpl @Inject constructor(
     private val logsSettingsRepository: LogsSettingsRepository,
 ) : SetShowLogContentUseCase {
 
-    override fun invoke(show: Boolean) {
-        logsSettingsRepository.showLogContent().set(show)
-    }
+    override fun invoke(show: Boolean) = logsSettingsRepository.showLogContent().set(show)
 }

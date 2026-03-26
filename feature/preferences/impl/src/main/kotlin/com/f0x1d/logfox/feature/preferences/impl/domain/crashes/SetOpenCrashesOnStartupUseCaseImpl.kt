@@ -8,7 +8,5 @@ internal class SetOpenCrashesOnStartupUseCaseImpl @Inject constructor(
     private val crashesSettingsRepository: CrashesSettingsRepository,
 ) : SetOpenCrashesOnStartupUseCase {
 
-    override fun invoke(openOnStartup: Boolean) {
-        crashesSettingsRepository.openCrashesOnStartup().set(openOnStartup)
-    }
+    override fun invoke(openOnStartup: Boolean) = crashesSettingsRepository.openCrashesOnStartup().set(openOnStartup)
 }

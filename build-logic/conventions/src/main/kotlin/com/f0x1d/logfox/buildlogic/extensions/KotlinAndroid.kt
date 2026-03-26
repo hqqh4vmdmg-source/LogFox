@@ -4,6 +4,7 @@ import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.Project
 import org.gradle.internal.Actions.with
 import org.gradle.kotlin.dsl.configure
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidExtension
 
 internal fun Project.configureKotlinAndroid(
@@ -19,7 +20,12 @@ internal fun Project.configureKotlinAndroid(
         jvmToolchain(JVM_VERSION)
 
         compilerOptions {
-            freeCompilerArgs.add("-Xannotation-default-target=param-property")
+            freeCompilerArgs.addAll(
+                "-Xannotation-default-target=param-property",
+                "-Xconsistent-data-class-copy-visibility",
+            )
+            progressiveMode = true
+            jvmDefault = JvmDefaultMode.ALL
         }
     }
 }

@@ -18,20 +18,18 @@ import com.f0x1d.logfox.feature.strings.Strings
 import java.io.File
 import kotlin.system.exitProcess
 
-val Context.hasPermissionToReadLogs: Boolean get() = ContextCompat.checkSelfPermission(
-    this,
-    Manifest.permission.READ_LOGS,
-) == PackageManager.PERMISSION_GRANTED
+val Context.hasPermissionToReadLogs: Boolean
+    get() = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS) ==
+        PackageManager.PERMISSION_GRANTED
 
 val Context.notificationManagerCompat get() = NotificationManagerCompat.from(this)
-val Context.notificationManager get() = getSystemService<NotificationManager>()!!
-val Context.activityManager get() = getSystemService<ActivityManager>()!!
+val Context.notificationManager: NotificationManager get() = getSystemService()!!
+val Context.activityManager: ActivityManager get() = getSystemService()!!
+val Context.inputMethodManager: InputMethodManager get() = getSystemService()!!
 
 fun Context.hardRestartApp() {
-    for (task in activityManager.appTasks) task.finishAndRemoveTask()
-
-    val intent = packageManager.getLaunchIntentForPackage(packageName)
-    startActivity(intent)
+    activityManager.appTasks.forEach { it.finishAndRemoveTask() }
+    startActivity(packageManager.getLaunchIntentForPackage(packageName))
     exitProcess(0)
 }
 
@@ -39,36 +37,32 @@ fun Context.toast(text: String) = Toast.makeText(this, text, Toast.LENGTH_SHORT)
 fun Context.toast(text: Int) = toast(getString(text))
 
 fun Context.shareIntent(text: String) = baseShareIntent {
-    it.putExtra(Intent.EXTRA_TEXT, text)
-    it.type = "text/plain"
+    putExtra(Intent.EXTRA_TEXT, text)
+    type = "text/plain"
 }
 
 fun Context.shareFileIntent(file: File) = baseShareIntent {
-    val uri = file.asUri(this)
-
-    it.putExtra(Intent.EXTRA_STREAM, uri)
-    it.type = "text/plain"
+    putExtra(Intent.EXTRA_STREAM, file.asUri(this@shareFileIntent))
+    type = "text/plain"
 }
 
-private fun Context.baseShareIntent(block: (Intent) -> Unit) {
-    try {
-        val intent = Intent(Intent.ACTION_SEND)
-        block(intent)
-
+private fun Context.baseShareIntent(block: Intent.() -> Unit) {
+    runCatching {
+        val intent = Intent(Intent.ACTION_SEND).apply(block)
         startActivity(Intent.createChooser(intent, getString(Strings.share)))
-    } catch (e: Exception) {
-        e.printStackTrace()
+    }.onFailure {
         toast(Strings.too_big_log)
     }
 }
 
 fun Context.catchingNotNumber(block: () -> Unit) = try {
     block()
-} catch (e: NumberFormatException) {
+} catch (_: NumberFormatException) {
     toast(Strings.this_is_not_a_number)
 }
 
-inline fun <reified T> Context.sendService(action: String) = startService(Intent(this, T::class.java).setAction(action))
+inline fun <reified T> Context.sendService(action: String) =
+    startService(Intent(this, T::class.java).setAction(action))
 
 @SuppressLint("InlinedApi")
 fun Context.hasNotificationsPermission() = if (shouldRequestNotificationsPermission) {
@@ -78,11 +72,10 @@ fun Context.hasNotificationsPermission() = if (shouldRequestNotificationsPermiss
     true
 }
 
-fun Context.doIfNotificationsAllowed(block: NotificationManagerCompat.() -> Unit) = if (hasNotificationsPermission()) {
-    block(notificationManagerCompat)
-} else {
-    Unit
+fun Context.doIfNotificationsAllowed(block: NotificationManagerCompat.() -> Unit) {
+    if (hasNotificationsPermission()) block(notificationManagerCompat)
 }
 
-val Context.isHorizontalOrientation get() = resources.configuration.orientation ==
-    Configuration.ORIENTATION_LANDSCAPE
+val Context.isHorizontalOrientation: Boolean
+    get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+

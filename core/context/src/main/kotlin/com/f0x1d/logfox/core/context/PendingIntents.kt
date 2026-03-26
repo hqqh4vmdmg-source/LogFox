@@ -30,7 +30,7 @@ inline fun <reified T : BroadcastReceiver> Context.makeBroadcastPendingIntent(
 ) = PendingIntent.getBroadcast(
     this,
     id,
-    Intent(this, T::class.java).also { setup(it) },
+    Intent(this, T::class.java).apply(setup),
     pendingIntentFlags,
 )
 
@@ -48,7 +48,7 @@ inline fun <reified T : Service> Context.makeServicePendingIntent(
 ) = PendingIntent.getService(
     this,
     id,
-    Intent(this, T::class.java).also { setup(it) },
+    Intent(this, T::class.java).apply(setup),
     pendingIntentFlags,
 )
 
@@ -66,7 +66,7 @@ inline fun <reified T : Activity> Context.makeActivityPendingIntent(
 ) = PendingIntent.getActivity(
     this,
     id,
-    Intent(this, T::class.java).also { setup(it) },
+    Intent(this, T::class.java).apply(setup),
     pendingIntentFlags,
 )
 

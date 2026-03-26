@@ -234,7 +234,9 @@ private fun LogsTopBar(
                     DropdownMenuItem(
                         text = { Text(stringResource(Strings.clear)) },
                         onClick = { showMenu = false; listener.onClearLogs() },
-                        leadingIcon = { Icon(painter = painterResource(Icons.ic_clear_all), contentDescription = null) },
+                        leadingIcon = {
+                            Icon(painter = painterResource(Icons.ic_clear_all), contentDescription = null)
+                        },
                     )
                     DropdownMenuItem(
                         text = { Text(stringResource(Strings.restart_logging)) },

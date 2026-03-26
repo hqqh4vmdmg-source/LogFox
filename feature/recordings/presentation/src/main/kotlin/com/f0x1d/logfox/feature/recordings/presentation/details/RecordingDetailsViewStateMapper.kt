@@ -10,7 +10,8 @@ internal class RecordingDetailsViewStateMapper @Inject constructor(
 ) : ViewStateMapper<RecordingDetailsState, RecordingDetailsViewState> {
     override fun map(state: RecordingDetailsState) = RecordingDetailsViewState(
         recordingItem = state.recording?.toPresentationModel(
-            formattedDate = "${dateTimeFormatter.formatDate(state.recording.dateAndTime)} ${dateTimeFormatter.formatTime(state.recording.dateAndTime)}",
+            formattedDate = "${dateTimeFormatter.formatDate(state.recording.dateAndTime)}" +
+                " ${dateTimeFormatter.formatTime(state.recording.dateAndTime)}",
         ),
         currentTitle = state.currentTitle,
     )

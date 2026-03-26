@@ -8,7 +8,12 @@ import javax.inject.Inject
 internal class PreferencesLinksViewModel @Inject constructor(
     reducer: PreferencesLinksReducer,
     viewStateMapper: PreferencesLinksViewStateMapper,
-) : BaseStoreViewModel<PreferencesLinksViewState, PreferencesLinksState, PreferencesLinksCommand, PreferencesLinksSideEffect>(
+) : BaseStoreViewModel<
+    PreferencesLinksViewState,
+    PreferencesLinksState,
+    PreferencesLinksCommand,
+    PreferencesLinksSideEffect,
+>(
         initialState = PreferencesLinksState,
         reducer = reducer,
         effectHandlers = emptyList(),

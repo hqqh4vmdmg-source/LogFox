@@ -23,45 +23,29 @@ internal class SetupEffectHandler @Inject constructor(
         onCommand: suspend (SetupCommand) -> Unit,
     ) {
         when (effect) {
-            is SetupSideEffect.ExecuteRootCommand -> {
-                if (executeGrantViaRootUseCase()) {
-                    onCommand(SetupCommand.RootExecutionSucceeded)
-                } else {
-                    onCommand(SetupCommand.RootExecutionFailed)
-                }
-            }
+            is SetupSideEffect.ExecuteRootCommand -> onCommand(
+                if (executeGrantViaRootUseCase()) SetupCommand.RootExecutionSucceeded
+                else SetupCommand.RootExecutionFailed,
+            )
 
-            is SetupSideEffect.ExecuteShizukuCommand -> {
-                if (executeGrantViaShizukuUseCase()) {
-                    onCommand(SetupCommand.ShizukuExecutionSucceeded)
-                } else {
-                    onCommand(SetupCommand.ShizukuExecutionFailed)
-                }
-            }
+            is SetupSideEffect.ExecuteShizukuCommand -> onCommand(
+                if (executeGrantViaShizukuUseCase()) SetupCommand.ShizukuExecutionSucceeded
+                else SetupCommand.ShizukuExecutionFailed,
+            )
 
-            is SetupSideEffect.SelectTerminal -> {
-                selectTerminalUseCase(effect.type)
-            }
+            is SetupSideEffect.SelectTerminal -> selectTerminalUseCase(effect.type)
 
-            is SetupSideEffect.CopyAdbCommand -> {
-                copyToClipboardUseCase(effect.command)
-            }
+            is SetupSideEffect.CopyAdbCommand -> copyToClipboardUseCase(effect.command)
 
-            is SetupSideEffect.CheckPermission -> {
-                if (checkReadLogsPermissionUseCase()) {
-                    onCommand(SetupCommand.PermissionGranted)
-                } else {
-                    onCommand(SetupCommand.PermissionNotGranted)
-                }
-            }
+            is SetupSideEffect.CheckPermission -> onCommand(
+                if (checkReadLogsPermissionUseCase()) SetupCommand.PermissionGranted
+                else SetupCommand.PermissionNotGranted,
+            )
 
-            is SetupSideEffect.CheckAdbPermission -> {
-                if (checkReadLogsPermissionUseCase()) {
-                    onCommand(SetupCommand.PermissionGranted)
-                } else {
-                    onCommand(SetupCommand.ShowAdbDialog(getAdbCommandUseCase()))
-                }
-            }
+            is SetupSideEffect.CheckAdbPermission -> onCommand(
+                if (checkReadLogsPermissionUseCase()) SetupCommand.PermissionGranted
+                else SetupCommand.ShowAdbDialog(getAdbCommandUseCase()),
+            )
 
             // UI side effects - handled by Fragment
             is SetupSideEffect.ShowSnackbar,

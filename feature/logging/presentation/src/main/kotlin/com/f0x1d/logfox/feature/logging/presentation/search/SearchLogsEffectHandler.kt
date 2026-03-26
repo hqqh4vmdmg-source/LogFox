@@ -19,25 +19,17 @@ internal class SearchLogsEffectHandler @Inject constructor(
         onCommand: suspend (SearchLogsCommand) -> Unit,
     ) {
         when (effect) {
-            is SearchLogsSideEffect.LoadQuery -> {
-                getQueryFlowUseCase().collect { query ->
-                    onCommand(SearchLogsCommand.QueryLoaded(query))
-                }
+            is SearchLogsSideEffect.LoadQuery -> getQueryFlowUseCase().collect { query ->
+                onCommand(SearchLogsCommand.QueryLoaded(query))
             }
 
-            is SearchLogsSideEffect.SaveQuery -> {
-                updateQueryUseCase(effect.query)
+            is SearchLogsSideEffect.SaveQuery -> updateQueryUseCase(effect.query)
+
+            is SearchLogsSideEffect.LoadCaseSensitive -> getCaseSensitiveFlowUseCase().collect { caseSensitive ->
+                onCommand(SearchLogsCommand.CaseSensitiveLoaded(caseSensitive))
             }
 
-            is SearchLogsSideEffect.LoadCaseSensitive -> {
-                getCaseSensitiveFlowUseCase().collect { caseSensitive ->
-                    onCommand(SearchLogsCommand.CaseSensitiveLoaded(caseSensitive))
-                }
-            }
-
-            is SearchLogsSideEffect.SaveCaseSensitive -> {
-                updateCaseSensitiveUseCase(effect.caseSensitive)
-            }
+            is SearchLogsSideEffect.SaveCaseSensitive -> updateCaseSensitiveUseCase(effect.caseSensitive)
 
             // UI side effects - handled by Fragment
             is SearchLogsSideEffect.Dismiss -> Unit

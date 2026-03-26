@@ -50,9 +50,7 @@ class LoggingService : LifecycleService() {
 
         // Observe side effects for UI handling
         lifecycleScope.launch {
-            store.sideEffects.collect { sideEffect ->
-                handleSideEffect(sideEffect)
-            }
+            store.sideEffects.collect(::handleSideEffect)
         }
 
         // Start logging
@@ -72,20 +70,12 @@ class LoggingService : LifecycleService() {
         return START_NOT_STICKY
     }
 
-    private fun clearLogs() {
-        store.send(LoggingServiceCommand.ClearLogs)
-    }
+    private fun clearLogs() = store.send(LoggingServiceCommand.ClearLogs)
 
     private fun handleSideEffect(sideEffect: LoggingServiceSideEffect) {
         when (sideEffect) {
-            is LoggingServiceSideEffect.ShowToast -> {
-                toast(sideEffect.message)
-            }
-
-            is LoggingServiceSideEffect.PerformKillService -> {
-                killApp()
-            }
-
+            is LoggingServiceSideEffect.ShowToast -> toast(sideEffect.message)
+            is LoggingServiceSideEffect.PerformKillService -> killApp()
             // Business logic side effects - handled by EffectHandler, ignored here
             else -> Unit
         }

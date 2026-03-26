@@ -14,7 +14,7 @@ internal class AppCrashDataSourceImpl @Inject constructor(
 ) : AppCrashDataSource {
 
     override fun getAllAsFlow(deleted: Boolean): Flow<List<AppCrashEntity>> =
-        dao.getAllAsFlow(deleted).map { list -> list.map { it.toData() } }
+        dao.getAllAsFlow(deleted).map { entities -> entities.map { it.toData() } }
 
     override suspend fun getAll(deleted: Boolean): List<AppCrashEntity> =
         dao.getAll(deleted).map { it.toData() }

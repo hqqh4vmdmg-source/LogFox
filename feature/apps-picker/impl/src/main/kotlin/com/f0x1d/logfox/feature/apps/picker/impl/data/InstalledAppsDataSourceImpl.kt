@@ -9,13 +9,14 @@ internal class InstalledAppsDataSourceImpl @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : InstalledAppsDataSource {
 
-    override fun getInstalledApps(): List<InstalledApp> = context.packageManager
-        .getInstalledPackages(0)
-        .map { packageInfo ->
-            InstalledApp(
-                title = packageInfo.applicationInfo?.loadLabel(context.packageManager).toString(),
-                packageName = packageInfo.packageName,
-            )
-        }
-        .sortedBy(InstalledApp::title)
+    override fun getInstalledApps(): List<InstalledApp> = with(context.packageManager) {
+        getInstalledPackages(0)
+            .map { packageInfo ->
+                InstalledApp(
+                    title = packageInfo.applicationInfo?.loadLabel(this).toString(),
+                    packageName = packageInfo.packageName,
+                )
+            }
+            .sortedBy(InstalledApp::title)
+    }
 }

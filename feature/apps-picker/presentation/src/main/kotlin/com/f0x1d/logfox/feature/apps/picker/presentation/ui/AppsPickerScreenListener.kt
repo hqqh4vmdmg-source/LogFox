@@ -1,7 +1,9 @@
 package com.f0x1d.logfox.feature.apps.picker.presentation.ui
 
+import androidx.compose.runtime.Immutable
 import com.f0x1d.logfox.feature.apps.picker.api.InstalledApp
 
+@Immutable
 data class AppsPickerScreenListener(
     val onBackClicked: () -> Unit,
     val onAppClicked: (InstalledApp) -> Unit,

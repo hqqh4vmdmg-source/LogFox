@@ -8,7 +8,6 @@ import javax.inject.Inject
 internal class UpdateSelectedLogLinesUseCaseImpl @Inject constructor(
     private val selectedLogLinesDataSource: SelectedLogLinesDataSource,
 ) : UpdateSelectedLogLinesUseCase {
-    override suspend fun invoke(selectedLines: List<LogLine>) {
+    override suspend fun invoke(selectedLines: List<LogLine>) =
         selectedLogLinesDataSource.updateSelectedLines(selectedLines)
-    }
 }

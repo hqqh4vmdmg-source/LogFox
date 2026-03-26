@@ -5,20 +5,13 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
 fun ZipOutputStream.putZipEntry(name: String, content: ByteArray) {
-    val entry = ZipEntry(name)
-    putNextEntry(entry)
-
-    write(content, 0, content.size)
+    putNextEntry(ZipEntry(name))
+    write(content)
     closeEntry()
 }
 
 fun ZipOutputStream.putZipEntry(name: String, file: File) {
-    val entry = ZipEntry(name)
-    putNextEntry(entry)
-
-    file.inputStream().use {
-        it.copyTo(this)
-    }
-
+    putNextEntry(ZipEntry(name))
+    file.inputStream().use { it.copyTo(this) }
     closeEntry()
 }

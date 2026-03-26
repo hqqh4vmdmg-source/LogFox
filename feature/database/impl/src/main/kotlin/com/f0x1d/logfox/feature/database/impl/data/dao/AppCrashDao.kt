@@ -46,9 +46,8 @@ internal interface AppCrashDao {
     @Update
     suspend fun update(appCrashes: List<AppCrashRoomEntity>)
 
-    suspend fun delete(appCrash: AppCrashRoomEntity) {
+    suspend fun delete(appCrash: AppCrashRoomEntity) =
         update(appCrash.copy(isDeleted = true, deletedTime = System.currentTimeMillis()))
-    }
 
     @Query(
         "UPDATE AppCrash SET is_deleted = 1, deleted_time = :time WHERE package_name = :packageName",
@@ -60,12 +59,10 @@ internal interface AppCrashDao {
 
     @Transaction
     suspend fun clearIfNeeded() {
-        val itemsToDelete = getAll(deleted = true).filter {
-            (System.currentTimeMillis() - (it.deletedTime ?: 0)) >= DAYS_30
-        }.also {
-            if (it.isEmpty()) return
+        val itemsToDelete = getAll(deleted = true).filter { entity ->
+            (System.currentTimeMillis() - (entity.deletedTime ?: 0L)) >= DAYS_30
         }
-
+        if (itemsToDelete.isEmpty()) return
         _delete(itemsToDelete)
     }
 

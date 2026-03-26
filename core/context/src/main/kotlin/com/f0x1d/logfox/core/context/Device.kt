@@ -2,22 +2,15 @@ package com.f0x1d.logfox.core.context
 
 import android.os.Build
 
-internal class Device {
-
-    private val data = mapOf<String, String>(
-        "SDK" to Build.VERSION.SDK_INT.toString(),
-        "PRODUCT_NAME" to Build.PRODUCT,
-        "DEVICE_NAME" to Build.DEVICE,
-        "BOARD_NAME" to Build.BOARD,
-        "SUPPORTED_ABIS" to Build.SUPPORTED_ABIS.joinToString(),
-        "MANUFACTURER" to Build.MANUFACTURER,
-        "BRAND" to Build.BRAND,
-        "MODEL" to Build.MODEL,
-    )
-        .map { "${it.key}: ${it.value}" }
-        .joinToString("\n")
-
-    override fun toString() = data
+val deviceData: String by lazy {
+    buildString {
+        appendLine("SDK: ${Build.VERSION.SDK_INT}")
+        appendLine("PRODUCT_NAME: ${Build.PRODUCT}")
+        appendLine("DEVICE_NAME: ${Build.DEVICE}")
+        appendLine("BOARD_NAME: ${Build.BOARD}")
+        appendLine("SUPPORTED_ABIS: ${Build.SUPPORTED_ABIS.joinToString()}")
+        appendLine("MANUFACTURER: ${Build.MANUFACTURER}")
+        appendLine("BRAND: ${Build.BRAND}")
+        append("MODEL: ${Build.MODEL}")
+    }
 }
-
-val deviceData: String get() = Device().toString()

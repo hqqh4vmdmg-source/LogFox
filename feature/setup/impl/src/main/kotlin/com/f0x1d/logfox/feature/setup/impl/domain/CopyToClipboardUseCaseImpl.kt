@@ -10,7 +10,5 @@ internal class CopyToClipboardUseCaseImpl @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : CopyToClipboardUseCase {
 
-    override fun invoke(text: String) {
-        context.copyText(text)
-    }
+    override fun invoke(text: String) = context.copyText(text)
 }

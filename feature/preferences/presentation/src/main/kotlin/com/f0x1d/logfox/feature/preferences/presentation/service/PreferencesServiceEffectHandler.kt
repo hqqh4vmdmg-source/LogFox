@@ -27,8 +27,8 @@ internal class PreferencesServiceEffectHandler @Inject constructor(
         onCommand: suspend (PreferencesServiceCommand) -> Unit,
     ) {
         when (effect) {
-            is PreferencesServiceSideEffect.LoadPreferences -> {
-                getSelectedTerminalTypeFlowUseCase().collect { selectedType ->
+            is PreferencesServiceSideEffect.LoadPreferences -> getSelectedTerminalTypeFlowUseCase()
+                .collect { selectedType ->
                     onCommand(
                         PreferencesServiceCommand.PreferencesLoaded(
                             selectedTerminalType = selectedType,
@@ -45,56 +45,43 @@ internal class PreferencesServiceEffectHandler @Inject constructor(
                         ),
                     )
                 }
-            }
 
-            is PreferencesServiceSideEffect.CheckTerminalSupport -> {
-                val terminal = terminals.getValue(effect.type)
-                if (terminal.isSupported()) {
-                    onCommand(PreferencesServiceCommand.TerminalSupported(effect.type))
+            is PreferencesServiceSideEffect.CheckTerminalSupport -> onCommand(
+                if (terminals.getValue(effect.type).isSupported()) {
+                    PreferencesServiceCommand.TerminalSupported(effect.type)
                 } else {
-                    onCommand(PreferencesServiceCommand.TerminalNotSupported)
-                }
-            }
+                    PreferencesServiceCommand.TerminalNotSupported
+                },
+            )
 
-            is PreferencesServiceSideEffect.SaveTerminalType -> {
-                setSelectedTerminalTypeUseCase(effect.type)
-            }
+            is PreferencesServiceSideEffect.SaveTerminalType -> setSelectedTerminalTypeUseCase(effect.type)
 
-            is PreferencesServiceSideEffect.SaveFallbackToDefault -> {
+            is PreferencesServiceSideEffect.SaveFallbackToDefault ->
                 terminalSettingsRepository.fallbackToDefaultTerminal().set(effect.enabled)
-            }
 
-            is PreferencesServiceSideEffect.SaveStartOnBoot -> {
+            is PreferencesServiceSideEffect.SaveStartOnBoot ->
                 serviceSettingsRepository.startOnBoot().set(effect.enabled)
-            }
 
-            is PreferencesServiceSideEffect.SaveStopLoggingOnBackExit -> {
+            is PreferencesServiceSideEffect.SaveStopLoggingOnBackExit ->
                 serviceSettingsRepository.stopLoggingOnBackExit().set(effect.enabled)
-            }
 
-            is PreferencesServiceSideEffect.SaveShowLogsFromAppLaunch -> {
+            is PreferencesServiceSideEffect.SaveShowLogsFromAppLaunch ->
                 serviceSettingsRepository.showLogsFromAppLaunch().set(effect.enabled)
-            }
 
-            is PreferencesServiceSideEffect.SaveIncludeDeviceInfo -> {
+            is PreferencesServiceSideEffect.SaveIncludeDeviceInfo ->
                 serviceSettingsRepository.includeDeviceInfoInArchives().set(effect.enabled)
-            }
 
-            is PreferencesServiceSideEffect.SaveIncludeAppInfo -> {
+            is PreferencesServiceSideEffect.SaveIncludeAppInfo ->
                 serviceSettingsRepository.includeAppInfoInExports().set(effect.enabled)
-            }
 
-            is PreferencesServiceSideEffect.SaveExportLogsAsTxt -> {
+            is PreferencesServiceSideEffect.SaveExportLogsAsTxt ->
                 serviceSettingsRepository.exportLogsAsTxt().set(effect.enabled)
-            }
 
-            is PreferencesServiceSideEffect.RestartLogging -> {
-                loggingServiceDelegate.restartLogging()
-            }
+            is PreferencesServiceSideEffect.RestartLogging -> loggingServiceDelegate.restartLogging()
 
             // UI side effects - handled by Fragment
-            is PreferencesServiceSideEffect.ShowTerminalRestartDialog -> Unit
-            is PreferencesServiceSideEffect.ShowTerminalUnavailableToast -> Unit
+            is PreferencesServiceSideEffect.ShowTerminalRestartDialog,
+            is PreferencesServiceSideEffect.ShowTerminalUnavailableToast,
             is PreferencesServiceSideEffect.ShowAndroid13WarningDialog -> Unit
         }
     }

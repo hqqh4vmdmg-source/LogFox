@@ -6,7 +6,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,9 +17,9 @@ internal class LogsDataSourceImpl @Inject constructor(
 
     private val mutableLogs = MutableStateFlow(emptyList<LogLine>())
 
-    override val logs: Flow<List<LogLine>> get() = mutableLogs.asStateFlow()
+    override val logs: Flow<List<LogLine>> = mutableLogs.asStateFlow()
 
     override suspend fun updateLogs(logs: List<LogLine>) = withContext(defaultDispatcher) {
-        mutableLogs.update { logs.toMutableList() }
+        mutableLogs.value = logs
     }
 }

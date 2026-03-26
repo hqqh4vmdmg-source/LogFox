@@ -44,9 +44,7 @@ class UserService() : IUserService.Stub() {
         exitProcess(0)
     }
 
-    override fun exit() {
-        destroy()
-    }
+    override fun exit() = destroy()
 
     override fun executeNow(command: String?) = runBlocking(Dispatchers.IO) {
         val process = Runtime.getRuntime().exec(command)
@@ -88,11 +86,7 @@ class UserService() : IUserService.Stub() {
 
         serviceScope.launch {
             AutoCloseOutputStream(pipe[1]).use {
-                try {
-                    inputStream.copyTo(it)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+                runCatching { inputStream.copyTo(it) }
             }
         }
 
@@ -105,20 +99,15 @@ class UserService() : IUserService.Stub() {
         val pipe = ParcelFileDescriptor.createPipe()
         serviceScope.launch {
             AutoCloseInputStream(pipe[0]).use {
-                try {
-                    it.copyTo(process.outputStream)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+                runCatching { it.copyTo(process.outputStream) }
             }
         }
 
         return pipe[1]
     }
 
-    override fun destroyProcess(processId: Long) {
+    override fun destroyProcess(processId: Long) =
         currentProcesses.remove(processId)?.tryDestroy()
-    }
 
     // Cancellable implementation
     private suspend fun InputStream.copyTo(

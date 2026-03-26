@@ -31,14 +31,12 @@ internal class RecordingDetailsEffectHandler @Inject constructor(
         onCommand: suspend (RecordingDetailsCommand) -> Unit,
     ) {
         when (effect) {
-            is RecordingDetailsSideEffect.LoadRecording -> {
-                getRecordingByIdFlowUseCase(recordingId)
-                    .distinctUntilChanged()
-                    .take(1)
-                    .collect { recording ->
-                        onCommand(RecordingDetailsCommand.RecordingLoaded(recording))
-                    }
-            }
+            is RecordingDetailsSideEffect.LoadRecording -> getRecordingByIdFlowUseCase(recordingId)
+                .distinctUntilChanged()
+                .take(1)
+                .collect { recording ->
+                    onCommand(RecordingDetailsCommand.RecordingLoaded(recording))
+                }
 
             is RecordingDetailsSideEffect.PrepareFileExport -> {
                 val recording = getRecordingByIdFlowUseCase(recordingId).firstOrNull()
@@ -61,23 +59,17 @@ internal class RecordingDetailsEffectHandler @Inject constructor(
                 onCommand(RecordingDetailsCommand.ShareFileReady(recording.file))
             }
 
-            is RecordingDetailsSideEffect.ExportFile -> {
-                exportRecordingFileUseCase(recordingId, effect.uri)
-            }
+            is RecordingDetailsSideEffect.ExportFile -> exportRecordingFileUseCase(recordingId, effect.uri)
 
-            is RecordingDetailsSideEffect.ExportZipFile -> {
-                exportRecordingZipUseCase(recordingId, effect.uri)
-            }
+            is RecordingDetailsSideEffect.ExportZipFile -> exportRecordingZipUseCase(recordingId, effect.uri)
 
-            is RecordingDetailsSideEffect.UpdateTitle -> {
-                titleUpdateMutex.withLock {
-                    updateRecordingTitleUseCase(effect.recordingId, effect.title)
-                }
+            is RecordingDetailsSideEffect.UpdateTitle -> titleUpdateMutex.withLock {
+                updateRecordingTitleUseCase(effect.recordingId, effect.title)
             }
 
             // UI side effects - handled by Fragment
-            is RecordingDetailsSideEffect.LaunchFileExportPicker -> Unit
-            is RecordingDetailsSideEffect.LaunchZipExportPicker -> Unit
+            is RecordingDetailsSideEffect.LaunchFileExportPicker,
+            is RecordingDetailsSideEffect.LaunchZipExportPicker,
             is RecordingDetailsSideEffect.ShareFile -> Unit
         }
     }

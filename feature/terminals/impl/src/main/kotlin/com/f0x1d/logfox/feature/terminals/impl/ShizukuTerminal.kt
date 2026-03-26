@@ -71,9 +71,10 @@ internal class ShizukuTerminal @Inject constructor(
                     override fun onRequestPermissionResult(requestCode: Int, grantResult: Int) {
                         if (requestCode != SHIZUKU_PERMISSION_REQUEST_ID) return
 
-                        when (grantResult == PackageManager.PERMISSION_GRANTED) {
-                            true -> it.resumeWithServiceBinding()
-                            else -> it.resume(false)
+                        if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                            it.resumeWithServiceBinding()
+                        } else {
+                            it.resume(false)
                         }
 
                         Shizuku.removeRequestPermissionResultListener(this)
@@ -96,7 +97,7 @@ internal class ShizukuTerminal @Inject constructor(
         object : ServiceConnection {
             override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
                 if (binder == null || !binder.pingBinder()) {
-                    if (resumed.not()) {
+                    if (!resumed) {
                         resume(false)
                         resumed = true
                     }
@@ -105,7 +106,7 @@ internal class ShizukuTerminal @Inject constructor(
 
                 userService = IUserService.Stub.asInterface(binder)
 
-                if (resumed.not()) {
+                if (!resumed) {
                     resume(true)
                     resumed = true
                 }

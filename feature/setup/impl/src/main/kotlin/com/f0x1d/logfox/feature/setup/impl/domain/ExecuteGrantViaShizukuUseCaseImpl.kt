@@ -13,8 +13,7 @@ internal class ExecuteGrantViaShizukuUseCaseImpl @Inject constructor(
     @ShizukuTerminal private val shizukuTerminal: Terminal,
 ) : ExecuteGrantViaShizukuUseCase {
 
-    private val grantCommand: Array<String>
-        get() = arrayOf("pm", "grant", context.packageName, Manifest.permission.READ_LOGS)
+    private val grantCommand = arrayOf("pm", "grant", context.packageName, Manifest.permission.READ_LOGS)
 
     override suspend fun invoke(): Boolean = shizukuTerminal.isSupported() &&
         shizukuTerminal.executeNow(*grantCommand).isSuccessful

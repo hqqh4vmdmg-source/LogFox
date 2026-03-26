@@ -6,7 +6,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,7 +14,7 @@ internal class LogsBufferDataSourceImpl @Inject constructor(
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
 ) : LogsBufferDataSource {
 
-    private val buffer = LinkedList<LogLine>()
+    private val buffer = ArrayDeque<LogLine>()
     private val mutex = Mutex()
 
     override suspend fun add(logLine: LogLine, limit: Int) = withContext(defaultDispatcher) {
@@ -32,9 +31,7 @@ internal class LogsBufferDataSourceImpl @Inject constructor(
     }
 
     override suspend fun clear() = withContext(defaultDispatcher) {
-        mutex.withLock {
-            buffer.clear()
-        }
+        mutex.withLock { buffer.clear() }
     }
 
     override suspend fun lastLog(): LogLine? = withContext(defaultDispatcher) {

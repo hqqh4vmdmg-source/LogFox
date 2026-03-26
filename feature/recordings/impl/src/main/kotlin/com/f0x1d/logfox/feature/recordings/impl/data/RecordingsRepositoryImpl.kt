@@ -43,7 +43,7 @@ internal class RecordingsRepositoryImpl @Inject constructor(
 ) : RecordingsRepository {
 
     private val recordingsDir = File("${context.filesDir.absolutePath}/recordings").apply {
-        if (!exists()) mkdirs()
+        mkdirs()
     }
 
     override suspend fun saveAll(): LogRecording = withContext(ioDispatcher) {
@@ -62,38 +62,32 @@ internal class RecordingsRepositoryImpl @Inject constructor(
                         terminals.getValue(terminalSettingsRepository.selectedTerminalType().value),
                     )
                     .collect { line ->
-                        batch += logLineFormatterRepository.formatForExport(
-                            logLine = line,
-                        )
+                        batch += logLineFormatterRepository.formatForExport(logLine = line)
 
                         if (batch.size >= BATCH_SIZE) {
-                            out.write((batch.joinToString("\n") + "\n").encodeToByteArray())
+                            out.write("${batch.joinToString("\n")}\n".encodeToByteArray())
                             batch.clear()
                         }
                     }
 
                 if (batch.isNotEmpty()) {
-                    out.write((batch.joinToString("\n") + "\n").encodeToByteArray())
+                    out.write("${batch.joinToString("\n")}\n".encodeToByteArray())
                 }
             }
         } catch (e: IOException) {
             withContext(mainDispatcher) {
                 context.toast(Strings.error_saving_logs)
             }
-            e.printStackTrace()
         } catch (_: TimeoutCancellationException) {
             // Collection of logs finished!
         }
 
+        val recordingTitle = buildRecordingTitle()
         LogRecording(
-            title = "${context.getString(
-                Strings.record_file,
-            )} ${logRecordingDataSource.count() + 1}",
+            title = recordingTitle,
             dateAndTime = recordingTime,
             file = recordingFile,
-        ).let {
-            it.copy(id = logRecordingDataSource.insert(it.toEntity()))
-        }
+        ).run { copy(id = logRecordingDataSource.insert(toEntity())) }
     }
 
     override suspend fun createRecordingFrom(lines: List<LogLine>): Unit = withContext(ioDispatcher) {
@@ -105,17 +99,12 @@ internal class RecordingsRepositoryImpl @Inject constructor(
         )
 
         recordingFile.writeText(
-            lines.joinToString("\n") {
-                logLineFormatterRepository.formatForExport(
-                    logLine = it,
-                )
-            },
+            lines.joinToString("\n", transform = logLineFormatterRepository::formatForExport),
         )
 
+        val title = buildRecordingTitle()
         LogRecording(
-            title = "${context.getString(
-                Strings.record_file,
-            )} ${logRecordingDataSource.count() + 1}",
+            title = title,
             dateAndTime = recordingTime,
             file = recordingFile,
         ).let { logRecordingDataSource.insert(it.toEntity()) }
@@ -128,7 +117,7 @@ internal class RecordingsRepositoryImpl @Inject constructor(
 
     override fun getAllAsFlow(): Flow<List<LogRecording>> = logRecordingDataSource
         .getAllAsFlow()
-        .map { list -> list.map { it.toDomainModel() } }
+        .map { entities -> entities.map { it.toDomainModel() } }
         .distinctUntilChanged()
         .flowOn(ioDispatcher)
 
@@ -157,6 +146,9 @@ internal class RecordingsRepositoryImpl @Inject constructor(
         getAll().forEach { it.deleteFile() }
         logRecordingDataSource.deleteAll()
     }
+
+    private suspend fun buildRecordingTitle(): String =
+        "${context.getString(Strings.record_file)} ${logRecordingDataSource.count() + 1}"
 
     private companion object {
         const val BATCH_SIZE = 100

@@ -21,9 +21,7 @@ internal class ANRDataSource @Inject constructor(
     override fun isFirstLine(line: LogLine): Boolean =
         line.tag == TAG && line.content.startsWith(ANR_PREFIX)
 
-    override fun filterLines(lines: MutableList<LogLine>) {
-        lines.removeAll { it.tag != TAG }
-    }
+    override fun filterLines(lines: MutableList<LogLine>) = lines.removeAll { it.tag != TAG }
 
     override fun extractPackageName(lines: List<LogLine>): String = runCatching {
         // First line format: "ANR in com.example.app" or "ANR in com.example.app (reason)"
@@ -41,6 +39,5 @@ internal class ANRDataSource @Inject constructor(
         const val TAG = "ActivityManager"
         const val ANR_PREFIX = "ANR in "
         const val ANR_PREFIX_LENGTH = 7 // "ANR in ".length
-        const val UNKNOWN_PACKAGE = "unknown"
     }
 }

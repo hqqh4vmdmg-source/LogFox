@@ -13,11 +13,7 @@ internal class ExportLogsToUriUseCaseImpl @Inject constructor(
 ) : ExportLogsToUriUseCase {
 
     override suspend fun invoke(lines: List<LogLine>, uri: Uri) {
-        val content = lines.joinToString("\n") { line ->
-            logLineFormatterRepository.formatForExport(
-                logLine = line,
-            )
-        }
+        val content = lines.joinToString("\n", transform = logLineFormatterRepository::formatForExport)
         exportRepository.writeContentToUri(uri, content)
     }
 }

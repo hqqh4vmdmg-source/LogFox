@@ -34,20 +34,15 @@ internal class CrashesSettingsLocalDataSourceImpl @Inject constructor(
         defaultValue = true,
     )
 
-    override fun collectingFor(crashTypeName: String): Boolean = booleanPreference(
-        key = "pref_collect_${crashTypeName.lowercase()}",
-        defaultValue = true,
-    ).get()
+    override fun collectingFor(crashTypeName: String): Boolean = collectingForPreference(crashTypeName).get()
 
     override fun collectingForPreference(crashTypeName: String): Preference<Boolean> = booleanPreference(
         key = "pref_collect_${crashTypeName.lowercase()}",
         defaultValue = true,
     )
 
-    override fun showingNotificationsFor(crashTypeName: String): Boolean = booleanPreference(
-        key = "pref_notifications_${crashTypeName.lowercase()}",
-        defaultValue = true,
-    ).get()
+    override fun showingNotificationsFor(crashTypeName: String): Boolean =
+        showingNotificationsForPreference(crashTypeName).get()
 
     override fun showingNotificationsForPreference(crashTypeName: String): Preference<Boolean> = booleanPreference(
         key = "pref_notifications_${crashTypeName.lowercase()}",

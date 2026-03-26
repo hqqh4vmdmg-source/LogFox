@@ -21,7 +21,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -47,18 +47,18 @@ internal class RecordingLocalDataSourceImpl @Inject constructor(
     private val enabledFilters = MutableStateFlow<List<UserFilter>>(emptyList())
     private var filtersCollectionJob: Job? = null
 
-    private val recordingsDir = File("${context.filesDir.absolutePath}/recordings").apply {
-        if (!exists()) mkdirs()
+    private val recordingsDir = File(context.filesDir, "recordings").apply {
+        mkdirs()
     }
 
     private val state = MutableStateFlow(RecordingState.IDLE)
-    override val recordingState: StateFlow<RecordingState> = state
+    override val recordingState: StateFlow<RecordingState> = state.asStateFlow()
 
     private var recordingTime = 0L
     private var recordingFile: File? = null
     private val fileMutex = Mutex()
 
-    private val recordedLines = mutableListOf<LogLine>()
+    private val recordedLines = ArrayDeque<LogLine>()
     private val linesMutex = Mutex()
 
     override suspend fun record() = withContext(ioDispatcher) {
@@ -77,7 +77,7 @@ internal class RecordingLocalDataSourceImpl @Inject constructor(
 
         startFiltersCollection()
 
-        state.update { RecordingState.RECORDING }
+        state.value = RecordingState.RECORDING
         notificationsLocalDataSource.sendRecordingNotification()
     }
 
@@ -96,17 +96,17 @@ internal class RecordingLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun pause() = withContext(ioDispatcher) {
-        state.update { RecordingState.PAUSED }
+        state.value = RecordingState.PAUSED
         notificationsLocalDataSource.sendRecordingPausedNotification()
     }
 
     override suspend fun resume() = withContext(ioDispatcher) {
-        state.update { RecordingState.RECORDING }
+        state.value = RecordingState.RECORDING
         notificationsLocalDataSource.sendRecordingNotification()
     }
 
     override suspend fun end(): LogRecording? = withContext(ioDispatcher) {
-        state.update { RecordingState.SAVING }
+        state.value = RecordingState.SAVING
         stopFiltersCollection()
         dumpLines()
         notificationsLocalDataSource.cancelRecordingNotification()
@@ -117,11 +117,9 @@ internal class RecordingLocalDataSourceImpl @Inject constructor(
             title = "${context.getString(Strings.record_file)} ${logRecordingDataSource.count() + 1}",
             dateAndTime = recordingTime,
             file = file,
-        ).let {
-            it.copy(id = logRecordingDataSource.insert(it.toEntity()))
-        }
+        ).run { copy(id = logRecordingDataSource.insert(toEntity())) }
 
-        state.update { RecordingState.IDLE }
+        state.value = RecordingState.IDLE
 
         return@withContext logRecording
     }
@@ -154,19 +152,14 @@ internal class RecordingLocalDataSourceImpl @Inject constructor(
         val content = linesMutex.withLock {
             if (recordedLines.isEmpty()) return@withLock ""
 
-            val formatted = recordedLines.joinToString("\n") {
-                logLineFormatterRepository.formatForExport(
-                    logLine = it,
-                )
-            }
+            val formatted = recordedLines.joinToString("\n", transform = logLineFormatterRepository::formatForExport)
             recordedLines.clear()
-
             formatted
         }
 
         if (content.isNotEmpty()) {
             fileMutex.withLock {
-                recordingFile?.appendText(content + "\n")
+                recordingFile?.appendText("$content\n")
             }
         }
     }

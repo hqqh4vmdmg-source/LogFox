@@ -24,13 +24,12 @@ internal class RootTerminal @Inject constructor(
     }
 
     override suspend fun executeNow(vararg command: String): TerminalResult = withContext(ioDispatcher) {
-        Shell.cmd(command.joinToString(" ")).exec().run {
-            TerminalResult(
-                exitCode = code,
-                output = out.joinToString("\n"),
-                errorOutput = err.joinToString("\n"),
-            )
-        }
+        val result = Shell.cmd(command.joinToString(" ")).exec()
+        TerminalResult(
+            exitCode = result.code,
+            output = result.out.joinToString("\n"),
+            errorOutput = result.err.joinToString("\n"),
+        )
     }
 
     // It seems not all devices support "su -c ...".
@@ -40,7 +39,7 @@ internal class RootTerminal @Inject constructor(
     private fun createProcess(commands: Array<out String>): Process? = runCatching {
         val process = Runtime.getRuntime().exec("su")
 
-        process.outputStream.run {
+        process.outputStream.apply {
             write(commands.joinToString(" ").encodeToByteArray())
             write('\n'.code)
             flush()

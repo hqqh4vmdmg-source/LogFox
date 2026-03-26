@@ -10,7 +10,12 @@ internal class PreferencesServiceViewModel @Inject constructor(
     reducer: PreferencesServiceReducer,
     effectHandler: PreferencesServiceEffectHandler,
     viewStateMapper: PreferencesServiceViewStateMapper,
-) : BaseStoreViewModel<PreferencesServiceViewState, PreferencesServiceState, PreferencesServiceCommand, PreferencesServiceSideEffect>(
+) : BaseStoreViewModel<
+    PreferencesServiceViewState,
+    PreferencesServiceState,
+    PreferencesServiceCommand,
+    PreferencesServiceSideEffect,
+>(
     initialState = PreferencesServiceState(
         selectedTerminalType = TerminalType.Default,
         terminalNames = emptyList(),

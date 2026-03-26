@@ -9,7 +9,12 @@ internal class RecordingDetailsViewModel @Inject constructor(
     reducer: RecordingDetailsReducer,
     effectHandler: RecordingDetailsEffectHandler,
     viewStateMapper: RecordingDetailsViewStateMapper,
-) : BaseStoreViewModel<RecordingDetailsViewState, RecordingDetailsState, RecordingDetailsCommand, RecordingDetailsSideEffect>(
+) : BaseStoreViewModel<
+    RecordingDetailsViewState,
+    RecordingDetailsState,
+    RecordingDetailsCommand,
+    RecordingDetailsSideEffect,
+>(
     initialState = RecordingDetailsState(
         recording = null,
         currentTitle = null,

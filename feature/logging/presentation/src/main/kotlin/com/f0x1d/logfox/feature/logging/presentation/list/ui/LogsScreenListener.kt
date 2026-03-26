@@ -1,5 +1,8 @@
 package com.f0x1d.logfox.feature.logging.presentation.list.ui
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 internal data class LogsScreenListener(
     val onItemClick: (Long) -> Unit = {},
     val onSelectClick: (Long) -> Unit = {},

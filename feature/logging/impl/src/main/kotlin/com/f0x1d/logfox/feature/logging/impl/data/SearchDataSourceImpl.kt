@@ -5,7 +5,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,14 +16,14 @@ internal class SearchDataSourceImpl @Inject constructor(
     private val mutableQuery = MutableStateFlow<String?>(null)
     private val mutableCaseSensitive = MutableStateFlow(false)
 
-    override val query: StateFlow<String?> get() = mutableQuery.asStateFlow()
-    override val caseSensitive: StateFlow<Boolean> get() = mutableCaseSensitive.asStateFlow()
+    override val query: StateFlow<String?> = mutableQuery.asStateFlow()
+    override val caseSensitive: StateFlow<Boolean> = mutableCaseSensitive.asStateFlow()
 
     override suspend fun updateQuery(query: String?) = withContext(defaultDispatcher) {
-        mutableQuery.update { query }
+        mutableQuery.value = query
     }
 
     override suspend fun updateCaseSensitive(caseSensitive: Boolean) = withContext(defaultDispatcher) {
-        mutableCaseSensitive.update { caseSensitive }
+        mutableCaseSensitive.value = caseSensitive
     }
 }

@@ -8,7 +8,5 @@ internal class SetCrashesSortReversedOrderUseCaseImpl @Inject constructor(
     private val crashesSettingsRepository: CrashesSettingsRepository,
 ) : SetCrashesSortReversedOrderUseCase {
 
-    override fun invoke(reversed: Boolean) {
-        crashesSettingsRepository.crashesSortReversedOrder().set(reversed)
-    }
+    override fun invoke(reversed: Boolean) = crashesSettingsRepository.crashesSortReversedOrder().set(reversed)
 }

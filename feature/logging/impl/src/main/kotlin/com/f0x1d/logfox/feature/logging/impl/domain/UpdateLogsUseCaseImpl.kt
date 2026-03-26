@@ -8,7 +8,5 @@ import javax.inject.Inject
 internal class UpdateLogsUseCaseImpl @Inject constructor(
     private val logsDataSource: LogsDataSource,
 ) : UpdateLogsUseCase {
-    override suspend fun invoke(logs: List<LogLine>) {
-        logsDataSource.updateLogs(logs)
-    }
+    override suspend fun invoke(logs: List<LogLine>) = logsDataSource.updateLogs(logs)
 }

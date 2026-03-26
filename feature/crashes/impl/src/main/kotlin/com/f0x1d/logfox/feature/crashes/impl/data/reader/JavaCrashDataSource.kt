@@ -21,9 +21,7 @@ internal class JavaCrashDataSource @Inject constructor(
     override fun isFirstLine(line: LogLine): Boolean =
         line.tag == TAG && line.content.startsWith(FATAL_EXCEPTION_PREFIX)
 
-    override fun filterLines(lines: MutableList<LogLine>) {
-        lines.removeAll { it.tag != TAG }
-    }
+    override fun filterLines(lines: MutableList<LogLine>) = lines.removeAll { it.tag != TAG }
 
     override fun extractPackageName(lines: List<LogLine>): String = runCatching {
         // Second line format: "Process: com.example.app, PID: 12345"
@@ -42,6 +40,5 @@ internal class JavaCrashDataSource @Inject constructor(
         const val TAG = "AndroidRuntime"
         const val FATAL_EXCEPTION_PREFIX = "FATAL EXCEPTION: "
         const val PROCESS_PREFIX_LENGTH = 9 // "Process: ".length
-        const val UNKNOWN_PACKAGE = "unknown"
     }
 }

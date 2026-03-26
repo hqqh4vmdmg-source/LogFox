@@ -29,12 +29,11 @@ class BootReceiver : BroadcastReceiver() {
             }
 
             if (context.hasPermissionToReadLogs) {
-                Intent(context, LoggingService::class.java).let {
-                    if (startForegroundServiceAvailable) {
-                        context.startForegroundService(it)
-                    } else {
-                        context.startService(it)
-                    }
+                val serviceIntent = Intent(context, LoggingService::class.java)
+                if (startForegroundServiceAvailable) {
+                    context.startForegroundService(serviceIntent)
+                } else {
+                    context.startService(serviceIntent)
                 }
             }
         }

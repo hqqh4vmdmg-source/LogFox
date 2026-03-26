@@ -44,7 +44,7 @@ internal class DisabledAppsRepositoryImpl @Inject constructor(
     }
 
     override fun getAllAsFlow(): Flow<List<DisabledApp>> = disabledAppDataSource.getAllAsFlow()
-        .map { list -> list.map { it.toDomainModel() } }
+        .map { entities -> entities.map { it.toDomainModel() } }
         .distinctUntilChanged()
         .flowOn(ioDispatcher)
 

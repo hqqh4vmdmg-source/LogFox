@@ -22,14 +22,14 @@ internal class RecordingDetailsBottomSheetFragment : BaseComposeBottomSheetFragm
     // no plain because android will append .txt itself
     private val logExportLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument("text/*"),
-    ) {
-        it?.let { uri -> viewModel.send(RecordingDetailsCommand.ExportFile(uri)) }
+    ) { uri ->
+        uri?.let { viewModel.send(RecordingDetailsCommand.ExportFile(it)) }
     }
 
     private val zipLogLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument("application/zip"),
-    ) {
-        it?.let { uri -> viewModel.send(RecordingDetailsCommand.ExportZipFile(uri)) }
+    ) { uri ->
+        uri?.let { viewModel.send(RecordingDetailsCommand.ExportZipFile(it)) }
     }
 
     @Composable
@@ -39,15 +39,15 @@ internal class RecordingDetailsBottomSheetFragment : BaseComposeBottomSheetFragm
         LaunchedEffect(Unit) {
             viewModel.sideEffects.collect { effect ->
                 when (effect) {
-                    is RecordingDetailsSideEffect.LaunchFileExportPicker -> {
+                    is RecordingDetailsSideEffect.LaunchFileExportPicker ->
                         logExportLauncher.launch(effect.filename)
-                    }
-                    is RecordingDetailsSideEffect.LaunchZipExportPicker -> {
+
+                    is RecordingDetailsSideEffect.LaunchZipExportPicker ->
                         zipLogLauncher.launch(effect.filename)
-                    }
-                    is RecordingDetailsSideEffect.ShareFile -> {
+
+                    is RecordingDetailsSideEffect.ShareFile ->
                         requireContext().shareFileIntent(effect.file)
-                    }
+
                     else -> Unit
                 }
             }

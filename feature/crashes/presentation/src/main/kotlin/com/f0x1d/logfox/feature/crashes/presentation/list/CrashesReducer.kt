@@ -56,13 +56,12 @@ internal class CrashesReducer @Inject constructor() : Reducer<CrashesState, Cras
             ),
         )
 
-        is CrashesCommand.CrashClicked -> {
-            val sideEffect = when (command.count) {
+        is CrashesCommand.CrashClicked -> state.withSideEffects(
+            when (command.count) {
                 1 -> CrashesSideEffect.NavigateToCrashDetails(command.crashId)
                 else -> CrashesSideEffect.NavigateToAppCrashes(command.packageName, command.appName)
-            }
-            state.withSideEffects(sideEffect)
-        }
+            },
+        )
 
         is CrashesCommand.SearchedCrashClicked -> state.withSideEffects(
             CrashesSideEffect.NavigateToCrashDetails(command.crashId),

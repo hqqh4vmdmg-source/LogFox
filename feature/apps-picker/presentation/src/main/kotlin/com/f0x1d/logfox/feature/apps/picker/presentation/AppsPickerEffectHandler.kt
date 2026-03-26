@@ -20,9 +20,7 @@ internal class AppsPickerEffectHandler @Inject constructor(
     ) {
         when (effect) {
             is AppsPickerSideEffect.LoadApps -> {
-                val apps = withContext(defaultDispatcher) {
-                    getInstalledAppsUseCase()
-                }
+                val apps = withContext(defaultDispatcher) { getInstalledAppsUseCase() }
                 onCommand(AppsPickerCommand.AppsLoaded(apps))
             }
 
@@ -34,7 +32,7 @@ internal class AppsPickerEffectHandler @Inject constructor(
             }
 
             // UI side effects are handled by Fragment
-            is AppsPickerSideEffect.PopBackStack -> Unit
+            is AppsPickerSideEffect.PopBackStack,
             is AppsPickerSideEffect.HandleAppSelection -> Unit
         }
     }

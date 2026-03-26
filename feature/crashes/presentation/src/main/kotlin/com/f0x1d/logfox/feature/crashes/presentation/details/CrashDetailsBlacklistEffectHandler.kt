@@ -21,21 +21,15 @@ internal class CrashDetailsBlacklistEffectHandler @Inject constructor(
         onCommand: suspend (CrashDetailsCommand) -> Unit,
     ) {
         when (effect) {
-            is CrashDetailsSideEffect.LoadCrash -> {
-                getCrashByIdFlowUseCase(crashId)
-                    .flatMapLatest { crash ->
-                        crash?.let {
-                            isAppDisabledFlowUseCase(it.packageName)
-                        } ?: flowOf(null)
-                    }
-                    .collect { blacklisted ->
-                        onCommand(CrashDetailsCommand.BlacklistStatusLoaded(blacklisted))
-                    }
-            }
+            is CrashDetailsSideEffect.LoadCrash -> getCrashByIdFlowUseCase(crashId)
+                .flatMapLatest { crash ->
+                    crash?.packageName?.let(isAppDisabledFlowUseCase::invoke) ?: flowOf(null)
+                }
+                .collect { blacklisted ->
+                    onCommand(CrashDetailsCommand.BlacklistStatusLoaded(blacklisted))
+                }
 
-            else -> {
-                // Handled by other effect handlers
-            }
+            else -> Unit // Handled by other effect handlers
         }
     }
 }

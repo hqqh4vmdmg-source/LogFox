@@ -21,52 +21,44 @@ internal class EditFilterEffectHandler @Inject constructor(
         onCommand: suspend (EditFilterCommand) -> Unit,
     ) {
         when (effect) {
-            is EditFilterSideEffect.LoadFilter -> {
-                getFilterByIdFlowUseCase(effect.filterId ?: -1L)
-                    .distinctUntilChanged()
-                    .take(1)
-                    .collect { filter ->
-                        if (filter != null) {
-                            onCommand(EditFilterCommand.FilterLoaded(filter))
-                        }
-                    }
-            }
-
-            is EditFilterSideEffect.SaveFilter -> {
-                if (effect.filter == null) {
-                    createFilterUseCase(
-                        including = effect.including,
-                        enabled = effect.enabled,
-                        enabledLogLevels = effect.enabledLogLevels,
-                        uid = effect.uid,
-                        pid = effect.pid,
-                        tid = effect.tid,
-                        packageName = effect.packageName,
-                        tag = effect.tag,
-                        content = effect.content,
-                    )
-                } else {
-                    updateFilterUseCase(
-                        userFilter = effect.filter,
-                        including = effect.including,
-                        enabled = effect.enabled,
-                        enabledLogLevels = effect.enabledLogLevels,
-                        uid = effect.uid,
-                        pid = effect.pid,
-                        tid = effect.tid,
-                        packageName = effect.packageName,
-                        tag = effect.tag,
-                        content = effect.content,
-                    )
+            is EditFilterSideEffect.LoadFilter -> getFilterByIdFlowUseCase(effect.filterId ?: -1L)
+                .distinctUntilChanged()
+                .take(1)
+                .collect { filter ->
+                    if (filter != null) onCommand(EditFilterCommand.FilterLoaded(filter))
                 }
+
+            is EditFilterSideEffect.SaveFilter -> if (effect.filter == null) {
+                createFilterUseCase(
+                    including = effect.including,
+                    enabled = effect.enabled,
+                    enabledLogLevels = effect.enabledLogLevels,
+                    uid = effect.uid,
+                    pid = effect.pid,
+                    tid = effect.tid,
+                    packageName = effect.packageName,
+                    tag = effect.tag,
+                    content = effect.content,
+                )
+            } else {
+                updateFilterUseCase(
+                    userFilter = effect.filter,
+                    including = effect.including,
+                    enabled = effect.enabled,
+                    enabledLogLevels = effect.enabledLogLevels,
+                    uid = effect.uid,
+                    pid = effect.pid,
+                    tid = effect.tid,
+                    packageName = effect.packageName,
+                    tag = effect.tag,
+                    content = effect.content,
+                )
             }
 
-            is EditFilterSideEffect.ExportFilter -> {
-                exportFiltersToUriUseCase(effect.uri, listOfNotNull(effect.filter))
-            }
+            is EditFilterSideEffect.ExportFilter -> exportFiltersToUriUseCase(effect.uri, listOfNotNull(effect.filter))
 
             // UI side effects - handled by Fragment
-            is EditFilterSideEffect.NavigateToAppPicker -> Unit
+            is EditFilterSideEffect.NavigateToAppPicker,
             is EditFilterSideEffect.Close -> Unit
         }
     }

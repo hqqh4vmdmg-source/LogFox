@@ -60,42 +60,40 @@ internal class CrashExportRepositoryImpl @Inject constructor(
         val suffix = dateTimeFormatter.formatForExport(appCrash.dateAndTime)
 
         exportRepository.writeZipToUri(uri) {
-            if (deviceInfo != null) {
+            deviceInfo?.let {
                 putZipEntry(
-                    name = "device_${suffix}.txt",
-                    content = deviceInfo.encodeToByteArray(),
+                    name = "device-$suffix.txt",
+                    content = it.encodeToByteArray(),
                 )
             }
 
-            if (appInfo != null) {
+            appInfo?.let {
                 putZipEntry(
-                    name = "app_${suffix}.txt",
-                    content = appInfo.encodeToByteArray(),
+                    name = "app-$suffix.txt",
+                    content = it.encodeToByteArray(),
                 )
             }
 
             appCrash.logFile?.let { file ->
                 putZipEntry(
-                    name = "crash_${suffix}.$logExtension",
+                    name = "crash-$suffix.$logExtension",
                     content = formatLogFileContent(file).encodeToByteArray(),
                 )
             }
 
             appCrash.logDumpFile?.let { file ->
                 putZipEntry(
-                    name = "dump_${suffix}.$logExtension",
+                    name = "dump-$suffix.$logExtension",
                     content = formatLogFileContent(file).encodeToByteArray(),
                 )
             }
         }
     }
 
-    private fun formatLogFileContent(file: File): String {
-        val lines = file.readLines()
-        return lines.mapIndexed { index, line ->
-            logLineParser.parse(index.toLong(), line)?.let { logLine ->
-                logLineFormatterRepository.formatForExport(logLine)
-            } ?: line
+    private fun formatLogFileContent(file: File): String =
+        file.readLines().mapIndexed { index, line ->
+            logLineParser.parse(index.toLong(), line)
+                ?.let(logLineFormatterRepository::formatForExport)
+                ?: line
         }.joinToString("\n")
-    }
 }

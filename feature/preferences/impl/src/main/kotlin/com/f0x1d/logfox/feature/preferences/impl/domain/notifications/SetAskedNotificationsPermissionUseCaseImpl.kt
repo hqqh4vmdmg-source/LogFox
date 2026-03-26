@@ -8,7 +8,5 @@ internal class SetAskedNotificationsPermissionUseCaseImpl @Inject constructor(
     private val notificationsSettingsRepository: NotificationsSettingsRepository,
 ) : SetAskedNotificationsPermissionUseCase {
 
-    override fun invoke(value: Boolean) {
-        notificationsSettingsRepository.askedNotificationsPermission().set(value)
-    }
+    override fun invoke(value: Boolean) = notificationsSettingsRepository.askedNotificationsPermission().set(value)
 }

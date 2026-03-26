@@ -5,7 +5,5 @@ import com.f0x1d.logfox.feature.terminals.api.domain.ExitTerminalUseCase
 import javax.inject.Inject
 
 internal class ExitTerminalUseCaseImpl @Inject constructor() : ExitTerminalUseCase {
-    override suspend fun invoke(terminal: Terminal) {
-        terminal.exit()
-    }
+    override suspend fun invoke(terminal: Terminal) = terminal.exit()
 }

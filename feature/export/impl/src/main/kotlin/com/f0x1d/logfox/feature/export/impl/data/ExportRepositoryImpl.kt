@@ -10,23 +10,18 @@ internal class ExportRepositoryImpl @Inject constructor(
     private val localDataSource: ExportLocalDataSource,
 ) : ExportRepository {
 
-    override suspend fun writeContentToUri(uri: Uri, content: String) {
+    override suspend fun writeContentToUri(uri: Uri, content: String) =
         localDataSource.writeContentToUri(uri, content)
-    }
 
-    override suspend fun writeContentAndFileToUri(uri: Uri, content: String, file: File) {
+    override suspend fun writeContentAndFileToUri(uri: Uri, content: String, file: File) =
         localDataSource.writeContentAndFileToUri(uri, content, file)
-    }
 
-    override suspend fun copyFileToUri(uri: Uri, file: File) {
+    override suspend fun copyFileToUri(uri: Uri, file: File) =
         localDataSource.copyFileToUri(uri, file)
-    }
 
-    override suspend fun writeZipToUri(uri: Uri, block: ZipOutputStream.() -> Unit) {
+    override suspend fun writeZipToUri(uri: Uri, block: ZipOutputStream.() -> Unit) =
         localDataSource.writeZipToUri(uri, block)
-    }
 
-    override suspend fun readContentFromUri(uri: Uri): String? {
-        return localDataSource.readContentFromUri(uri)
-    }
+    override suspend fun readContentFromUri(uri: Uri): String? =
+        localDataSource.readContentFromUri(uri)
 }

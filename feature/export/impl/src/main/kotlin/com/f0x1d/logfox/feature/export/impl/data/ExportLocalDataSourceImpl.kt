@@ -22,7 +22,11 @@ internal class ExportLocalDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun writeContentAndFileToUri(uri: Uri, content: String, file: File): Unit = withContext(ioDispatcher) {
+    override suspend fun writeContentAndFileToUri(
+        uri: Uri,
+        content: String,
+        file: File,
+    ): Unit = withContext(ioDispatcher) {
         context.contentResolver.openOutputStream(uri)?.use { outputStream ->
             outputStream.write(content.encodeToByteArray())
             file.inputStream().use { inputStream ->

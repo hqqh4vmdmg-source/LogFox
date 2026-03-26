@@ -21,13 +21,11 @@ internal class PreferencesLinksFragment : BaseComposeFragment() {
         LaunchedEffect(viewModel) {
             viewModel.sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is PreferencesLinksSideEffect.OpenUrl -> {
-                        requireContext().startActivity(
-                            Intent(Intent.ACTION_VIEW, Uri.parse(sideEffect.url)).apply {
-                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            },
-                        )
-                    }
+                    is PreferencesLinksSideEffect.OpenUrl -> requireContext().startActivity(
+                        Intent(Intent.ACTION_VIEW, Uri.parse(sideEffect.url)).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        },
+                    )
                 }
             }
         }

@@ -12,7 +12,5 @@ import dagger.hilt.components.SingletonComponent
 internal interface RepositoriesModule {
 
     @Binds
-    fun bindRecordingsRepository(
-        recordingsRepositoryImpl: RecordingsRepositoryImpl,
-    ): RecordingsRepository
+    fun bindRecordingsRepository(impl: RecordingsRepositoryImpl): RecordingsRepository
 }

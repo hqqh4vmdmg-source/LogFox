@@ -8,7 +8,5 @@ import javax.inject.Inject
 internal class ProcessLogLineRecordingUseCaseImpl @Inject constructor(
     private val recordingLocalDataSource: RecordingLocalDataSource,
 ) : ProcessLogLineRecordingUseCase {
-    override suspend fun invoke(logLine: LogLine) {
-        recordingLocalDataSource.processLogLine(logLine)
-    }
+    override suspend fun invoke(logLine: LogLine) = recordingLocalDataSource.processLogLine(logLine)
 }

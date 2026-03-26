@@ -19,9 +19,7 @@ internal class JNICrashDataSource @Inject constructor(
     override fun isFirstLine(line: LogLine): Boolean =
         line.isDebugTag && line.content == CRASH_HEADER
 
-    override fun filterLines(lines: MutableList<LogLine>) {
-        lines.removeAll { !it.isDebugTag }
-    }
+    override fun filterLines(lines: MutableList<LogLine>) = lines.removeAll { !it.isDebugTag }
 
     override fun shouldContinueCollecting(line: LogLine): Boolean {
         // Stop if a new crash starts
@@ -55,6 +53,5 @@ internal class JNICrashDataSource @Inject constructor(
         const val CRASH_HEADER = "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***"
         const val PACKAGE_START_MARKER = ">>> "
         const val PACKAGE_END_MARKER = " <<<"
-        const val UNKNOWN_PACKAGE = "unknown"
     }
 }

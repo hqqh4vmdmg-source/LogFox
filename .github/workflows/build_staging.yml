@@ -7,24 +7,42 @@ on:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 jobs:
- steps:
-   - name: Checkout
-     uses: actions/checkout@v6
-     with:
-       fetch-depth: 0
-        
-build:
-  name: Build APK
-  uses: ./.github/workflows/build_apk_job.yml
-  with:
-    checkout_keystore: false
-send:
-  name: Send APK
-  runs-on: ubuntu-latest
-  needs: build
-  steps:
-    - name: Download APK
-      uses: actions/download-artifact@v4
-      with:
-        name: logfox-release
-        path: ./apk
+  extract_version:
+    name: Extract Version
+    runs-on: ubuntu-latest
+    outputs:
+      version_name: ${{ steps.extract.outputs.version_name }}
+      version_code: ${{ steps.extract.outputs.version_code }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from latest tag
+        id: extract
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0-0")
+          VERSION_CODE="${LATEST_TAG##*-}"
+          VERSION_NAME="${GITHUB_SHA::7}"
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+
+  build:
+    name: Build APK
+    needs: extract_version
+    uses: ./.github/workflows/build_apk_job.yml
+    with:
+      version_name: ${{ needs.extract_version.outputs.version_name }}
+      version_code: ${{ needs.extract_version.outputs.version_code }}
+
+  send:
+    name: Send APK
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download APK
+        uses: actions/download-artifact@v4
+        with:
+          name: logfox-debug
+          path: ./apk

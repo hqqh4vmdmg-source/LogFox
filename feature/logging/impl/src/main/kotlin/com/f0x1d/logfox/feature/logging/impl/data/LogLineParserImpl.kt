@@ -57,22 +57,18 @@ internal class LogLineParserImpl @Inject constructor(
             context.packageManager
                 .getPackagesForUid(integerUid)
                 ?.firstOrNull()
-                ?.also { packageName -> uidsCache.put(uid, packageName) }
+                ?.also { uidsCache.put(uid, it) }
         }.getOrNull()
     }
 
-    private fun resolveIntegerUid(uid: String): Int? {
-        uid.toIntOrNull()?.let { return it }
-
-        WELL_KNOWN_UIDS[uid]?.let { return it }
-
-        return uidRegex.find(uid)?.let { matchResult ->
-            val userId = matchResult.groupValues[1].toInt()
-            val appId = matchResult.groupValues[2].toInt()
-
-            USER_UID_MULTIPLIER * userId + APP_UID_OFFSET + appId
-        }
-    }
+    private fun resolveIntegerUid(uid: String): Int? =
+        uid.toIntOrNull()
+            ?: WELL_KNOWN_UIDS[uid]
+            ?: uidRegex.find(uid)?.let { matchResult ->
+                val userId = matchResult.groupValues[1].toInt()
+                val appId = matchResult.groupValues[2].toInt()
+                USER_UID_MULTIPLIER * userId + APP_UID_OFFSET + appId
+            }
 
     private fun parseTime(timeString: String): Long {
         val cleanTime = timeString.trim()

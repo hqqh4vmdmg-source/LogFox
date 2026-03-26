@@ -10,13 +10,10 @@ internal class CrashLogRepositoryImpl @Inject constructor(
     private val logLineParser: LogLineParser,
     private val logLineFormatterRepository: LogLineFormatterRepository,
 ) : CrashLogRepository {
-    override fun readCrashLog(appCrash: AppCrash): List<String> {
-        val lines = appCrash.logFile?.readLines() ?: return emptyList()
-
-        return lines.mapIndexed { index, line ->
-            logLineParser.parse(index.toLong(), line)?.let { logLine ->
-                logLineFormatterRepository.formatOriginal(logLine)
-            } ?: line
-        }
-    }
+    override fun readCrashLog(appCrash: AppCrash): List<String> =
+        appCrash.logFile?.readLines()?.mapIndexed { index, line ->
+            logLineParser.parse(index.toLong(), line)
+                ?.let(logLineFormatterRepository::formatOriginal)
+                ?: line
+        }.orEmpty()
 }

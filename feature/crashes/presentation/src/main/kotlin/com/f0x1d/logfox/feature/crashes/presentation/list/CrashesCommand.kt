@@ -27,7 +27,12 @@ internal sealed interface CrashesCommand {
     data class CheckAppDisabled(val packageName: String, val disabled: Boolean? = null) : CrashesCommand
 
     // Navigation commands
-    data class CrashClicked(val crashId: Long, val count: Int, val packageName: String, val appName: String?) : CrashesCommand
+    data class CrashClicked(
+        val crashId: Long,
+        val count: Int,
+        val packageName: String,
+        val appName: String?,
+    ) : CrashesCommand
     data class SearchedCrashClicked(val crashId: Long) : CrashesCommand
     data object OpenBlacklist : CrashesCommand
 }

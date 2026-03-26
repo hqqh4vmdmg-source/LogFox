@@ -39,85 +39,60 @@ internal class LogsEffectHandler @Inject constructor(
 
     override suspend fun handle(effect: LogsSideEffect, onCommand: suspend (LogsCommand) -> Unit) {
         when (effect) {
-            is LogsSideEffect.LoadLogs -> {
-                combine(
-                    getLogsFlowUseCase(),
-                    getAllEnabledFiltersFlowUseCase(),
-                    getQueryFlowUseCase(),
-                    getCaseSensitiveFlowUseCase(),
-                    getShowLogValuesFlowUseCase(),
-                ) { logs, filters, query, caseSensitive, showLogValues ->
-                    LogsCommand.LogsLoaded(
-                        logs = logs,
-                        query = query,
-                        caseSensitive = caseSensitive,
-                        filters = filters,
-                        showLogValues = showLogValues,
-                    )
-                }.collect { command ->
-                    onCommand(command)
-                }
-            }
-
-            is LogsSideEffect.ObservePreferences -> {
-                combine(
-                    getResumeLoggingWithBottomTouchFlowUseCase(),
-                    getLogsTextSizeFlowUseCase(),
-                    getLogsExpandedFlowUseCase(),
-                ) { resumeLoggingWithBottomTouch, textSize, logsExpanded ->
-                    LogsCommand.PreferencesUpdated(
-                        resumeLoggingWithBottomTouch = resumeLoggingWithBottomTouch,
-                        textSize = textSize,
-                        logsExpanded = logsExpanded,
-                    )
-                }.collect { command ->
-                    onCommand(command)
-                }
-            }
-
-            is LogsSideEffect.SyncSelectedLines -> {
-                updateSelectedLogLinesUseCase(selectedLines = effect.lines)
-            }
-
-            is LogsSideEffect.CreateRecordingFromLines -> {
-                createRecordingFromLinesUseCase(lines = effect.lines)
-            }
-
-            is LogsSideEffect.ExportLogsTo -> {
-                exportLogsToUriUseCase(effect.lines, effect.uri)
-            }
-
-            is LogsSideEffect.PrepareExport -> {
-                val extension = if (getExportLogsAsTxtUseCase()) "txt" else "log"
-                val filename = "${dateTimeFormatter.formatForExport(System.currentTimeMillis())}.$extension"
-                onCommand(LogsCommand.ExportPickerReady(filename))
-            }
-
-            is LogsSideEffect.FormatAndCopyLog -> {
-                val formattedText = formatLogLineUseCase(
-                    logLine = effect.logLine,
+            is LogsSideEffect.LoadLogs -> combine(
+                getLogsFlowUseCase(),
+                getAllEnabledFiltersFlowUseCase(),
+                getQueryFlowUseCase(),
+                getCaseSensitiveFlowUseCase(),
+                getShowLogValuesFlowUseCase(),
+            ) { logs, filters, query, caseSensitive, showLogValues ->
+                LogsCommand.LogsLoaded(
+                    logs = logs,
+                    query = query,
+                    caseSensitive = caseSensitive,
+                    filters = filters,
+                    showLogValues = showLogValues,
                 )
-                onCommand(LogsCommand.CopyFormattedText(formattedText))
-            }
+            }.collect(onCommand)
 
-            is LogsSideEffect.FormatAndCopyLogs -> {
-                val formattedText = effect.lines.joinToString("\n") { line ->
-                    formatLogLineUseCase(line)
-                }
-                onCommand(LogsCommand.CopyFormattedText(formattedText))
-            }
+            is LogsSideEffect.ObservePreferences -> combine(
+                getResumeLoggingWithBottomTouchFlowUseCase(),
+                getLogsTextSizeFlowUseCase(),
+                getLogsExpandedFlowUseCase(),
+            ) { resumeLoggingWithBottomTouch, textSize, logsExpanded ->
+                LogsCommand.PreferencesUpdated(
+                    resumeLoggingWithBottomTouch = resumeLoggingWithBottomTouch,
+                    textSize = textSize,
+                    logsExpanded = logsExpanded,
+                )
+            }.collect(onCommand)
 
-            is LogsSideEffect.ClearLogs -> {
-                loggingServiceDelegate.clearLogs()
-            }
+            is LogsSideEffect.SyncSelectedLines -> updateSelectedLogLinesUseCase(selectedLines = effect.lines)
 
-            is LogsSideEffect.RestartLogging -> {
-                loggingServiceDelegate.restartLogging()
-            }
+            is LogsSideEffect.CreateRecordingFromLines -> createRecordingFromLinesUseCase(lines = effect.lines)
 
-            is LogsSideEffect.KillService -> {
-                loggingServiceDelegate.killService()
-            }
+            is LogsSideEffect.ExportLogsTo -> exportLogsToUriUseCase(effect.lines, effect.uri)
+
+            is LogsSideEffect.PrepareExport -> onCommand(
+                LogsCommand.ExportPickerReady(
+                    "${dateTimeFormatter.formatForExport(System.currentTimeMillis())}" +
+                        ".${if (getExportLogsAsTxtUseCase()) "txt" else "log"}",
+                ),
+            )
+
+            is LogsSideEffect.FormatAndCopyLog -> onCommand(
+                LogsCommand.CopyFormattedText(formatLogLineUseCase(effect.logLine)),
+            )
+
+            is LogsSideEffect.FormatAndCopyLogs -> onCommand(
+                LogsCommand.CopyFormattedText(effect.lines.joinToString("\n") { formatLogLineUseCase(it) }),
+            )
+
+            is LogsSideEffect.ClearLogs -> loggingServiceDelegate.clearLogs()
+
+            is LogsSideEffect.RestartLogging -> loggingServiceDelegate.restartLogging()
+
+            is LogsSideEffect.KillService -> loggingServiceDelegate.killService()
 
             // UI side effects - handled by Fragment
             else -> Unit

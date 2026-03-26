@@ -44,7 +44,7 @@ fun Preference.setupAsEditTextPreference(
             }
         }
         .show()
-    return@setOnPreferenceClickListener true
+    true
 }
 
 fun Preference.setupAsListPreference(
@@ -62,5 +62,5 @@ fun Preference.setupAsListPreference(
         .setPositiveButton(Strings.close, null)
         .apply(setupDialog)
         .show()
-    return@setOnPreferenceClickListener true
+    true
 }

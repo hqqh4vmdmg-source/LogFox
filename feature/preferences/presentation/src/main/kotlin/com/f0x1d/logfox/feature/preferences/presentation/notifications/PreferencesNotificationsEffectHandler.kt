@@ -20,43 +20,35 @@ internal class PreferencesNotificationsEffectHandler @Inject constructor(
         onCommand: suspend (PreferencesNotificationsCommand) -> Unit,
     ) {
         when (effect) {
-            is PreferencesNotificationsSideEffect.LoadPreferences -> {
-                onCommand(
-                    PreferencesNotificationsCommand.PreferencesLoaded(
-                        useSeparateChannels = crashesSettingsRepository.useSeparateNotificationsChannelsForCrashes().value,
-                        javaNotifications = crashesSettingsRepository.showingNotificationsFor(CrashTypeNames.JAVA),
-                        jniNotifications = crashesSettingsRepository.showingNotificationsFor(CrashTypeNames.JNI),
-                        anrNotifications = crashesSettingsRepository.showingNotificationsFor(CrashTypeNames.ANR),
-                    ),
-                )
-            }
+            is PreferencesNotificationsSideEffect.LoadPreferences -> onCommand(
+                PreferencesNotificationsCommand.PreferencesLoaded(
+                    useSeparateChannels = crashesSettingsRepository.useSeparateNotificationsChannelsForCrashes().value,
+                    javaNotifications = crashesSettingsRepository.showingNotificationsFor(CrashTypeNames.JAVA),
+                    jniNotifications = crashesSettingsRepository.showingNotificationsFor(CrashTypeNames.JNI),
+                    anrNotifications = crashesSettingsRepository.showingNotificationsFor(CrashTypeNames.ANR),
+                ),
+            )
 
-            is PreferencesNotificationsSideEffect.CheckPermission -> {
-                onCommand(
-                    PreferencesNotificationsCommand.PermissionChecked(
-                        hasPermission = context.hasNotificationsPermission(),
-                    ),
-                )
-            }
+            is PreferencesNotificationsSideEffect.CheckPermission -> onCommand(
+                PreferencesNotificationsCommand.PermissionChecked(
+                    hasPermission = context.hasNotificationsPermission(),
+                ),
+            )
 
-            is PreferencesNotificationsSideEffect.SaveUseSeparateChannels -> {
+            is PreferencesNotificationsSideEffect.SaveUseSeparateChannels ->
                 crashesSettingsRepository.useSeparateNotificationsChannelsForCrashes().set(effect.enabled)
-            }
 
-            is PreferencesNotificationsSideEffect.SaveJavaNotifications -> {
+            is PreferencesNotificationsSideEffect.SaveJavaNotifications ->
                 setShowingNotificationsForCrashTypeUseCase(CrashTypeNames.JAVA, effect.enabled)
-            }
 
-            is PreferencesNotificationsSideEffect.SaveJniNotifications -> {
+            is PreferencesNotificationsSideEffect.SaveJniNotifications ->
                 setShowingNotificationsForCrashTypeUseCase(CrashTypeNames.JNI, effect.enabled)
-            }
 
-            is PreferencesNotificationsSideEffect.SaveAnrNotifications -> {
+            is PreferencesNotificationsSideEffect.SaveAnrNotifications ->
                 setShowingNotificationsForCrashTypeUseCase(CrashTypeNames.ANR, effect.enabled)
-            }
 
             // UI side effects - handled by Fragment
-            is PreferencesNotificationsSideEffect.OpenLoggingChannelSettings -> Unit
+            is PreferencesNotificationsSideEffect.OpenLoggingChannelSettings,
             is PreferencesNotificationsSideEffect.OpenAppNotificationSettings -> Unit
         }
     }

@@ -7,7 +7,5 @@ import javax.inject.Inject
 internal class NotifyLoggingStoppedUseCaseImpl @Inject constructor(
     private val recordingLocalDataSource: RecordingLocalDataSource,
 ) : NotifyLoggingStoppedUseCase {
-    override suspend fun invoke() {
-        recordingLocalDataSource.loggingStopped()
-    }
+    override suspend fun invoke() = recordingLocalDataSource.loggingStopped()
 }

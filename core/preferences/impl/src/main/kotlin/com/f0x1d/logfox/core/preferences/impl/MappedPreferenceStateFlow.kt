@@ -1,7 +1,6 @@
 package com.f0x1d.logfox.core.preferences.impl
 
 import com.f0x1d.logfox.core.preferences.api.PreferenceStateFlow
-
 import com.fredporciuncula.flow.preferences.Preference
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.map
@@ -23,9 +22,7 @@ internal class MappedPreferenceStateFlowImpl<T : Any, R : Any>(
         }
     }
 
-    override fun set(value: R) {
-        preference.set(mapSet(value))
-    }
+    override fun set(value: R) = preference.set(mapSet(value))
 }
 
 fun <T : Any, R : Any> Preference<T>.asMappedPreferenceStateFlow(

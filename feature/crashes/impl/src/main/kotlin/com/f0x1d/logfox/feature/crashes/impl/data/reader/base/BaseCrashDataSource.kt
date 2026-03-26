@@ -18,7 +18,7 @@ internal abstract class BaseCrashDataSource(
     private var collecting = false
     private var collectionStartTime = 0L
     private var firstLine: LogLine? = null
-    private val collectedLines = mutableListOf<LogLine>()
+    private val collectedLines = ArrayDeque<LogLine>()
 
     abstract fun isFirstLine(line: LogLine): Boolean
 
@@ -63,11 +63,13 @@ internal abstract class BaseCrashDataSource(
         filterLines(collectedLines)
 
         if (collectedLines.isNotEmpty()) {
-            val crash = createAppCrash(
-                packageName = extractPackageName(collectedLines),
-                lines = collectedLines,
+            crashCollectorDataSource.collectCrash(
+                appCrash = createAppCrash(
+                    packageName = extractPackageName(collectedLines),
+                    lines = collectedLines,
+                ),
+                logLines = collectedLines.toList(),
             )
-            crashCollectorDataSource.collectCrash(crash, collectedLines.toList())
         }
 
         collecting = false
@@ -84,7 +86,8 @@ internal abstract class BaseCrashDataSource(
         dateAndTime = lines.firstOrNull()?.dateAndTime ?: System.currentTimeMillis(),
     )
 
-    private companion object {
+    companion object {
         const val TIME_BUFFER_MS = 1000L
+        const val UNKNOWN_PACKAGE = "unknown"
     }
 }

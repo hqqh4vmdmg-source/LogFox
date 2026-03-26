@@ -24,13 +24,9 @@ internal class FiltersEffectHandler @Inject constructor(
         onCommand: suspend (FiltersCommand) -> Unit,
     ) {
         when (effect) {
-            is FiltersSideEffect.LoadFilters -> {
-                getAllFiltersFlowUseCase()
-                    .distinctUntilChanged()
-                    .collect { filters ->
-                        onCommand(FiltersCommand.FiltersLoaded(filters))
-                    }
-            }
+            is FiltersSideEffect.LoadFilters -> getAllFiltersFlowUseCase()
+                .distinctUntilChanged()
+                .collect { onCommand(FiltersCommand.FiltersLoaded(it)) }
 
             is FiltersSideEffect.ImportFilters -> importFiltersFromUriUseCase(effect.uri)
 
@@ -43,7 +39,7 @@ internal class FiltersEffectHandler @Inject constructor(
             is FiltersSideEffect.ClearAllFilters -> clearAllFiltersUseCase()
 
             // UI side effects - handled by Fragment
-            is FiltersSideEffect.NavigateToEditFilter -> Unit
+            is FiltersSideEffect.NavigateToEditFilter,
             is FiltersSideEffect.NavigateToCreateFilter -> Unit
         }
     }

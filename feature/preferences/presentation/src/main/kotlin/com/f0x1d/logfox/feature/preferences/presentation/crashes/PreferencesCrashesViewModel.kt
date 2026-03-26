@@ -12,7 +12,12 @@ internal class PreferencesCrashesViewModel @Inject constructor(
     effectHandler: PreferencesCrashesEffectHandler,
     viewStateMapper: PreferencesCrashesViewStateMapper,
     getCollectingForCrashTypeUseCase: GetCollectingForCrashTypeUseCase,
-) : BaseStoreViewModel<PreferencesCrashesViewState, PreferencesCrashesState, PreferencesCrashesCommand, PreferencesCrashesSideEffect>(
+) : BaseStoreViewModel<
+    PreferencesCrashesViewState,
+    PreferencesCrashesState,
+    PreferencesCrashesCommand,
+    PreferencesCrashesSideEffect,
+>(
     initialState = PreferencesCrashesState(
         collectJava = getCollectingForCrashTypeUseCase(CrashTypeNames.JAVA),
         collectJni = getCollectingForCrashTypeUseCase(CrashTypeNames.JNI),

@@ -1,7 +1,6 @@
 package com.f0x1d.logfox.core.preferences.impl
 
 import com.f0x1d.logfox.core.preferences.api.PreferenceStateFlow
-
 import com.fredporciuncula.flow.preferences.Preference
 import kotlinx.coroutines.flow.FlowCollector
 
@@ -18,9 +17,7 @@ internal class PreferenceStateFlowImpl<T : Any>(private val preference: Preferen
         }
     }
 
-    override fun set(value: T) {
-        preference.set(value)
-    }
+    override fun set(value: T) = preference.set(value)
 }
 
 fun <T : Any> Preference<T>.asPreferenceStateFlow(): PreferenceStateFlow<T> = PreferenceStateFlowImpl(this)

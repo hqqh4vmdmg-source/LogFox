@@ -8,7 +8,5 @@ internal class SetNightThemeUseCaseImpl @Inject constructor(
     private val uiSettingsRepository: UISettingsRepository,
 ) : SetNightThemeUseCase {
 
-    override fun invoke(theme: Int) {
-        uiSettingsRepository.nightTheme().set(theme)
-    }
+    override fun invoke(theme: Int) = uiSettingsRepository.nightTheme().set(theme)
 }

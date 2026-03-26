@@ -8,7 +8,5 @@ internal class SetWrapCrashLogLinesUseCaseImpl @Inject constructor(
     private val crashesSettingsRepository: CrashesSettingsRepository,
 ) : SetWrapCrashLogLinesUseCase {
 
-    override fun invoke(wrap: Boolean) {
-        crashesSettingsRepository.wrapCrashLogLines().set(wrap)
-    }
+    override fun invoke(wrap: Boolean) = crashesSettingsRepository.wrapCrashLogLines().set(wrap)
 }

@@ -32,7 +32,6 @@ jobs:
     needs: extract_version
     uses: ./.github/workflows/build_apk_job.yml
     with:
-      checkout_keystore: false
       version_name: ${{ needs.extract_version.outputs.version_name }}
       version_code: ${{ needs.extract_version.outputs.version_code }}
 
@@ -46,7 +45,7 @@ jobs:
       - name: Download APK
         uses: actions/download-artifact@v4
         with:
-          name: logfox-release
+          name: logfox-debug
           path: ./apk
 
       - name: Create Release

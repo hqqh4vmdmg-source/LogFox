@@ -43,16 +43,13 @@ internal class FiltersFragment : BaseComposeFragment() {
         LaunchedEffect(viewModel) {
             viewModel.sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is FiltersSideEffect.NavigateToEditFilter -> {
-                        findNavController().navigate(
-                            resId = Directions.action_filtersFragment_to_editFilterFragment,
-                            args = bundleOf("filter_id" to sideEffect.filterId),
-                        )
-                    }
+                    is FiltersSideEffect.NavigateToEditFilter -> findNavController().navigate(
+                        resId = Directions.action_filtersFragment_to_editFilterFragment,
+                        args = bundleOf("filter_id" to sideEffect.filterId),
+                    )
 
-                    is FiltersSideEffect.NavigateToCreateFilter -> {
+                    is FiltersSideEffect.NavigateToCreateFilter ->
                         findNavController().navigate(Directions.action_filtersFragment_to_editFilterFragment)
-                    }
 
                     // Business logic side effects - handled by EffectHandler
                     else -> Unit

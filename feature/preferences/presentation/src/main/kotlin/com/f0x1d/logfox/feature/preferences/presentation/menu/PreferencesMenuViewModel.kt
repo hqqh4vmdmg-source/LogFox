@@ -13,7 +13,12 @@ internal class PreferencesMenuViewModel @Inject constructor(
     @ApplicationContext context: Context,
     reducer: PreferencesMenuReducer,
     viewStateMapper: PreferencesMenuViewStateMapper,
-) : BaseStoreViewModel<PreferencesMenuViewState, PreferencesMenuState, PreferencesMenuCommand, PreferencesMenuSideEffect>(
+) : BaseStoreViewModel<
+    PreferencesMenuViewState,
+    PreferencesMenuState,
+    PreferencesMenuCommand,
+    PreferencesMenuSideEffect,
+>(
     initialState = run {
         val packageManager = context.packageManager
         val packageInfo = packageManager.getPackageInfo(context.packageName, 0)

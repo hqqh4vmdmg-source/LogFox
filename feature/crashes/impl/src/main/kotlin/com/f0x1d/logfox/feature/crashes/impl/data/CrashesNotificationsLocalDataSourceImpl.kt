@@ -27,9 +27,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @SuppressLint("MissingPermission")
-internal class CrashesNotificationsLocalDataSourceImpl
-@Inject
-constructor(
+internal class CrashesNotificationsLocalDataSourceImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val crashesSettingsRepository: CrashesSettingsRepository,
 ) : CrashesNotificationsLocalDataSource {
@@ -128,23 +126,18 @@ constructor(
                     .setVibrationEnabled(true)
                     .build()
 
-            context.notificationManagerCompat.apply {
-                createNotificationChannelsCompat(listOf(crashesChannel))
-            }
+            context.notificationManagerCompat.createNotificationChannelsCompat(listOf(crashesChannel))
         }
     }
 
-    override fun cancelCrashNotificationFor(appCrash: AppCrash) {
-        context.notificationManagerCompat.cancel(
-            appCrash.packageName,
-            appCrash.notificationId,
-        )
-    }
+    override fun cancelCrashNotificationFor(appCrash: AppCrash) =
+        context.notificationManagerCompat.cancel(appCrash.packageName, appCrash.notificationId)
 
-    override fun cancelAllCrashNotifications() = context.notificationManager.run {
-        activeNotifications.forEach {
-            if (it.tag != null && it.tag.contains(".")) cancel(it.tag, it.id)
-        }
+    override fun cancelAllCrashNotifications() {
+        val nm = context.notificationManager
+        nm.activeNotifications
+            .filter { it.tag?.contains('.') == true }
+            .forEach { nm.cancel(it.tag, it.id) }
     }
 
     companion object {

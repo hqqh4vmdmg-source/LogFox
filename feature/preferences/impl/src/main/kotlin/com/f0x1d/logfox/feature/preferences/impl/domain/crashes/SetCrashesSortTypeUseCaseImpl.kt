@@ -9,7 +9,5 @@ internal class SetCrashesSortTypeUseCaseImpl @Inject constructor(
     private val crashesSettingsRepository: CrashesSettingsRepository,
 ) : SetCrashesSortTypeUseCase {
 
-    override fun invoke(sortType: CrashesSort) {
-        crashesSettingsRepository.crashesSortType().set(sortType)
-    }
+    override fun invoke(sortType: CrashesSort) = crashesSettingsRepository.crashesSortType().set(sortType)
 }

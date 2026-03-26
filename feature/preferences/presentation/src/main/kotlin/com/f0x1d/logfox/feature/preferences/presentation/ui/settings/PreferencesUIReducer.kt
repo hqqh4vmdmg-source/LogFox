@@ -8,131 +8,107 @@ import com.f0x1d.logfox.feature.preferences.api.data.DateTimeSettingsRepository
 import com.f0x1d.logfox.feature.preferences.api.data.LogsSettingsRepository
 import javax.inject.Inject
 
-internal class PreferencesUIReducer
-@Inject
-constructor() : Reducer<PreferencesUIState, PreferencesUICommand, PreferencesUISideEffect> {
+internal class PreferencesUIReducer @Inject constructor() :
+    Reducer<PreferencesUIState, PreferencesUICommand, PreferencesUISideEffect> {
+
     override fun reduce(
         state: PreferencesUIState,
         command: PreferencesUICommand,
     ): ReduceResult<PreferencesUIState, PreferencesUISideEffect> = when (command) {
-        is PreferencesUICommand.Load -> {
-            state.withSideEffects(PreferencesUISideEffect.LoadPreferences)
-        }
+        is PreferencesUICommand.Load -> state.withSideEffects(PreferencesUISideEffect.LoadPreferences)
 
-        is PreferencesUICommand.PreferencesLoaded -> {
-            state
-                .copy(
-                    nightTheme = command.nightTheme,
-                    monetEnabled = command.monetEnabled,
-                    dateFormat = command.dateFormat,
-                    timeFormat = command.timeFormat,
-                    openCrashesOnStartup = command.openCrashesOnStartup,
-                    showLogDate = command.showLogDate,
-                    showLogTime = command.showLogTime,
-                    showLogUid = command.showLogUid,
-                    showLogPid = command.showLogPid,
-                    showLogTid = command.showLogTid,
-                    showLogPackage = command.showLogPackage,
-                    showLogTag = command.showLogTag,
-                    showLogContent = command.showLogContent,
-                    exportLogsInOriginalFormat = command.exportLogsInOriginalFormat,
-                    wrapCrashLogLines = command.wrapCrashLogLines,
-                    logsUpdateInterval = command.logsUpdateInterval,
-                    logsTextSize = command.logsTextSize,
-                    logsDisplayLimit = command.logsDisplayLimit,
-                    logsExpanded = command.logsExpanded,
-                    resumeLogsWithTouch = command.resumeLogsWithTouch,
-                ).noSideEffects()
-        }
+        is PreferencesUICommand.PreferencesLoaded -> state.copy(
+            nightTheme = command.nightTheme,
+            monetEnabled = command.monetEnabled,
+            dateFormat = command.dateFormat,
+            timeFormat = command.timeFormat,
+            openCrashesOnStartup = command.openCrashesOnStartup,
+            showLogDate = command.showLogDate,
+            showLogTime = command.showLogTime,
+            showLogUid = command.showLogUid,
+            showLogPid = command.showLogPid,
+            showLogTid = command.showLogTid,
+            showLogPackage = command.showLogPackage,
+            showLogTag = command.showLogTag,
+            showLogContent = command.showLogContent,
+            exportLogsInOriginalFormat = command.exportLogsInOriginalFormat,
+            wrapCrashLogLines = command.wrapCrashLogLines,
+            logsUpdateInterval = command.logsUpdateInterval,
+            logsTextSize = command.logsTextSize,
+            logsDisplayLimit = command.logsDisplayLimit,
+            logsExpanded = command.logsExpanded,
+            resumeLogsWithTouch = command.resumeLogsWithTouch,
+        ).noSideEffects()
 
-        is PreferencesUICommand.NightThemeChanged -> {
-            state.copy(nightTheme = command.themeIndex).withSideEffects(
+        is PreferencesUICommand.NightThemeChanged -> state.copy(nightTheme = command.themeIndex)
+            .withSideEffects(
                 PreferencesUISideEffect.SaveNightTheme(command.themeIndex),
                 PreferencesUISideEffect.RecreateActivity,
             )
-        }
 
-        is PreferencesUICommand.MonetEnabledChanged -> {
-            state.copy(monetEnabled = command.enabled).withSideEffects(
+        is PreferencesUICommand.MonetEnabledChanged -> state.copy(monetEnabled = command.enabled)
+            .withSideEffects(
                 PreferencesUISideEffect.SaveMonetEnabled(command.enabled),
                 PreferencesUISideEffect.RecreateActivity,
             )
-        }
 
-        is PreferencesUICommand.DateFormatChanged -> {
-            val format =
-                command.format?.trim() ?: DateTimeSettingsRepository.DATE_FORMAT_DEFAULT
-            state.copy(dateFormat = format).withSideEffects(
-                PreferencesUISideEffect.SaveDateFormat(format),
-            )
-        }
+        is PreferencesUICommand.DateFormatChanged ->
+            (command.format?.trim() ?: DateTimeSettingsRepository.DATE_FORMAT_DEFAULT).let { format ->
+                state.copy(dateFormat = format).withSideEffects(
+                    PreferencesUISideEffect.SaveDateFormat(format),
+                )
+            }
 
-        is PreferencesUICommand.TimeFormatChanged -> {
-            val format =
-                command.format?.trim() ?: DateTimeSettingsRepository.TIME_FORMAT_DEFAULT
-            state.copy(timeFormat = format).withSideEffects(
-                PreferencesUISideEffect.SaveTimeFormat(format),
-            )
-        }
+        is PreferencesUICommand.TimeFormatChanged ->
+            (command.format?.trim() ?: DateTimeSettingsRepository.TIME_FORMAT_DEFAULT).let { format ->
+                state.copy(timeFormat = format).withSideEffects(
+                    PreferencesUISideEffect.SaveTimeFormat(format),
+                )
+            }
 
-        is PreferencesUICommand.OpenCrashesOnStartupChanged -> {
-            state.copy(openCrashesOnStartup = command.openOnStartup).withSideEffects(
-                PreferencesUISideEffect.SaveOpenCrashesOnStartup(command.openOnStartup),
-            )
-        }
+        is PreferencesUICommand.OpenCrashesOnStartupChanged -> state.copy(
+            openCrashesOnStartup = command.openOnStartup,
+        ).withSideEffects(PreferencesUISideEffect.SaveOpenCrashesOnStartup(command.openOnStartup))
 
-        is PreferencesUICommand.LogsFormatChanged -> {
-            state.withSideEffects(
-                PreferencesUISideEffect.SaveLogsFormat(command.which, command.checked),
-            )
-        }
+        is PreferencesUICommand.LogsFormatChanged -> state.withSideEffects(
+            PreferencesUISideEffect.SaveLogsFormat(command.which, command.checked),
+        )
 
-        is PreferencesUICommand.ExportLogsInOriginalFormatChanged -> {
-            state.copy(exportLogsInOriginalFormat = command.inOriginalFormat).withSideEffects(
-                PreferencesUISideEffect.SaveExportLogsInOriginalFormat(command.inOriginalFormat),
-            )
-        }
+        is PreferencesUICommand.ExportLogsInOriginalFormatChanged -> state.copy(
+            exportLogsInOriginalFormat = command.inOriginalFormat,
+        ).withSideEffects(
+            PreferencesUISideEffect.SaveExportLogsInOriginalFormat(command.inOriginalFormat),
+        )
 
-        is PreferencesUICommand.WrapCrashLogLinesChanged -> {
-            state.copy(wrapCrashLogLines = command.wrap).withSideEffects(
-                PreferencesUISideEffect.SaveWrapCrashLogLines(command.wrap),
-            )
-        }
+        is PreferencesUICommand.WrapCrashLogLinesChanged -> state.copy(wrapCrashLogLines = command.wrap)
+            .withSideEffects(PreferencesUISideEffect.SaveWrapCrashLogLines(command.wrap))
 
-        is PreferencesUICommand.LogsUpdateIntervalChanged -> {
-            val interval =
-                command.interval ?: LogsSettingsRepository.LOGS_UPDATE_INTERVAL_DEFAULT
-            state.copy(logsUpdateInterval = interval).withSideEffects(
-                PreferencesUISideEffect.SaveLogsUpdateInterval(interval),
-            )
-        }
+        is PreferencesUICommand.LogsUpdateIntervalChanged ->
+            (command.interval ?: LogsSettingsRepository.LOGS_UPDATE_INTERVAL_DEFAULT).let { interval ->
+                state.copy(logsUpdateInterval = interval).withSideEffects(
+                    PreferencesUISideEffect.SaveLogsUpdateInterval(interval),
+                )
+            }
 
-        is PreferencesUICommand.LogsTextSizeChanged -> {
-            val size = command.size ?: LogsSettingsRepository.LOGS_TEXT_SIZE_DEFAULT
-            state.copy(logsTextSize = size).withSideEffects(
-                PreferencesUISideEffect.SaveLogsTextSize(size),
-            )
-        }
+        is PreferencesUICommand.LogsTextSizeChanged ->
+            (command.size ?: LogsSettingsRepository.LOGS_TEXT_SIZE_DEFAULT).let { size ->
+                state.copy(logsTextSize = size).withSideEffects(
+                    PreferencesUISideEffect.SaveLogsTextSize(size),
+                )
+            }
 
-        is PreferencesUICommand.LogsDisplayLimitChanged -> {
-            val limit =
-                command.limit?.coerceAtLeast(0)
-                    ?: LogsSettingsRepository.LOGS_DISPLAY_LIMIT_DEFAULT
-            state.copy(logsDisplayLimit = limit).withSideEffects(
-                PreferencesUISideEffect.SaveLogsDisplayLimit(limit),
-            )
-        }
+        is PreferencesUICommand.LogsDisplayLimitChanged ->
+            (command.limit?.coerceAtLeast(0) ?: LogsSettingsRepository.LOGS_DISPLAY_LIMIT_DEFAULT).let { limit ->
+                state.copy(logsDisplayLimit = limit).withSideEffects(
+                    PreferencesUISideEffect.SaveLogsDisplayLimit(limit),
+                )
+            }
 
-        is PreferencesUICommand.LogsExpandedChanged -> {
-            state.copy(logsExpanded = command.expanded).withSideEffects(
-                PreferencesUISideEffect.SaveLogsExpanded(command.expanded),
-            )
-        }
+        is PreferencesUICommand.LogsExpandedChanged -> state.copy(logsExpanded = command.expanded)
+            .withSideEffects(PreferencesUISideEffect.SaveLogsExpanded(command.expanded))
 
-        is PreferencesUICommand.ResumeLogsWithTouchChanged -> {
-            state.copy(resumeLogsWithTouch = command.resumeWithTouch).withSideEffects(
-                PreferencesUISideEffect.SaveResumeLogsWithTouch(command.resumeWithTouch),
-            )
-        }
+        is PreferencesUICommand.ResumeLogsWithTouchChanged -> state.copy(
+            resumeLogsWithTouch = command.resumeWithTouch,
+        ).withSideEffects(PreferencesUISideEffect.SaveResumeLogsWithTouch(command.resumeWithTouch))
     }
 }

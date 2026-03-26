@@ -8,7 +8,6 @@ internal class SetResumeLoggingWithBottomTouchUseCaseImpl @Inject constructor(
     private val logsSettingsRepository: LogsSettingsRepository,
 ) : SetResumeLoggingWithBottomTouchUseCase {
 
-    override fun invoke(resumeWithTouch: Boolean) {
+    override fun invoke(resumeWithTouch: Boolean) =
         logsSettingsRepository.resumeLoggingWithBottomTouch().set(resumeWithTouch)
-    }
 }

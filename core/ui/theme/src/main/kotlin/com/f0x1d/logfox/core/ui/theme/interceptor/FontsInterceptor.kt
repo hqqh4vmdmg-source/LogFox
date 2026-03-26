@@ -27,12 +27,10 @@ class FontsInterceptor(context: Context) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): InflateResult {
         val result = chain.proceed(chain.request())
 
-        result.view?.apply {
-            fontsMap[id]?.also {
-                if (this is TextView) {
-                    typeface = it
-                }
-            }
+        val view = result.view
+        val typeface = view?.let { fontsMap[it.id] }
+        if (typeface != null && view is TextView) {
+            view.typeface = typeface
         }
 
         return result
