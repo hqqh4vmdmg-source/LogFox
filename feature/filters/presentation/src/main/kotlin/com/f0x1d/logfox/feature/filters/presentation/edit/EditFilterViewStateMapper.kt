@@ -3,7 +3,8 @@ package com.f0x1d.logfox.feature.filters.presentation.edit
 import com.f0x1d.logfox.core.tea.ViewStateMapper
 import javax.inject.Inject
 
-internal class EditFilterViewStateMapper @Inject constructor() : ViewStateMapper<EditFilterState, EditFilterViewState> {
+internal class EditFilterViewStateMapper @Inject constructor() :
+    ViewStateMapper<EditFilterState, EditFilterViewState> {
     override fun map(state: EditFilterState) = EditFilterViewState(
         filter = state.filter,
         including = state.including,
