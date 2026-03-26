@@ -106,8 +106,9 @@ class UserService() : IUserService.Stub() {
         return pipe[1]
     }
 
-    override fun destroyProcess(processId: Long) =
+    override fun destroyProcess(processId: Long) {
         currentProcesses.remove(processId)?.tryDestroy()
+    }
 
     // Cancellable implementation
     private suspend fun InputStream.copyTo(

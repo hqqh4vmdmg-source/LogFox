@@ -24,8 +24,8 @@ internal fun Project.configureKotlinAndroid(
                 "-Xannotation-default-target=param-property",
                 "-Xconsistent-data-class-copy-visibility",
             )
-            progressiveMode = true
-            jvmDefault = JvmDefaultMode.ALL
+            progressiveMode.set(true)
+            jvmDefault.set(JvmDefaultMode.NO_COMPATIBILITY)
         }
     }
 }
