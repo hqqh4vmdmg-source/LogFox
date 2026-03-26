@@ -62,7 +62,5 @@ abstract class BaseStorePreferenceFragment<
     /**
      * Convenience method to send commands to ViewModel.
      */
-    protected fun send(command: Command) {
-        viewModel.send(command)
-    }
+    protected fun send(command: Command) = viewModel.send(command)
 }

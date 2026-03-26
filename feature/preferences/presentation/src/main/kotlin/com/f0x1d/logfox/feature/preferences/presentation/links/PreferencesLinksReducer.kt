@@ -5,7 +5,8 @@ import com.f0x1d.logfox.core.tea.Reducer
 import com.f0x1d.logfox.core.tea.withSideEffects
 import javax.inject.Inject
 
-internal class PreferencesLinksReducer @Inject constructor() : Reducer<PreferencesLinksState, PreferencesLinksCommand, PreferencesLinksSideEffect> {
+internal class PreferencesLinksReducer @Inject constructor() :
+    Reducer<PreferencesLinksState, PreferencesLinksCommand, PreferencesLinksSideEffect> {
 
     override fun reduce(
         state: PreferencesLinksState,

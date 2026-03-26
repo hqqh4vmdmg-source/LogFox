@@ -8,7 +8,8 @@ import com.f0x1d.logfox.core.tea.withSideEffects
 import com.f0x1d.logfox.feature.terminals.api.base.TerminalType
 import javax.inject.Inject
 
-internal class PreferencesServiceReducer @Inject constructor() : Reducer<PreferencesServiceState, PreferencesServiceCommand, PreferencesServiceSideEffect> {
+internal class PreferencesServiceReducer @Inject constructor() :
+    Reducer<PreferencesServiceState, PreferencesServiceCommand, PreferencesServiceSideEffect> {
 
     override fun reduce(
         state: PreferencesServiceState,

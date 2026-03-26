@@ -17,9 +17,7 @@ internal class PreferenceStateFlowImpl<T : Any>(private val preference: Preferen
         }
     }
 
-    override fun set(value: T) {
-        preference.set(value)
-    }
+    override fun set(value: T) = preference.set(value)
 }
 
 fun <T : Any> Preference<T>.asPreferenceStateFlow(): PreferenceStateFlow<T> = PreferenceStateFlowImpl(this)

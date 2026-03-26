@@ -44,9 +44,7 @@ class UserService() : IUserService.Stub() {
         exitProcess(0)
     }
 
-    override fun exit() {
-        destroy()
-    }
+    override fun exit() = destroy()
 
     override fun executeNow(command: String?) = runBlocking(Dispatchers.IO) {
         val process = Runtime.getRuntime().exec(command)
@@ -108,9 +106,8 @@ class UserService() : IUserService.Stub() {
         return pipe[1]
     }
 
-    override fun destroyProcess(processId: Long) {
+    override fun destroyProcess(processId: Long) =
         currentProcesses.remove(processId)?.tryDestroy()
-    }
 
     // Cancellable implementation
     private suspend fun InputStream.copyTo(

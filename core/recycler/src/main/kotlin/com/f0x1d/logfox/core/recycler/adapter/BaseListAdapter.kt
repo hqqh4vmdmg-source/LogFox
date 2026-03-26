@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.f0x1d.logfox.core.recycler.viewholder.BaseViewHolder
 
-abstract class BaseListAdapter<T, D : ViewBinding>(diffUtil: DiffUtil.ItemCallback<T>) : ListAdapter<T, BaseViewHolder<T, D>>(diffUtil) {
+abstract class BaseListAdapter<T, D : ViewBinding>(diffUtil: DiffUtil.ItemCallback<T>) :
+    ListAdapter<T, BaseViewHolder<T, D>>(diffUtil) {
 
     protected var recyclerView: RecyclerView? = null
 
@@ -24,13 +25,9 @@ abstract class BaseListAdapter<T, D : ViewBinding>(diffUtil: DiffUtil.ItemCallba
 
     override fun onBindViewHolder(holder: BaseViewHolder<T, D>, position: Int) = holder.bindTo(getItem(position))
 
-    override fun onViewRecycled(holder: BaseViewHolder<T, D>) {
-        holder.recycle()
-    }
+    override fun onViewRecycled(holder: BaseViewHolder<T, D>) = holder.recycle()
 
-    override fun onViewDetachedFromWindow(holder: BaseViewHolder<T, D>) {
-        holder.detach()
-    }
+    override fun onViewDetachedFromWindow(holder: BaseViewHolder<T, D>) = holder.detach()
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)

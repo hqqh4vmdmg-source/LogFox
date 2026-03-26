@@ -15,7 +15,12 @@ internal class PreferencesNotificationsViewModel @Inject constructor(
     viewStateMapper: PreferencesNotificationsViewStateMapper,
     getUseSeparateNotificationsChannelsForCrashesUseCase: GetUseSeparateNotificationsChannelsForCrashesUseCase,
     getShowingNotificationsForCrashTypeUseCase: GetShowingNotificationsForCrashTypeUseCase,
-) : BaseStoreViewModel<PreferencesNotificationsViewState, PreferencesNotificationsState, PreferencesNotificationsCommand, PreferencesNotificationsSideEffect>(
+) : BaseStoreViewModel<
+    PreferencesNotificationsViewState,
+    PreferencesNotificationsState,
+    PreferencesNotificationsCommand,
+    PreferencesNotificationsSideEffect,
+>(
     initialState = PreferencesNotificationsState(
         hasNotificationsPermission = true,
         notificationsChannelsAvailable = notificationsChannelsAvailable,

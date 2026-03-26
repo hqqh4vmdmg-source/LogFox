@@ -9,7 +9,12 @@ internal class LogsExtendedCopyViewModel @Inject constructor(
     reducer: LogsExtendedCopyReducer,
     effectHandler: LogsExtendedCopyEffectHandler,
     viewStateMapper: LogsExtendedCopyViewStateMapper,
-) : BaseStoreViewModel<LogsExtendedCopyViewState, LogsExtendedCopyState, LogsExtendedCopyCommand, LogsExtendedCopySideEffect>(
+) : BaseStoreViewModel<
+    LogsExtendedCopyViewState,
+    LogsExtendedCopyState,
+    LogsExtendedCopyCommand,
+    LogsExtendedCopySideEffect,
+>(
     initialState = LogsExtendedCopyState(
         text = null,
     ),

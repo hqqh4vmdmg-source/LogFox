@@ -21,9 +21,7 @@ internal class ANRDataSource @Inject constructor(
     override fun isFirstLine(line: LogLine): Boolean =
         line.tag == TAG && line.content.startsWith(ANR_PREFIX)
 
-    override fun filterLines(lines: MutableList<LogLine>) {
-        lines.removeAll { it.tag != TAG }
-    }
+    override fun filterLines(lines: MutableList<LogLine>) = lines.removeAll { it.tag != TAG }
 
     override fun extractPackageName(lines: List<LogLine>): String = runCatching {
         // First line format: "ANR in com.example.app" or "ANR in com.example.app (reason)"

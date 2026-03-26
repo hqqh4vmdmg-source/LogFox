@@ -6,7 +6,8 @@ import com.f0x1d.logfox.core.tea.noSideEffects
 import com.f0x1d.logfox.core.tea.withSideEffects
 import javax.inject.Inject
 
-internal class AppCrashesReducer @Inject constructor() : Reducer<AppCrashesState, AppCrashesCommand, AppCrashesSideEffect> {
+internal class AppCrashesReducer @Inject constructor() :
+    Reducer<AppCrashesState, AppCrashesCommand, AppCrashesSideEffect> {
 
     override fun reduce(
         state: AppCrashesState,

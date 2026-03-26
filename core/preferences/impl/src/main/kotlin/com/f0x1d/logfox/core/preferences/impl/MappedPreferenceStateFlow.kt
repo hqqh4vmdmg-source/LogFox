@@ -22,9 +22,7 @@ internal class MappedPreferenceStateFlowImpl<T : Any, R : Any>(
         }
     }
 
-    override fun set(value: R) {
-        preference.set(mapSet(value))
-    }
+    override fun set(value: R) = preference.set(mapSet(value))
 }
 
 fun <T : Any, R : Any> Preference<T>.asMappedPreferenceStateFlow(

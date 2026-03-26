@@ -8,7 +8,8 @@ import com.f0x1d.logfox.feature.crashes.api.data.notificationChannelId
 import java.util.Locale
 import javax.inject.Inject
 
-internal class CrashDetailsReducer @Inject constructor() : Reducer<CrashDetailsState, CrashDetailsCommand, CrashDetailsSideEffect> {
+internal class CrashDetailsReducer @Inject constructor() :
+    Reducer<CrashDetailsState, CrashDetailsCommand, CrashDetailsSideEffect> {
 
     override fun reduce(
         state: CrashDetailsState,

@@ -19,13 +19,9 @@ fun TextView.doAfterTextChanged(
 
     fragment.viewLifecycleOwner.lifecycle.addObserver(
         object : DefaultLifecycleObserver {
-            override fun onResume(owner: LifecycleOwner) {
-                addTextChangedListener(textWatcher)
-            }
+            override fun onResume(owner: LifecycleOwner) = addTextChangedListener(textWatcher)
 
-            override fun onPause(owner: LifecycleOwner) {
-                removeTextChangedListener(textWatcher)
-            }
+            override fun onPause(owner: LifecycleOwner) = removeTextChangedListener(textWatcher)
         },
     )
 }

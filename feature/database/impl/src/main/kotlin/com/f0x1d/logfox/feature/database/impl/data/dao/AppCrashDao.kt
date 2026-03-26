@@ -46,9 +46,8 @@ internal interface AppCrashDao {
     @Update
     suspend fun update(appCrashes: List<AppCrashRoomEntity>)
 
-    suspend fun delete(appCrash: AppCrashRoomEntity) {
+    suspend fun delete(appCrash: AppCrashRoomEntity) =
         update(appCrash.copy(isDeleted = true, deletedTime = System.currentTimeMillis()))
-    }
 
     @Query(
         "UPDATE AppCrash SET is_deleted = 1, deleted_time = :time WHERE package_name = :packageName",

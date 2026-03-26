@@ -46,14 +46,16 @@ internal class RecordingsEffectHandler @Inject constructor(
                 )
             }.collect(onCommand)
 
-            is RecordingsSideEffect.ToggleStartStop -> if (getRecordingStateFlowUseCase().value == RecordingState.IDLE) {
+            is RecordingsSideEffect.ToggleStartStop ->
+                if (getRecordingStateFlowUseCase().value == RecordingState.IDLE) {
                 startRecordingUseCase()
             } else {
                 val recording = endRecordingUseCase()
                 onCommand(RecordingsCommand.RecordingEnded(recording))
             }
 
-            is RecordingsSideEffect.TogglePauseResume -> if (getRecordingStateFlowUseCase().value == RecordingState.PAUSED) {
+            is RecordingsSideEffect.TogglePauseResume ->
+                if (getRecordingStateFlowUseCase().value == RecordingState.PAUSED) {
                 resumeRecordingUseCase()
             } else {
                 pauseRecordingUseCase()
