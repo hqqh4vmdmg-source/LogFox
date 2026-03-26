@@ -75,7 +75,8 @@ internal class LogsEffectHandler @Inject constructor(
 
             is LogsSideEffect.PrepareExport -> onCommand(
                 LogsCommand.ExportPickerReady(
-                    "${dateTimeFormatter.formatForExport(System.currentTimeMillis())}.${if (getExportLogsAsTxtUseCase()) "txt" else "log"}",
+                    "${dateTimeFormatter.formatForExport(System.currentTimeMillis())}" +
+                        ".${if (getExportLogsAsTxtUseCase()) "txt" else "log"}",
                 ),
             )
 

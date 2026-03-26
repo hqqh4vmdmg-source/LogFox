@@ -189,7 +189,11 @@ internal class PreferencesUIEffectHandler @Inject constructor(
             }.collect(onCommand)
 
             is PreferencesUISideEffect.SaveNightTheme -> {
-                val theme = if (effect.themeIndex == 0) AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM else effect.themeIndex
+                val theme = if (effect.themeIndex == 0) {
+                    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                } else {
+                    effect.themeIndex
+                }
                 setNightThemeUseCase(theme)
                 AppCompatDelegate.setDefaultNightMode(theme)
             }

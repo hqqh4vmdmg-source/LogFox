@@ -67,10 +67,18 @@ internal class PreferencesNotificationsFragment : BaseComposeFragment() {
         PreferencesNotificationsScreen(
             state = state,
             onBack = { findNavController().popBackStack() },
-            onLoggingNotificationClick = { viewModel.send(PreferencesNotificationsCommand.OpenLoggingNotificationSettings) },
-            onNotificationsPermissionClick = { viewModel.send(PreferencesNotificationsCommand.OpenNotificationsPermissionSettings) },
-            onUseSeparateChannelsChanged = { viewModel.send(PreferencesNotificationsCommand.UseSeparateChannelsChanged(it)) },
-            onJavaNotificationsChanged = { viewModel.send(PreferencesNotificationsCommand.JavaNotificationsChanged(it)) },
+            onLoggingNotificationClick = {
+                viewModel.send(PreferencesNotificationsCommand.OpenLoggingNotificationSettings)
+            },
+            onNotificationsPermissionClick = {
+                viewModel.send(PreferencesNotificationsCommand.OpenNotificationsPermissionSettings)
+            },
+            onUseSeparateChannelsChanged = {
+                viewModel.send(PreferencesNotificationsCommand.UseSeparateChannelsChanged(it))
+            },
+            onJavaNotificationsChanged = {
+                viewModel.send(PreferencesNotificationsCommand.JavaNotificationsChanged(it))
+            },
             onJniNotificationsChanged = { viewModel.send(PreferencesNotificationsCommand.JniNotificationsChanged(it)) },
             onAnrNotificationsChanged = { viewModel.send(PreferencesNotificationsCommand.AnrNotificationsChanged(it)) },
         )

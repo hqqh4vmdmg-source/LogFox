@@ -8,5 +8,6 @@ internal class SetShowingNotificationsForCrashTypeUseCaseImpl @Inject constructo
     private val crashesSettingsRepository: CrashesSettingsRepository,
 ) : SetShowingNotificationsForCrashTypeUseCase {
 
-    override fun invoke(crashTypeName: String, showing: Boolean) = crashesSettingsRepository.setShowingNotificationsFor(crashTypeName, showing)
+    override fun invoke(crashTypeName: String, showing: Boolean) =
+        crashesSettingsRepository.setShowingNotificationsFor(crashTypeName, showing)
 }

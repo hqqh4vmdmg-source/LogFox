@@ -13,10 +13,12 @@ internal class TerminalSettingsRepositoryImpl @Inject constructor(
     private val localDataSource: TerminalSettingsLocalDataSource,
 ) : TerminalSettingsRepository {
 
-    override fun selectedTerminalType(): PreferenceStateFlow<TerminalType> = localDataSource.selectedTerminalTypeKey().asMappedPreferenceStateFlow(
+    override fun selectedTerminalType(): PreferenceStateFlow<TerminalType> =
+        localDataSource.selectedTerminalTypeKey().asMappedPreferenceStateFlow(
         mapGet = TerminalType::fromKey,
         mapSet = TerminalType::key,
     )
 
-    override fun fallbackToDefaultTerminal(): PreferenceStateFlow<Boolean> = localDataSource.fallbackToDefaultTerminal().asPreferenceStateFlow()
+    override fun fallbackToDefaultTerminal(): PreferenceStateFlow<Boolean> =
+        localDataSource.fallbackToDefaultTerminal().asPreferenceStateFlow()
 }

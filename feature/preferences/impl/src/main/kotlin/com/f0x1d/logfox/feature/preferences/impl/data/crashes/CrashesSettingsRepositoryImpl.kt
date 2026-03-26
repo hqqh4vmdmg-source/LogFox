@@ -12,13 +12,17 @@ internal class CrashesSettingsRepositoryImpl @Inject constructor(
     private val localDataSource: CrashesSettingsLocalDataSource,
 ) : CrashesSettingsRepository {
 
-    override fun openCrashesOnStartup(): PreferenceStateFlow<Boolean> = localDataSource.openCrashesOnStartup().asPreferenceStateFlow()
+    override fun openCrashesOnStartup(): PreferenceStateFlow<Boolean> =
+        localDataSource.openCrashesOnStartup().asPreferenceStateFlow()
 
-    override fun wrapCrashLogLines(): PreferenceStateFlow<Boolean> = localDataSource.wrapCrashLogLines().asPreferenceStateFlow()
+    override fun wrapCrashLogLines(): PreferenceStateFlow<Boolean> =
+        localDataSource.wrapCrashLogLines().asPreferenceStateFlow()
 
-    override fun crashesSortType(): PreferenceStateFlow<CrashesSort> = localDataSource.crashesSortType().asPreferenceStateFlow()
+    override fun crashesSortType(): PreferenceStateFlow<CrashesSort> =
+        localDataSource.crashesSortType().asPreferenceStateFlow()
 
-    override fun crashesSortReversedOrder(): PreferenceStateFlow<Boolean> = localDataSource.crashesSortReversedOrder().asPreferenceStateFlow()
+    override fun crashesSortReversedOrder(): PreferenceStateFlow<Boolean> =
+        localDataSource.crashesSortReversedOrder().asPreferenceStateFlow()
 
     override fun collectingFor(crashTypeName: String): Boolean = localDataSource.collectingFor(crashTypeName)
 
@@ -28,7 +32,8 @@ internal class CrashesSettingsRepositoryImpl @Inject constructor(
     override fun setCollectingFor(crashTypeName: String, value: Boolean) =
         localDataSource.collectingForPreference(crashTypeName).set(value)
 
-    override fun showingNotificationsFor(crashTypeName: String): Boolean = localDataSource.showingNotificationsFor(crashTypeName)
+    override fun showingNotificationsFor(crashTypeName: String): Boolean =
+        localDataSource.showingNotificationsFor(crashTypeName)
 
     override fun showingNotificationsForFlow(crashTypeName: String): PreferenceStateFlow<Boolean> =
         localDataSource.showingNotificationsForPreference(crashTypeName).asPreferenceStateFlow()
@@ -36,5 +41,6 @@ internal class CrashesSettingsRepositoryImpl @Inject constructor(
     override fun setShowingNotificationsFor(crashTypeName: String, value: Boolean) =
         localDataSource.showingNotificationsForPreference(crashTypeName).set(value)
 
-    override fun useSeparateNotificationsChannelsForCrashes(): PreferenceStateFlow<Boolean> = localDataSource.useSeparateNotificationsChannelsForCrashes().asPreferenceStateFlow()
+    override fun useSeparateNotificationsChannelsForCrashes(): PreferenceStateFlow<Boolean> =
+        localDataSource.useSeparateNotificationsChannelsForCrashes().asPreferenceStateFlow()
 }

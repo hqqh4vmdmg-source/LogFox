@@ -36,7 +36,9 @@ internal class PreferencesMenuFragment : BaseComposeFragment() {
                         findNavController().navigate(Directions.action_settingsMenuFragment_to_settingsCrashesFragment)
 
                     is PreferencesMenuSideEffect.NavigateToNotificationsSettings ->
-                        findNavController().navigate(Directions.action_settingsMenuFragment_to_settingsNotificationsFragment)
+                        findNavController().navigate(
+                            Directions.action_settingsMenuFragment_to_settingsNotificationsFragment,
+                        )
 
                     is PreferencesMenuSideEffect.NavigateToLinks ->
                         findNavController().navigate(Directions.action_settingsMenuFragment_to_settingsLinksFragment)

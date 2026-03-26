@@ -41,7 +41,8 @@ internal class CrashesSettingsLocalDataSourceImpl @Inject constructor(
         defaultValue = true,
     )
 
-    override fun showingNotificationsFor(crashTypeName: String): Boolean = showingNotificationsForPreference(crashTypeName).get()
+    override fun showingNotificationsFor(crashTypeName: String): Boolean =
+        showingNotificationsForPreference(crashTypeName).get()
 
     override fun showingNotificationsForPreference(crashTypeName: String): Preference<Boolean> = booleanPreference(
         key = "pref_notifications_${crashTypeName.lowercase()}",
